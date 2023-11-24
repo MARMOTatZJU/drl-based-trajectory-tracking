@@ -4,12 +4,11 @@ import logging
 
 
 def _register_generic(
-        module_dict : Dict,
-        module_name : str,
-        module : object,
-        ):
-    assert module_name not in module_dict, logging.info(
-        module_name, module_dict, 'defined in several script files')
+    module_dict: Dict,
+    module_name: str,
+    module: object,
+):
+    assert module_name not in module_dict, logging.info(module_name, module_dict, 'defined in several script files')
     module_dict[module_name] = module
 
 
@@ -36,7 +35,8 @@ class Registry(dict):
     >>> # fetch for function call
     >>> result = REGISTRY_NAME[module_name](*args, **kwargs)
     """
-    def __init__(self, name : str='Registry', **kwargs):
+
+    def __init__(self, name: str = 'Registry', **kwargs):
         """
         Args:
             name: name of the registry
@@ -44,7 +44,7 @@ class Registry(dict):
         self.name = name
         super(Registry, self).__init__(**kwargs)
 
-    def register(self, module : object) -> object:
+    def register(self, module: object) -> object:
         """Register module (class/functino/etc.) into this registry
 
         Args:
@@ -60,7 +60,9 @@ class Registry(dict):
 
 
 def build_object_within_registry_from_config(
-    registry : Registry, config : Dict, **kwargs,
+    registry: Registry,
+    config: Dict,
+    **kwargs,
 ) -> Any:
     """Builder function to build object within a registry from config.
 
