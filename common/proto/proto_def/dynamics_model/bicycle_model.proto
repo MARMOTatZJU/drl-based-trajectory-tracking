@@ -6,4 +6,24 @@ message BicycleModelHyperParameters {
     optional float rear_overhang = 3;
     optional float wheelbase = 4;
     optional float width = 5;
+    optional float frontwheel_to_CoG = 6;
+    optional float rearwheel_to_CoG = 7;
+}
+
+message BicycleModelState {
+    // x-coordinate in [m]
+    optional float x = 1;
+    // y-coordinate in [m]
+    optional float y = 2;
+    // heading in [rad]
+    optional float r = 3;
+    // velocity in [m/s]
+    optional float v = 4;
+}
+
+message BicycleModelAction {
+    // acceleration in [m/s^2]
+    optional float a = 1;
+    // steering angle in [rad]
+    optional float s = 2;
 }

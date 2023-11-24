@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Any
 from abc import ABC, abstractmethod
 from copy import deepcopy
 
@@ -28,14 +28,14 @@ class BaseDynamicsModel(ABC):
         dtype: np.dtype = DEFAULT_DTYPE,
     ):
         if init_state is not None:
-            self.set_state(deepcopy(init_state))
+            self.set_state(init_state)
         self.set_dtype(dtype)
 
     def get_state(self) -> np.ndarray:
-        return deepcopy(self.state)
+        return self.deserialize(self.state)
 
     def set_state(self, new_state: np.ndarray):
-        self.state = deepcopy(new_state)
+        self.state = self.serialize(new_state)
 
     def get_dtype(self) -> np.dtype:
         return self.dtype
@@ -43,12 +43,28 @@ class BaseDynamicsModel(ABC):
     def set_dtype(self, dtype: np.dtype):
         self.dtype = dtype
 
+    @classmethod
     @abstractmethod
-    def step(
-        self,
-        action: np.ndarray,
-        delta_t: float,
-    ):
+    def serialize_state(cls, state: np.ndarry) -> Any:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def deserialize_state(cls, state: Any) -> np.ndarray:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def serialize_action(cls, action: np.ndarry) -> Any:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def deserialize_action(cls, action: Any) -> np.ndarray:
+        raise NotImplementedError
+
+    @abstractmethod
+    def step(self, action: np.ndarray, delta_t: float):
         """Step the model's state forward by a specified time interval
 
         TODO: provide default implementation of `step` function (e.g. `step_without_update` + apply_delta_state)
@@ -56,11 +72,7 @@ class BaseDynamicsModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def compute_next_state(
-        self,
-        action: np.ndarray,
-        delta_t: float,
-    ) -> Any:
+    def compute_next_state(self, action: np.ndarray, delta_t: float) -> Any:
         """
         Proceed a step forward by a specified time interval
             **without** update of internal state
