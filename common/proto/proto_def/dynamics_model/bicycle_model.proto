@@ -8,6 +8,8 @@ message BicycleModelHyperParameters {
     optional float width = 5;
     optional float frontwheel_to_CoG = 6;
     optional float rearwheel_to_CoG = 7;
+    repeated float action_lb = 8;
+    repeated float action_ub = 9;
 }
 
 message BicycleModelState {

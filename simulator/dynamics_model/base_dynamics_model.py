@@ -32,10 +32,10 @@ class BaseDynamicsModel(ABC):
         self.set_dtype(dtype)
 
     def get_state(self) -> np.ndarray:
-        return self.deserialize(self.state)
+        return self.deserialize_state(self.state)
 
     def set_state(self, new_state: np.ndarray):
-        self.state = self.serialize(new_state)
+        self.state = self.serialize_state(new_state)
 
     def get_dtype(self) -> np.dtype:
         return self.dtype
@@ -45,7 +45,7 @@ class BaseDynamicsModel(ABC):
 
     @classmethod
     @abstractmethod
-    def serialize_state(cls, state: np.ndarry) -> Any:
+    def serialize_state(cls, state: np.ndarray) -> Any:
         raise NotImplementedError
 
     @classmethod
@@ -55,7 +55,7 @@ class BaseDynamicsModel(ABC):
 
     @classmethod
     @abstractmethod
-    def serialize_action(cls, action: np.ndarry) -> Any:
+    def serialize_action(cls, action: np.ndarray) -> Any:
         raise NotImplementedError
 
     @classmethod
@@ -90,10 +90,13 @@ class BaseDynamicsModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_state_space(
-        self,
-    ) -> Space:
+    def get_state_space(self) -> Space:
         """Get state space"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_action_space(self) -> Space:
+        """Get action space"""
         raise NotImplementedError
 
     @abstractmethod
