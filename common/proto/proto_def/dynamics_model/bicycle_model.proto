@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message BicycleModelHyperParameters {
+    optional float length = 1;
+    optional float front_overhang = 2;
+    optional float rear_overhang = 3;
+    optional float wheelbase = 4;
+    optional float width = 5;
+}
