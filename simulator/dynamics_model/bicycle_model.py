@@ -1,5 +1,4 @@
-from typing import Tuple, Iterable, Any  # override
-from copy import deepcopy
+from typing import Iterable, Any  # override
 import math
 
 import numpy as np
@@ -17,20 +16,9 @@ from proto_gen_py.dynamics_model.bicycle_model_pb2 import (
 
 
 class BicycleModel(BaseDynamicsModel):
-    """Transition funciton
+    """Bicycle model
 
-    State space:
-        (x, y): position (in world frame)
-        r: heading
-        v: scalar velocity (at center of gravity)
-
-    Action space:
-        s: front wheel steer angle
-        a: acceleration
-
-    Convention of variable:
-        delta_xxx: difference of variable xxx
-        d_xxx: derivative of variable xxx w.r.t. time
+    Suitable for vehicle/bicycle kinematics
     """
 
     hyper_parameters: BicycleModelHyperParameters
