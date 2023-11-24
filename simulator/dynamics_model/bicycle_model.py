@@ -6,7 +6,7 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from . import BaseDynamicsModel, DEFAULT_DTYPE
+from . import BaseDynamicsModel, DTYPE
 from common.geometry import normalize_angle
 
 from proto_gen_py.dynamics_model.bicycle_model_pb2 import (
@@ -73,8 +73,8 @@ class BicycleModel(BaseDynamicsModel):
         return serialized_state
 
     @classmethod
-    def deserialize_state(cls, state: Any, dtype=DEFAULT_DTYPE) -> np.ndarray:
-        deserialized_state = np.zeros((4,), dtype=dtype)
+    def deserialize_state(cls, state: Any) -> np.ndarray:
+        deserialized_state = np.zeros((4,), dtype=DTYPE)
         deserialized_state[0] = state.x
         deserialized_state[1] = state.y
         deserialized_state[2] = state.r
@@ -91,8 +91,8 @@ class BicycleModel(BaseDynamicsModel):
         return serialized_action
 
     @classmethod
-    def deserialize_action(cls, action: Any, dtype=DEFAULT_DTYPE) -> np.ndarray:
-        deserialized_action = np.zeros((2,), dtype=dtype)
+    def deserialize_action(cls, action: Any) -> np.ndarray:
+        deserialized_action = np.zeros((2,), dtype=DTYPE)
         deserialized_action[0] = action.a
         deserialized_action[1] = action.s
 
@@ -150,22 +150,22 @@ class BicycleModel(BaseDynamicsModel):
                 self.hyper_parameters.width,
                 self.hyper_parameters.length,
             ),
-            dtype=self.dtype,
+            dtype=DTYPE,
         )
 
         return observation
 
     # @override
     def get_state_observation(self) -> np.ndarray:
-        observation = np.array((self.state.v,), dtype=self.dtype)
+        observation = np.array((self.state.v,), dtype=DTYPE)
 
         return observation
 
     # @override
     def get_state_space(self) -> Space:
         state_space = gym.spaces.Box(
-            low=np.array((-np.inf, -np.inf, -np.pi, 0.0), dtype=self.dtype),
-            high=np.array((+np.inf, +np.inf, +np.pi, +np.inf), dtype=self.dtype),
+            low=np.array((-np.inf, -np.inf, -np.pi, 0.0), dtype=DTYPE),
+            high=np.array((+np.inf, +np.inf, +np.pi, +np.inf), dtype=DTYPE),
             shape=(4,),
             dtype=self.get_dtype(),
         )
@@ -175,13 +175,13 @@ class BicycleModel(BaseDynamicsModel):
     # @override
     def get_action_space(self) -> Space:
         """Get action space"""
-        lb = np.array(self.hyper_parameters.action_lb, dtype=self.dtype)
-        ub = np.array(self.hyper_parameters.action_ub, dtype=self.dtype)
+        lb = np.array(self.hyper_parameters.action_lb, dtype=DTYPE)
+        ub = np.array(self.hyper_parameters.action_ub, dtype=DTYPE)
         action_space = gym.spaces.Box(
             low=lb,
             high=ub,
             shape=lb.shape,
-            dtype=self.dtype,
+            dtype=DTYPE,
         )
 
         return action_space

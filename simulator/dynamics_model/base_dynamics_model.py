@@ -6,7 +6,7 @@ import numpy as np
 from gym.spaces import Space
 
 
-DEFAULT_DTYPE = np.float32
+DTYPE = np.float32  # consistent with protobuf
 
 
 class BaseDynamicsModel(ABC):
@@ -20,28 +20,19 @@ class BaseDynamicsModel(ABC):
     """
 
     state: np.ndarray
-    dtype: np.dtype
 
     def __init__(
         self,
         init_state: np.ndarray = None,
-        dtype: np.dtype = DEFAULT_DTYPE,
     ):
         if init_state is not None:
             self.set_state(init_state)
-        self.set_dtype(dtype)
 
     def get_state(self) -> np.ndarray:
         return self.deserialize_state(self.state)
 
     def set_state(self, new_state: np.ndarray):
         self.state = self.serialize_state(new_state)
-
-    def get_dtype(self) -> np.dtype:
-        return self.dtype
-
-    def set_dtype(self, dtype: np.dtype):
-        self.dtype = dtype
 
     @classmethod
     @abstractmethod
