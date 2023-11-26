@@ -6,9 +6,6 @@ import numpy as np
 from gym.spaces import Space
 
 
-DTYPE = np.float32  # consistent with protobuf
-
-
 class BaseDynamicsModel(ABC):
     """Base class for dynamics models
 
@@ -16,7 +13,6 @@ class BaseDynamicsModel(ABC):
 
     Attributes:
         state: vectorized state of the dynamics model
-        dtype: internal data type
     """
 
     state: np.ndarray

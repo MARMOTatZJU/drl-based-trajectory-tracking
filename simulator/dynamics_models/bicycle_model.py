@@ -5,7 +5,8 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from . import BaseDynamicsModel, DTYPE
+from simulator import DTYPE
+from . import BaseDynamicsModel
 from common.geometry import normalize_angle
 
 from proto_gen_py.dynamics_model.bicycle_model_pb2 import (
