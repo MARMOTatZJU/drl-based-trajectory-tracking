@@ -27,6 +27,19 @@ class BicycleModel(BaseDynamicsModel):
 
     def __init__(
         self,
+        **kwargs,
+    ):
+        self.hyper_parameters = BicycleModelHyperParameters()
+        self.parse_hyper_parameters(self.hyper_parameters, **kwargs)
+
+        self.state = BicycleModelState()
+
+        super().__init__(**kwargs)
+
+    @classmethod
+    def parse_hyper_parameters(
+        cls,
+        hyper_parameters: BicycleModelHyperParameters,
         front_overhang: float,
         wheelbase: float,
         rear_overhang: float,
@@ -35,21 +48,16 @@ class BicycleModel(BaseDynamicsModel):
         action_ub: Iterable[float] = (+math.inf, +math.inf),
         **kwargs,
     ):
-        self.hyper_parameters = BicycleModelHyperParameters()
-        self.hyper_parameters.front_overhang = front_overhang
-        self.hyper_parameters.wheelbase = wheelbase
-        self.hyper_parameters.rear_overhang = rear_overhang
-        self.hyper_parameters.width = width
+        hyper_parameters.front_overhang = front_overhang
+        hyper_parameters.wheelbase = wheelbase
+        hyper_parameters.rear_overhang = rear_overhang
+        hyper_parameters.width = width
         length = front_overhang + wheelbase + rear_overhang
-        self.hyper_parameters.length = length
-        self.hyper_parameters.frontwheel_to_CoG = wheelbase + rear_overhang - length / 2
-        self.hyper_parameters.rearwheel_to_CoG = wheelbase + front_overhang - length / 2
-        self.hyper_parameters.action_ub.extend(action_ub)
-        self.hyper_parameters.action_lb.extend(action_lb)
-
-        self.state = BicycleModelState()
-
-        super().__init__(**kwargs)
+        hyper_parameters.length = length
+        hyper_parameters.frontwheel_to_CoG = wheelbase + rear_overhang - length / 2
+        hyper_parameters.rearwheel_to_CoG = wheelbase + front_overhang - length / 2
+        hyper_parameters.action_ub.extend(action_ub)
+        hyper_parameters.action_lb.extend(action_lb)
 
     @classmethod
     def serialize_state(cls, state: np.ndarray) -> Any:
