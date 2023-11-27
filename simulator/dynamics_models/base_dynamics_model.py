@@ -20,6 +20,7 @@ class BaseDynamicsModel(ABC):
     def __init__(
         self,
         init_state: np.ndarray = None,
+        **kwargs,
     ):
         if init_state is not None:
             self.set_state(init_state)
