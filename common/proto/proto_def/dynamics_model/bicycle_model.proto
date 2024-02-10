@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package drl_based_trajectory_tracking;
+
 message BicycleModelHyperParameters {
     optional float length = 1;
     optional float front_overhang = 2;

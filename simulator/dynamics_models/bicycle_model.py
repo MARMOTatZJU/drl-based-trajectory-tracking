@@ -1,5 +1,6 @@
-from typing import Iterable, Any  # override
+from typing import Iterable, Union, Any  # override
 import math
+from copy import deepcopy
 
 import numpy as np
 import gym
@@ -22,15 +23,19 @@ class BicycleModel(BaseDynamicsModel):
     Suitable for vehicle/bicycle kinematics
     """
 
-    hyper_parameters: BicycleModelHyperParameters
+    hyper_parameters: Union[BicycleModelHyperParameters, None]
     state: BicycleModelState
 
     def __init__(
         self,
+        hyper_parameters: Union[BicycleModelHyperParameters, None] = None,
         **kwargs,
     ):
         self.hyper_parameters = BicycleModelHyperParameters()
-        self.parse_hyper_parameters(self.hyper_parameters, **kwargs)
+        if hyper_parameters is None:
+            self.parse_hyper_parameters(self.hyper_parameters, **kwargs)
+        else:
+            self.hyper_parameters = deepcopy(hyper_parameters)
 
         self.state = BicycleModelState()
 
@@ -39,11 +44,11 @@ class BicycleModel(BaseDynamicsModel):
     @classmethod
     def parse_hyper_parameters(
         cls,
-        hyper_parameters: BicycleModelHyperParameters,
-        front_overhang: float,
-        wheelbase: float,
-        rear_overhang: float,
-        width: float,
+        hyper_parameters: Union[BicycleModelHyperParameters, None] = None,
+        front_overhang: float = 0.0,
+        wheelbase: float = 0.0,
+        rear_overhang: float = 0.0,
+        width: float = 0.0,
         action_lb: Iterable[float] = (-math.inf, -math.inf),
         action_ub: Iterable[float] = (+math.inf, +math.inf),
         **kwargs,
