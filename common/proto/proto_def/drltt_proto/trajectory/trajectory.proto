@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "drltt_proto/dynamics_model/bicycle_model.proto";
+
+package drl_based_trajectory_tracking;
+
+message ReferenceLineWaypoint {
+    optional float x = 1;
+    optional float y = 2;
+}
+
+message ReferenceLine {
+    repeated ReferenceLineWaypoint waypoints = 1;
+}
+
+message TrajectoryWaypoint {
+    optional BicycleModelState state = 1;
+    optional BicycleModelAction action = 2;
+}
+
+message Trajectory {
+    repeated TrajectoryWaypoint waypoints = 1;
+}

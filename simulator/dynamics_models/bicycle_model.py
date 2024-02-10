@@ -10,7 +10,7 @@ from simulator import DTYPE
 from . import BaseDynamicsModel
 from common.geometry import normalize_angle
 
-from proto_gen_py.dynamics_model.bicycle_model_pb2 import (
+from drltt_proto.dynamics_model.bicycle_model_pb2 import (
     BicycleModelHyperParameters,
     BicycleModelState,
     BicycleModelAction,

@@ -10,8 +10,8 @@ mkdir -p ${cpp_output_dir}
 protoc -I ${src_dir} \
     --python_out ${python_output_dir} \
     --cpp_out ${cpp_output_dir} \
-    ${src_dir}/**/*.proto
+    $(find ${src_dir} -name *.proto)
 
 # create `__init__.py` files for compiled Python package
-find ${python_output_dir} -type d -exec touch {}/__init__.py \;
+find ${python_output_dir} -mindepth 1 -type d -exec touch {}/__init__.py \;
 echo "Proto compiled."
