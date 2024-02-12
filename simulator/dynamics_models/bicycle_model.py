@@ -1,4 +1,4 @@
-from typing import Iterable, Union, Any  # override
+from typing import Iterable, Union, Any, override
 import math
 from copy import deepcopy
 
@@ -127,7 +127,7 @@ class BicycleModel(BaseDynamicsModel):
 
         return derivative
 
-    # @override
+    @override
     def compute_next_state(self, action: np.ndarray, delta_t: float) -> Any:
         action = self.serialize_action(action)
         state_derivative = self._compute_derivative(self.state, action)
@@ -137,12 +137,12 @@ class BicycleModel(BaseDynamicsModel):
 
         return next_state
 
-    # @override
+    @override
     def step(self, action: np.ndarray, delta_t: float):
         next_state = self.compute_next_state(action, delta_t)
         self.state = next_state
 
-    # @override
+    @override
     def get_dynamics_model_observation(self) -> np.ndarray:
         observation = np.array(
             (
@@ -157,13 +157,13 @@ class BicycleModel(BaseDynamicsModel):
 
         return observation
 
-    # @override
+    @override
     def get_state_observation(self) -> np.ndarray:
         observation = np.array((self.state.v,), dtype=DTYPE)
 
         return observation
 
-    # @override
+    @override
     def get_state_space(self) -> Space:
         state_space = gym.spaces.Box(
             low=np.array((-np.inf, -np.inf, -np.pi, 0.0), dtype=DTYPE),
@@ -174,7 +174,7 @@ class BicycleModel(BaseDynamicsModel):
 
         return state_space
 
-    # @override
+    @override
     def get_action_space(self) -> Space:
         """Get action space"""
         lb = np.array(self.hyper_parameters.action_lb, dtype=DTYPE)
@@ -188,6 +188,6 @@ class BicycleModel(BaseDynamicsModel):
 
         return action_space
 
-    # @override
+    @override
     def jacobian(self, state: np.ndarray, action: np.ndarray) -> np.ndarray:
         pass
