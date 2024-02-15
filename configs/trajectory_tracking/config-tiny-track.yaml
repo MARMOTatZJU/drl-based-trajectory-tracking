@@ -5,12 +5,11 @@ common:
 environment:
   type: 'TrajectoryTrackingEnv'
   step_interval: 0.1
-  tracking_length_lb: 40
-  tracking_length_ub: 80
-  #  TODO: init_v: 0.1 - 40.0
-  init_state_lb: [-1.e-8, -1.e-8, -3.1415926536, 10.0]
-  init_state_ub: [+1.e-8, +1.e-8, +3.1415926536, 20.0]
-  n_observation_steps: 10
+  tracking_length_lb: 50
+  tracking_length_ub: 50
+  init_state_lb: [-1.e-8, -1.e-8, -3.1415926536, 5.0]
+  init_state_ub: [+1.e-8, +1.e-8, +3.1415926536, 30.0]
+  n_observation_steps: 15
   dynamics_model_configs:
       # short vehicle
   -   type: 'BicycleModel'
@@ -52,7 +51,7 @@ model:
   verbose: 1
   learning_starts: 4096
   batch_size: 4096
-  tau: 0.002
+  tau: 0.001
 
 learning:
     total_timesteps: 3_000_000

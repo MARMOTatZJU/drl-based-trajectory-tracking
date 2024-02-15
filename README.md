@@ -7,6 +7,20 @@ This repo hosts code and script for training and deploying *DRL-Based Trajectory
 - Python>=3.12
 - `requirements/pypi.txt`
 
+## RL training
+
+Setup a subfolder and create a `train.sh` with follwoing content, then execute it:
+
+```
+#!/bin/bash
+source setup.sh
+work_dir=$(dirname $0)
+python scripts/train.py \
+    --config-file configs/trajectory_tracking/config-tiny-track.yaml \
+    --checkpoint-file $work_dir/checkpoint.pkl \
+    #
+```
+
 ## Development
 
 ### System Design
