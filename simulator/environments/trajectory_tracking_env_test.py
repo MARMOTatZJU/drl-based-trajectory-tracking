@@ -1,11 +1,12 @@
 
 from common.io import load_config_from_yaml
 import numpy as np
+from simulator import SAMPLE_CONFIG_PATH
 from simulator.environments.trajectory_tracking_env import TrajectoryTrackingEnv
 
 
 def test_trajectory_tracking_env():
-    config_file = 'configs/trajectory_tracking/config-tiny-track.yaml'
+    config_file = SAMPLE_CONFIG_PATH
     config = load_config_from_yaml(config_file)
     env_config = config['environment']
     env = TrajectoryTrackingEnv(**env_config)
