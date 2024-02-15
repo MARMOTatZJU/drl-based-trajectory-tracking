@@ -8,6 +8,7 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
+from . import ENVIRONMENTS
 from simulator import DTYPE
 from simulator.dynamics_models import (
     BaseDynamicsModel,
@@ -20,6 +21,7 @@ from simulator.observation.observation_manager import ObservationManager
 from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEnvironment
 
 
+@ENVIRONMENTS.register
 class TrajectoryTrackingEnv(gym.Env):
     # dynamics_model: BaseDynamicsModel
     state_space: Space=None

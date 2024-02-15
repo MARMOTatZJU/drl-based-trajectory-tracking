@@ -3,6 +3,7 @@ common:
   action_space_ub: &ACTION_SPACE_UB [+4.5, +0.5235987755983]
 
 environment:
+  type: 'TrajectoryTrackingEnv'
   step_interval: 0.1
   tracking_length_lb: 40
   tracking_length_ub: 80
