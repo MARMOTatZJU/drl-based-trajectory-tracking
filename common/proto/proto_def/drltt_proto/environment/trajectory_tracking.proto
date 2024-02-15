@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "drltt_proto/dynamics_model/bicycle_model.proto";
+import "drltt_proto/trajectory/trajectory.proto";
+
+package drl_based_trajectory_tracking;
+
+message DynamicsModelData {
+    optional BicycleModelState state = 1;
+    optional BicycleModelAction action = 2;
+    optional BicycleModelHyperParameters hyper_parameters = 3;
+}
+
+message TrajectoryTrackingFrame {
+    optional int32 frame_index = 1;
+    optional DynamicsModelData dynamics_model = 2;
+    optional ReferenceLine reference_line = 3;
+    optional float reward = 4;
+}
+
+message TrajectoryTrackingHyperParameter {
+    optional float step_interval = 1;
+    repeated float init_state_lb = 2;
+    repeated float init_state_ub = 3;
+    optional int32 n_observation_steps = 4;
+    // repeated BicycleModelHyperParameters dynamics_model_hyper_parameters = 5;
+    optional int32 tracking_length_lb = 6;
+    optional int32 tracking_length_ub = 7;
+    // repeated float action_space_lb = 8;
+    // repeated float action_space_ub = 9;
+}
+
+message TrajectoryTrackingRuntimeData {
+    optional int32 step_index = 1;
+    optional int32 tracking_length = 2;
+}
+
+message TrajectoryTrackingEnvironment {
+    optional TrajectoryTrackingHyperParameter hyper_parameters = 1;
+    optional TrajectoryTrackingRuntimeData runtime_data = 2;
+    repeated TrajectoryTrackingFrame frames = 3;
+    // index of current step
+}

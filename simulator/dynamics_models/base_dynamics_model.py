@@ -3,7 +3,11 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 
 import numpy as np
+import gym
 from gym.spaces import Space
+
+from drltt_proto.dynamics_model.basics_pb2 import BodyState
+from simulator import DTYPE
 
 
 class BaseDynamicsModel(ABC):
@@ -27,6 +31,10 @@ class BaseDynamicsModel(ABC):
 
     def get_state(self) -> np.ndarray:
         return self.deserialize_state(self.state)
+
+    @abstractmethod
+    def get_body_state_proto(self) -> BodyState:
+        raise NotImplementedError
 
     def set_state(self, new_state: np.ndarray):
         self.state = self.serialize_state(new_state)
@@ -72,10 +80,25 @@ class BaseDynamicsModel(ABC):
         """Make observation of the hyper-parameters of this dynamics model"""
         raise NotImplementedError
 
+    def get_dynamics_model_observation_space(self) -> Space:
+        observation = self.get_dynamics_model_observation()
+        obs_size = observation.size
+        space = gym.spaces.Box(
+            low=-np.ones((obs_size,)) * np.inf,
+            high=+np.ones((obs_size,)) * np.inf,
+            shape=observation.shape,
+            dtype=DTYPE,
+        )
+
+        return space
+
     @abstractmethod
     def get_state_observation(self) -> np.ndarray:
         """Make observation of the state of this dynamics model"""
         raise NotImplementedError
+
+    def get_state_observation_space(self) -> Space:
+        return self.get_state_space()
 
     @abstractmethod
     def get_state_space(self) -> Space:

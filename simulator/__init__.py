@@ -1,3 +1,3 @@
 import numpy as np
 
-DTYPE = np.float32  # consistent with protobuf
+DTYPE = np.float64  # consistent with protobuf

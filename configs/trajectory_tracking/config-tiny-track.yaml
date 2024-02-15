@@ -1,0 +1,37 @@
+common:
+  action_space_lb: &ACTION_SPACE_LB [-4.5, -0.5235987755983]
+  action_space_ub: &ACTION_SPACE_UB [+4.5, +0.5235987755983]
+
+environment:
+  step_interval: 0.1
+  tracking_length_lb: 40
+  tracking_length_ub: 80
+  #  TODO: init_v: 0.1 - 40.0
+  init_state_lb: [-1.e-8, -1.e-8, -3.1415926536, 10.0]
+  init_state_ub: [+1.e-8, +1.e-8, +3.1415926536, 20.0]
+  n_observation_steps: 10
+  dynamics_model_configs:
+      # short vehicle
+  -   type: 'BicycleModel'
+      front_overhang: 0.9
+      rear_overhang: 0.9
+      wheelbase: 2.7
+      width: 1.8
+      action_space_lb: *ACTION_SPACE_LB
+      action_space_ub: *ACTION_SPACE_UB
+      # long vehicle
+  -   type: 'BicycleModel'
+      front_overhang: 2.3
+      rear_overhang: 2.0
+      wheelbase: 6.1
+      width: 2.5
+      action_space_lb: *ACTION_SPACE_LB
+      action_space_ub: *ACTION_SPACE_UB
+      # middle vehicle
+  -   type: 'BicycleModel'
+      front_overhang: 1.0
+      rear_overhang: 1.5
+      wheelbase: 3.4
+      width: 2.65
+      action_space_lb: *ACTION_SPACE_LB
+      action_space_ub: *ACTION_SPACE_UB

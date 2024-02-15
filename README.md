@@ -2,7 +2,19 @@
 
 This repo hosts code and script for training and deploying *DRL-Based Trajectory Tracking* algorithm.
 
+## Installation
+
+- Python>=3.12
+- `requirements/pypi.txt`
+
 ## Development
+
+### System Design
+
+- `TrajectoryTrackingEnv`
+    - `ObservationManager`
+        - `ReferenceLineManager`
+        - `DynamicsModelManager`
 
 ### Formatting
 
