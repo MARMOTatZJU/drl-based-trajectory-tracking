@@ -84,8 +84,8 @@ class BaseDynamicsModel(ABC):
         observation = self.get_dynamics_model_observation()
         obs_size = observation.size
         space = gym.spaces.Box(
-            low=-np.ones((obs_size,)) * np.inf,
-            high=+np.ones((obs_size,)) * np.inf,
+            low=-np.ones((obs_size,), dtype=DTYPE) * np.inf,
+            high=+np.ones((obs_size,), dtype=DTYPE) * np.inf,
             shape=observation.shape,
             dtype=DTYPE,
         )

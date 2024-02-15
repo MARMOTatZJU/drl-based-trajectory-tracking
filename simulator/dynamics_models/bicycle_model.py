@@ -186,6 +186,16 @@ class BicycleModel(BaseDynamicsModel):
         return observation
 
     @override
+    def get_state_observation_space(self) -> Space:
+        state_observation_space = gym.spaces.Box(
+            low=np.array((0.0,), dtype=DTYPE),
+            high=np.array((+np.inf,), dtype=DTYPE),
+            shape=(1,),
+            dtype=DTYPE,
+        )
+        return state_observation_space
+
+    @override
     def get_state_space(self) -> Space:
         state_space = gym.spaces.Box(
             low=np.array((-np.inf, -np.inf, -np.pi, 0.0), dtype=DTYPE),

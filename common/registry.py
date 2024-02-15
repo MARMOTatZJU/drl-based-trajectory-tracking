@@ -1,4 +1,4 @@
-from typing import Dict, Any, override
+from typing import Dict, Any, override, Self
 from copy import deepcopy
 import logging
 
@@ -46,8 +46,10 @@ class Registry(dict):
         self.name = name
         super(Registry, self).__init__(**kwargs)
 
-    def register(self, module: object) -> object:
+    def register(self, module: object) -> Any:
         """Register module (class/functino/etc.) into this registry
+
+        Typically used as decorater, thus return the input module itself
 
         Args:
             module: python object that needs to be registered
@@ -67,14 +69,14 @@ class Registry(dict):
 
         return super().__getitem__(name)
 
-    def register_from_python_module(self, module: object):
+    def register_from_python_module(self, module: object) -> Self:
         self.name = module.__name__
         for k, v in module.__dict__.items():
             if k.startswith('__'):
                 continue
             self[k] = v
 
-        return module
+        return self
 
 
 def build_object_within_registry_from_config(

@@ -7,16 +7,17 @@ from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 class DynamicsModelManager:
     dynamics_models: List[BaseDynamicsModel]
-    sampled_dynamics_Model: Union[BaseDynamicsModel, None]
+    sampled_dynamics_model: Union[BaseDynamicsModel, None]=None
 
     def __init__(self, dynamics_model_configs: Iterable=tuple()):
         self.dynamics_models = list()
-        self.sampled_dynamics_Model = None
+        self.sampled_dynamics_model = None
         for dynamics_model_config in dynamics_model_configs:
             dynamics_model = build_object_within_registry_from_config(DYNAMICS_MODELS, dynamics_model_config)
             self.dynamics_models.append(dynamics_model)
 
         self.probabilities = (1 / len(self.dynamics_models),) * len(self.dynamics_models)
+        self.sampled_dynamics_model = self.dynamics_models[0]
 
     def get_dynamics_model_observation_space(
         self,

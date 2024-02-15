@@ -35,3 +35,24 @@ environment:
       width: 2.65
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
+
+model:
+  type: TD3
+  policy: MlpPolicy
+  policy_kwargs:
+    net_arch:
+      pi: [128, 32]
+      qf: [1024, 512, 256, 128]
+  train_freq: [4, "episode"]
+  learning_rate: 4.0e-5
+  scaled_action_noise:
+    mean: [0.0, 0.0]
+    sigma: [0.9, 0.3]
+  verbose: 1
+  learning_starts: 4096
+  batch_size: 4096
+  tau: 0.002
+
+learning:
+    total_timesteps: 3_000_000
+    log_interval: 10

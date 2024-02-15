@@ -52,6 +52,7 @@ class TrajectoryTrackingEnv(gym.Env):
             n_observation_steps: number of the steps within the observation
             reward_configs: config of all rewards
         """
+        # parse hyper-parameters
         self.env_info: TrajectoryTrackingEnvironment = TrajectoryTrackingEnvironment()
         self.env_info.hyper_parameters.step_interval = step_interval
         self.env_info.hyper_parameters.tracking_length_lb = tracking_length_lb
@@ -62,6 +63,7 @@ class TrajectoryTrackingEnv(gym.Env):
         # self.env_info.hyper_parameters.action_space_ub.extend(action_space_ub)
         self.env_info.hyper_parameters.n_observation_steps = n_observation_steps
 
+        # build manager classes
         self.reference_line_manager = ReferenceLineManager(
             n_observation_steps=self.env_info.hyper_parameters.n_observation_steps,
         )
@@ -73,11 +75,8 @@ class TrajectoryTrackingEnv(gym.Env):
             self.dynamics_model_manager,
         )
 
-        self.init_state_space = gym.spaces.Box(
-            low=np.array((self.env_info.hyper_parameters.init_state_lb)),
-            high=np.array((self.env_info.hyper_parameters.init_state_ub)),
-            dtype=DTYPE,
-        )
+        # build spaces
+        self._build_spaces()
 
     @override
     def reset(
@@ -91,7 +90,6 @@ class TrajectoryTrackingEnv(gym.Env):
 
         # TODO: decide whether keep a handler to the sampled dynamics model in env object
         sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
-        self._build_spaces()
 
         tracking_length = random.randint(
             self.env_info.hyper_parameters.tracking_length_lb,
@@ -116,31 +114,36 @@ class TrajectoryTrackingEnv(gym.Env):
             body_state=sampled_dynamics_model.get_body_state_proto(),
             )
         # TODO: verify interface: gym==0.21 or gym==0.26
+        # reference: https://gymnasium.farama.org/content/migration-guide/
 
-        return observation, extra_info
+        # return observation, extra_info
+        return observation
 
     def _build_spaces(
         self,
     ):
         """
-        Build spaces (observation / action / state / etc.)
+        Build spaces (observation / action / state / init_state / etc.)
 
         Dependency (class attributes needed to be set before):
-        - self.dynamics_model
+        - self.env_info
+        - self.dynamics_model_manager
+        - self.observation_manager
         """
-        # state space
-        if self.state_space is None:
-            self.state_space = self.dynamics_model_manager.get_sampled_dynamics_model().get_state_space()
-
-        if self.action_space is None:
-            self.action_space = self.dynamics_model_manager.get_sampled_dynamics_model().get_action_space()
-
         if self.observation_space is None:
             self.observation_space = self.observation_manager.get_observation_space()
+        if self.action_space is None:
+            self.action_space = self.dynamics_model_manager.get_sampled_dynamics_model().get_action_space()
+        if self.state_space is None:
+            self.state_space = self.dynamics_model_manager.get_sampled_dynamics_model().get_state_space()
+        if self.init_state_space is None:
+            self.init_state_space = gym.spaces.Box(
+                low=np.array((self.env_info.hyper_parameters.init_state_lb), dtype=DTYPE),
+                high=np.array((self.env_info.hyper_parameters.init_state_ub), dtype=DTYPE),
+                dtype=DTYPE,
+            )
 
-    def get_current_dynamics_model(
-        self,
-    ) -> BaseDynamicsModel:
+    def get_current_dynamics_model(self) -> BaseDynamicsModel:
         return self.dynamics_model_manager.get_sampled_dynamics_model()
 
     @override
@@ -179,6 +182,10 @@ class TrajectoryTrackingEnv(gym.Env):
         terminated: bool = self.env_info.runtime_data.step_index >= self.env_info.runtime_data.tracking_length
         truncated: bool = False
 
-        return observation, scalar_reward, terminated, truncated, extra_info
+        # TODO: verify interface: gym==0.21 or gym==0.26
+        # reference: https://gymnasium.farama.org/content/migration-guide/
+
+        # return observation, scalar_reward, terminated, truncated, extra_info
+        return observation, scalar_reward, terminated, extra_info
 
     # TODO: rendering

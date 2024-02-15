@@ -43,8 +43,8 @@ class ReferenceLineManager:
         """
         obs_size = 2 * self.n_observation_steps
         observation_space = gym.spaces.Box(
-            low=-np.ones((obs_size,)) * np.inf,
-            high=+np.ones((obs_size,)) * np.inf,
+            low=-(np.ones((obs_size,)) * np.inf).astype(dtype=DTYPE),
+            high=+(np.ones((obs_size,)) * np.inf).astype(dtype=DTYPE),
             shape=(obs_size,),
             dtype=self.dtype,
         )
@@ -54,10 +54,10 @@ class ReferenceLineManager:
         if reference_line is not None:
             self.set_reference_line(reference_line)
 
-        if index + self.n_observation_steps >= len(self.reference_line.waypoints):
+        if index + self.n_observation_steps >= len(self.reference_line.waypoints)+1:
             raise ValueError(
                 f'Getting observation from index {index} of length {self.n_observation_steps} will cause out-of-bound'
-                ' error.'
+                f' error. The length of reference line is {len(self.reference_line.waypoints)}'
             )
 
         # TODO: move to `duplication` method for waypoints near the tail
