@@ -1,7 +1,7 @@
 from typing import List, Union, Iterable
 import numpy as np
 
-from common.io import build_object_by_config_from_registry
+from common import build_object_within_registry_from_config
 from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 
@@ -13,7 +13,7 @@ class DynamicsModelManager:
         self.dynamics_models = list()
         self.sampled_dynamics_Model = None
         for dynamics_model_config in dynamics_model_configs:
-            dynamics_model = build_object_by_config_from_registry(DYNAMICS_MODELS, dynamics_model_config)
+            dynamics_model = build_object_within_registry_from_config(DYNAMICS_MODELS, dynamics_model_config)
             self.dynamics_models.append(dynamics_model)
 
         self.probabilities = (1 / len(self.dynamics_models),) * len(self.dynamics_models)

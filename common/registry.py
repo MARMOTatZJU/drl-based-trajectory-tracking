@@ -1,6 +1,8 @@
-from typing import Dict, Any
+from typing import Dict, Any, override
 from copy import deepcopy
 import logging
+
+from frozendict import frozendict
 
 
 def _register_generic(
@@ -58,10 +60,26 @@ class Registry(dict):
 
         return module
 
+    @override
+    def __getitem__(self, name: str) -> object:
+        if name not in self:
+            raise ValueError(f'Object {name} does not exist')
+
+        return super().__getitem__(name)
+
+    def register_from_python_module(self, module: object):
+        self.name = module.__name__
+        for k, v in module.__dict__.items():
+            if k.startswith('__'):
+                continue
+            self[k] = v
+
+        return module
+
 
 def build_object_within_registry_from_config(
     registry: Registry,
-    config: Dict,
+    config: Dict[str, Any]=frozendict(),  # TODO: replace with Python built-in static mapping object
     **kwargs,
 ) -> Any:
     """Builder function to build object within a registry from config.
@@ -86,6 +104,8 @@ def build_object_within_registry_from_config(
         **kwargs: key-word arguments to be passed to the retrieved class function
     """
     config = deepcopy(config)
+    config = dict(**config)
+    kwargs = deepcopy(kwargs)
     config.update(kwargs)
     class_name = config.pop('type')
     obj = registry[class_name](**config)
