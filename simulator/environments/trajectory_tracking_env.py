@@ -95,6 +95,7 @@ class TrajectoryTrackingEnv(gym.Env):
 
         # TODO: decide whether keep a handler to the sampled dynamics model in env object
         sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
+        self.env_info.episode.dynamics_model.type = type(sampled_dynamics_model).__name__
 
         tracking_length = random.randint(
             self.env_info.hyper_parameter.tracking_length_lb,

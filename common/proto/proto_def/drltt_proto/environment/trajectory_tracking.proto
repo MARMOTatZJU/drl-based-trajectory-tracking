@@ -19,9 +19,10 @@ message TrajectoryTrackingHyperParameter {
 }
 
 message DynamicsModelData {
-    repeated State states = 1;
-    repeated Action actions = 2;
-    optional HyperParameter hyper_parameter = 3;
+    optional string type = 1;
+    repeated State states = 2;
+    repeated Action actions = 3;
+    optional HyperParameter hyper_parameter = 4;
 }
 
 message TrajectoryTrackingEpisode {
