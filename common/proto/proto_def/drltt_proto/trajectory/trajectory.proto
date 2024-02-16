@@ -1,6 +1,7 @@
 syntax = "proto3";
 
-import "drltt_proto/dynamics_model/bicycle_model.proto";
+import "drltt_proto/dynamics_model/state.proto";
+import "drltt_proto/dynamics_model/action.proto";
 
 package drl_based_trajectory_tracking;
 
@@ -14,8 +15,8 @@ message ReferenceLine {
 }
 
 message TrajectoryWaypoint {
-    optional BicycleModelState state = 1;
-    optional BicycleModelAction action = 2;
+    optional State state = 1;
+    optional Action action = 2;
 }
 
 message Trajectory {

@@ -12,7 +12,6 @@ from . import ENVIRONMENTS
 from simulator import DTYPE
 from simulator.dynamics_models import (
     BaseDynamicsModel,
-    BicycleModel,
     DynamicsModelManager,
 )  # TODO (yinda): resolve this hard-code
 from simulator.trajectory.random_walk import random_walk

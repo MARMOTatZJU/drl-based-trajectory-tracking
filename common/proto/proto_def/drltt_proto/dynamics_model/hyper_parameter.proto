@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package drl_based_trajectory_tracking;
+
+message HyperParameter {
+    optional BicycleModelHyperParameter bicycle_model = 1;
+}
+
+message BicycleModelHyperParameter {
+    optional float length = 1;
+    optional float front_overhang = 2;
+    optional float rear_overhang = 3;
+    optional float wheelbase = 4;
+    optional float width = 5;
+    optional float frontwheel_to_CoG = 6;
+    optional float rearwheel_to_CoG = 7;
+    repeated float action_space_lb = 8;
+    repeated float action_space_ub = 9;
+}

@@ -8,7 +8,6 @@ from gym.spaces import Space
 
 
 from drltt_proto.trajectory.trajectory_pb2 import ReferenceLineWaypoint, ReferenceLine, TrajectoryWaypoint, Trajectory
-from drltt_proto.dynamics_model.bicycle_model_pb2 import BicycleModelState, BicycleModelAction
 
 
 def random_walk(
@@ -43,12 +42,8 @@ def random_walk(
         reference_line.waypoints.append(ref_wpt)
 
         trj_wpt = TrajectoryWaypoint()
-        trj_wpt.state.x = state[0]
-        trj_wpt.state.y = state[1]
-        trj_wpt.state.r = state[2]
-        trj_wpt.state.v = state[3]
-        trj_wpt.action.a = action[0]
-        trj_wpt.action.s = action[1]
+        trj_wpt.state.CopyFrom(dynamics_model.serialize_state(state))
+        trj_wpt.action.CopyFrom(dynamics_model.serialize_action(action))
         trajectory.waypoints.append(trj_wpt)
 
     return (reference_line, trajectory)

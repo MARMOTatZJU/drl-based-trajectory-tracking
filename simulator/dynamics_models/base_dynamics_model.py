@@ -1,4 +1,3 @@
-from typing import Union, Any
 from abc import ABC, abstractmethod
 from copy import deepcopy
 
@@ -8,6 +7,10 @@ from gym.spaces import Space
 
 from drltt_proto.dynamics_model.basics_pb2 import BodyState
 from simulator import DTYPE
+
+from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter
+from drltt_proto.dynamics_model.state_pb2 import State
+from drltt_proto.dynamics_model.action_pb2 import Action
 
 
 class BaseDynamicsModel(ABC):
@@ -19,7 +22,8 @@ class BaseDynamicsModel(ABC):
         state: vectorized state of the dynamics model
     """
 
-    state: np.ndarray
+    hyper_parameters: HyperParameter
+    state: State
 
     def __init__(
         self,
@@ -41,22 +45,22 @@ class BaseDynamicsModel(ABC):
 
     @classmethod
     @abstractmethod
-    def serialize_state(cls, state: np.ndarray) -> Any:
+    def serialize_state(cls, state: np.ndarray) -> State:
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def deserialize_state(cls, state: Any) -> np.ndarray:
+    def deserialize_state(cls, state: State) -> np.ndarray:
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def serialize_action(cls, action: np.ndarray) -> Any:
+    def serialize_action(cls, action: np.ndarray) -> Action:
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def deserialize_action(cls, action: Any) -> np.ndarray:
+    def deserialize_action(cls, action: Action) -> np.ndarray:
         raise NotImplementedError
 
     @abstractmethod
@@ -68,7 +72,7 @@ class BaseDynamicsModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def compute_next_state(self, action: np.ndarray, delta_t: float) -> Any:
+    def compute_next_state(self, action: np.ndarray, delta_t: float) -> State:
         """
         Proceed a step forward by a specified time interval
             **without** update of internal state
