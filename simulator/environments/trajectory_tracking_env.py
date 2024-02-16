@@ -89,6 +89,9 @@ class TrajectoryTrackingEnv(gym.Env):
         extra_info = dict()
 
         self.env_info.episode.step_index = 0
+        del self.env_info.episode.dynamics_model.states[:]
+        del self.env_info.episode.dynamics_model.actions[:]
+        del self.env_info.episode.rewards[:]
 
         # TODO: decide whether keep a handler to the sampled dynamics model in env object
         sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
@@ -153,7 +156,7 @@ class TrajectoryTrackingEnv(gym.Env):
         """
         TODO: verify this function
         """
-        extra_info = dict()
+        extra_info = dict()  # WARNING: `extra_info` can not store large object
 
         current_dynamics_model = self.get_current_dynamics_model()
 
@@ -172,6 +175,13 @@ class TrajectoryTrackingEnv(gym.Env):
         # sum up
         scalar_reward = sum(all_rewards.values())
         extra_info['all_rewards'] = all_rewards
+
+        self.env_info.episode.dynamics_model.states.append(deepcopy(current_dynamics_model.get_state_proto()))
+        self.env_info.episode.dynamics_model.actions.append(deepcopy(current_dynamics_model.serialize_action(action)))
+        self.env_info.episode.rewards.append(deepcopy(scalar_reward))
+
+        # ABOVE: step t
+        # BELLOW: step t+1
 
         # update state
         current_dynamics_model.step(action, delta_t=self.env_info.hyper_parameter.step_interval)

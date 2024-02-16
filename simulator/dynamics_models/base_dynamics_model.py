@@ -36,6 +36,9 @@ class BaseDynamicsModel(ABC):
     def get_state(self) -> np.ndarray:
         return self.deserialize_state(self.state)
 
+    def get_state_proto(self) -> np.ndarray:
+        return self.state
+
     @abstractmethod
     def get_body_state_proto(self) -> BodyState:
         raise NotImplementedError
