@@ -23,5 +23,6 @@ def test_train_with_sb3():
         checkpoint_file='',
     )
 
+
 if __name__ == '__main__':
     test_train_with_sb3()

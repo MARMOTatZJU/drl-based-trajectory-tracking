@@ -14,11 +14,11 @@ SB3_MODULES = Registry().register_from_python_module(stable_baselines3)
 
 
 def train_with_sb3(
-        environment: gym.Env,
-        model_config: Dict,
-        learning_config: Dict,
-        checkpoint_file: str='',
-        ) -> Union[BaseAlgorithm, None]:
+    environment: gym.Env,
+    model_config: Dict,
+    learning_config: Dict,
+    checkpoint_file: str = '',
+) -> Union[BaseAlgorithm, None]:
     if os.path.exists(checkpoint_file):
         logging.warn(f'Training aborted as checkpoint exists: {checkpoint_file}')
         return None
@@ -31,7 +31,7 @@ def train_with_sb3(
     )
     # add environment object
     model_config['env'] = environment
-    
+
     # build model object
     model: BaseAlgorithm = build_object_within_registry_from_config(SB3_MODULES, model_config)
 

@@ -211,9 +211,10 @@ class BicycleModel(BaseDynamicsModel):
         """Get action space"""
         lb = np.array(self.hyper_parameters.action_space_lb, dtype=DTYPE)
         ub = np.array(self.hyper_parameters.action_space_ub, dtype=DTYPE)
-        assert (
-            lb.shape == ub.shape
-        ), f'In `hyper_parameters`, action_space_lb\'s shape {lb.shape} does not match action_space_ub\'s shape {ub.shape}'
+        assert lb.shape == ub.shape, (
+            f'In `hyper_parameters`, action_space_lb\'s shape {lb.shape} does not match action_space_ub\'s shape'
+            f' {ub.shape}'
+        )
         action_space = gym.spaces.Box(
             low=lb,
             high=ub,

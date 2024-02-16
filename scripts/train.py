@@ -17,6 +17,7 @@ def parse_args():
 
     return args
 
+
 def main(args):
     config = load_config_from_yaml(args.config_file)
     config = convert_list_to_tuple_within_dict(config)

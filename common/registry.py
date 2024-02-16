@@ -81,7 +81,7 @@ class Registry(dict):
 
 def build_object_within_registry_from_config(
     registry: Registry,
-    config: Dict[str, Any]=frozendict(),  # TODO: replace with Python built-in static mapping object
+    config: Dict[str, Any] = frozendict(),  # TODO: replace with Python built-in static mapping object
     **kwargs,
 ) -> Any:
     """Builder function to build object within a registry from config.

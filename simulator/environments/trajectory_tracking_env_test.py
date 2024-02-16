@@ -1,11 +1,9 @@
-
 from gym import Env
 
 from common import build_object_within_registry_from_config
 from common.io import load_config_from_yaml, convert_list_to_tuple_within_dict
 from simulator import SAMPLE_CONFIG_PATH
 from simulator.environments import ENVIRONMENTS
-
 
 
 def test_trajectory_tracking_env():

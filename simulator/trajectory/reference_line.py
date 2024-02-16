@@ -54,7 +54,7 @@ class ReferenceLineManager:
         if reference_line is not None:
             self.set_reference_line(reference_line)
 
-        if index + self.n_observation_steps >= len(self.reference_line.waypoints)+1:
+        if index + self.n_observation_steps >= len(self.reference_line.waypoints) + 1:
             raise ValueError(
                 f'Getting observation from index {index} of length {self.n_observation_steps} will cause out-of-bound'
                 f' error. The length of reference line is {len(self.reference_line.waypoints)}'

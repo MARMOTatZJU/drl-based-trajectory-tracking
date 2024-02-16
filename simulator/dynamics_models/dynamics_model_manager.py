@@ -7,9 +7,9 @@ from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 class DynamicsModelManager:
     dynamics_models: List[BaseDynamicsModel]
-    sampled_dynamics_model: Union[BaseDynamicsModel, None]=None
+    sampled_dynamics_model: Union[BaseDynamicsModel, None] = None
 
-    def __init__(self, dynamics_model_configs: Iterable=tuple()):
+    def __init__(self, dynamics_model_configs: Iterable = tuple()):
         self.dynamics_models = list()
         self.sampled_dynamics_model = None
         for dynamics_model_config in dynamics_model_configs:

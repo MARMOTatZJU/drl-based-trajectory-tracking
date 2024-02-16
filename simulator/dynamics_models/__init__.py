@@ -7,7 +7,6 @@ from .dynamics_model_manager import DynamicsModelManager
 from .bicycle_model import BicycleModel
 
 
-
 __all__ = [
     'BaseDynamicsModel',
     'BicycleModel',

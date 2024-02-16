@@ -34,7 +34,9 @@ class ObservationManager:
         return observation_space
 
     def get_observation(self, index: int, body_state: BodyState):
-        reference_line_observation = self.reference_line_manager.get_observation_by_index(index=index, body_state=body_state)
+        reference_line_observation = self.reference_line_manager.get_observation_by_index(
+            index=index, body_state=body_state
+        )
         state_observation = self.dynamics_model_manager.get_sampled_dynamics_model().get_state_observation()
         dynamics_model_observation = (
             self.dynamics_model_manager.get_sampled_dynamics_model().get_dynamics_model_observation()

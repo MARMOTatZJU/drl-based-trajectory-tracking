@@ -24,10 +24,10 @@ from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEn
 @ENVIRONMENTS.register
 class TrajectoryTrackingEnv(gym.Env):
     # dynamics_model: BaseDynamicsModel
-    state_space: Space=None
-    init_state_space: Space=None
-    action_space: Space=None  # required by learning algorithm
-    observation_space: Space=None  # required by learning algorithm
+    state_space: Space = None
+    init_state_space: Space = None
+    action_space: Space = None  # required by learning algorithm
+    observation_space: Space = None  # required by learning algorithm
 
     def __init__(
         self,
@@ -110,11 +110,11 @@ class TrajectoryTrackingEnv(gym.Env):
         self.reference_line_manager.set_reference_line(reference_line)
 
         # TODO: use closest waypoint assignment
-        
+
         observation = self.observation_manager.get_observation(
             index=self.env_info.runtime_data.step_index,
             body_state=sampled_dynamics_model.get_body_state_proto(),
-            )
+        )
         # TODO: verify interface: gym==0.21 or gym==0.26
         # reference: https://gymnasium.farama.org/content/migration-guide/
 
