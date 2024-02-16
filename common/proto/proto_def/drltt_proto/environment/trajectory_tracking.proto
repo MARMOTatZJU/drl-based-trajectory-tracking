@@ -7,19 +7,6 @@ import "drltt_proto/trajectory/trajectory.proto";
 
 package drl_based_trajectory_tracking;
 
-message DynamicsModelData {
-    optional State state = 1;
-    optional Action action = 2;
-    optional HyperParameter hyper_parameter = 3;
-}
-
-message TrajectoryTrackingFrame {
-    optional int32 step_index = 1;
-    optional DynamicsModelData dynamics_model = 2;
-    optional ReferenceLine reference_line = 3;
-    optional float reward = 4;
-}
-
 message TrajectoryTrackingHyperParameter {
     optional float step_interval = 1;
     repeated float init_state_lb = 2;
@@ -31,14 +18,23 @@ message TrajectoryTrackingHyperParameter {
     optional int32 tracking_length_ub = 7;
 }
 
-message TrajectoryTrackingRuntimeData {
+message DynamicsModelData {
+    repeated State states = 1;
+    repeated Action actions = 2;
+    optional HyperParameter hyper_parameter = 3;
+}
+
+message TrajectoryTrackingEpisode {
     optional int32 step_index = 1;
-    optional int32 tracking_length = 2;
+    optional ReferenceLine reference_line = 2;
+    optional int32 tracking_length = 3;
+    DynamicsModelData dynamics_model = 4;
+    repeated float rewards = 5;
+
 }
 
 message TrajectoryTrackingEnvironment {
     optional TrajectoryTrackingHyperParameter hyper_parameter = 1;
-    optional TrajectoryTrackingRuntimeData runtime_data = 2;
-    // repeated TrajectoryTrackingFrame frames = 3;
+    optional TrajectoryTrackingEpisode episode = 2;
     // index of current step
 }

@@ -88,7 +88,7 @@ class TrajectoryTrackingEnv(gym.Env):
     ):
         extra_info = dict()
 
-        self.env_info.runtime_data.step_index = 0
+        self.env_info.episode.step_index = 0
 
         # TODO: decide whether keep a handler to the sampled dynamics model in env object
         sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
@@ -97,7 +97,7 @@ class TrajectoryTrackingEnv(gym.Env):
             self.env_info.hyper_parameter.tracking_length_lb,
             self.env_info.hyper_parameter.tracking_length_ub,
         )
-        self.env_info.runtime_data.tracking_length = tracking_length
+        self.env_info.episode.tracking_length = tracking_length
 
         init_state = self.init_state_space.sample()
         sampled_dynamics_model.set_state(init_state)
@@ -112,7 +112,7 @@ class TrajectoryTrackingEnv(gym.Env):
         # TODO: use closest waypoint assignment
 
         observation = self.observation_manager.get_observation(
-            index=self.env_info.runtime_data.step_index,
+            index=self.env_info.episode.step_index,
             body_state=sampled_dynamics_model.get_body_state_proto(),
         )
         # TODO: verify interface: gym==0.21 or gym==0.26
@@ -161,7 +161,7 @@ class TrajectoryTrackingEnv(gym.Env):
         all_rewards = dict()
         # tracking
         state_vec: np.ndarray = current_dynamics_model.get_state()
-        waypoint_vec = self.reference_line_manager.get_reference_line_waypoint(self.env_info.runtime_data.step_index)
+        waypoint_vec = self.reference_line_manager.get_reference_line_waypoint(self.env_info.episode.step_index)
         dist = np.linalg.norm(state_vec[:2] - waypoint_vec)
         all_rewards['tracking'] = -dist
         # TODO: add heading error
@@ -175,13 +175,13 @@ class TrajectoryTrackingEnv(gym.Env):
 
         # update state
         current_dynamics_model.step(action, delta_t=self.env_info.hyper_parameter.step_interval)
-        self.env_info.runtime_data.step_index += 1
+        self.env_info.episode.step_index += 1
         observation = self.observation_manager.get_observation(
-            index=self.env_info.runtime_data.step_index,
+            index=self.env_info.episode.step_index,
             body_state=current_dynamics_model.get_body_state_proto(),
         )
 
-        terminated: bool = self.env_info.runtime_data.step_index >= self.env_info.runtime_data.tracking_length
+        terminated: bool = self.env_info.episode.step_index >= self.env_info.episode.tracking_length
         truncated: bool = False
 
         # TODO: verify interface: gym==0.21 or gym==0.26
