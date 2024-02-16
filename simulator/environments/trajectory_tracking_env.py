@@ -35,8 +35,6 @@ class TrajectoryTrackingEnv(gym.Env):
         tracking_length_ub: int,
         init_state_lb: List[Union[float, None]],
         init_state_ub: List[Union[float, None]],
-        # action_space_lb: List[Union[float, None]],
-        # action_space_ub: List[Union[float, None]],
         n_observation_steps: int,
         dynamics_model_configs: List[Dict[str, Any]],
         # reward_configs: Union[Dict[str, float], None] = None,
@@ -60,8 +58,6 @@ class TrajectoryTrackingEnv(gym.Env):
         self.env_info.hyper_parameters.tracking_length_ub = tracking_length_ub
         self.env_info.hyper_parameters.init_state_lb.extend(init_state_lb)
         self.env_info.hyper_parameters.init_state_ub.extend(init_state_ub)
-        # self.env_info.hyper_parameters.action_space_lb.extend(action_space_lb)
-        # self.env_info.hyper_parameters.action_space_ub.extend(action_space_ub)
         self.env_info.hyper_parameters.n_observation_steps = n_observation_steps
 
         # build manager classes
@@ -156,7 +152,7 @@ class TrajectoryTrackingEnv(gym.Env):
 
         current_dynamics_model = self.get_current_dynamics_model()
 
-        # TODO compute reward
+        # TODO configurable reward weighting
         all_rewards = dict()
         # tracking
         state_vec: np.ndarray = current_dynamics_model.get_state()

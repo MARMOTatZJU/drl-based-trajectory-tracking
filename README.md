@@ -25,10 +25,11 @@ python scripts/train.py \
 
 ### System Design
 
-- `TrajectoryTrackingEnv`
-    - `ObservationManager`
-        - `ReferenceLineManager`
-        - `DynamicsModelManager`
+- SB3-BaseAlgorithm
+  - `TrajectoryTrackingEnv`
+      - `ObservationManager`
+          - `ReferenceLineManager`
+          - `DynamicsModelManager`
 
 ### Formatting
 
