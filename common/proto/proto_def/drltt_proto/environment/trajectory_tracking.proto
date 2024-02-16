@@ -25,8 +25,8 @@ message TrajectoryTrackingHyperParameter {
     repeated float init_state_lb = 2;
     repeated float init_state_ub = 3;
     optional int32 n_observation_steps = 4;
-    // TODO: set it
-    repeated HyperParameter dynamics_model_hyper_parameters = 5;
+    // TODO: set it in `TrajectoryTrackingEnv` class
+    repeated HyperParameter dynamics_model_hyper_parameter = 5;
     optional int32 tracking_length_lb = 6;
     optional int32 tracking_length_ub = 7;
 }
@@ -37,8 +37,8 @@ message TrajectoryTrackingRuntimeData {
 }
 
 message TrajectoryTrackingEnvironment {
-    optional TrajectoryTrackingHyperParameter hyper_parameters = 1;
+    optional TrajectoryTrackingHyperParameter hyper_parameter = 1;
     optional TrajectoryTrackingRuntimeData runtime_data = 2;
-    repeated TrajectoryTrackingFrame frames = 3;
+    // repeated TrajectoryTrackingFrame frames = 3;
     // index of current step
 }

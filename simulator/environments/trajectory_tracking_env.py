@@ -17,7 +17,7 @@ from simulator.dynamics_models import (
 from simulator.trajectory.random_walk import random_walk
 from simulator.trajectory.reference_line import ReferenceLineManager
 from simulator.observation.observation_manager import ObservationManager
-from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEnvironment
+from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEnvironment, TrajectoryTrackingHyperParameter
 
 
 @ENVIRONMENTS.register
@@ -27,20 +27,12 @@ class TrajectoryTrackingEnv(gym.Env):
     init_state_space: Space = None
     action_space: Space = None  # required by learning algorithm
     observation_space: Space = None  # required by learning algorithm
+    env_info: TrajectoryTrackingEnvironment
 
     def __init__(
         self,
-        step_interval: float,
-        tracking_length_lb: int,
-        tracking_length_ub: int,
-        init_state_lb: List[Union[float, None]],
-        init_state_ub: List[Union[float, None]],
-        n_observation_steps: int,
         dynamics_model_configs: List[Dict[str, Any]],
-        # reward_configs: Union[Dict[str, float], None] = None,
-        # action_norm_reward_dims: Union[List[int], None] = None,
-        # action_norm_reward_weights: Union[List[float], float, None] = None,
-        # action_norm_reward_powers: Union[List[int], int, None] = 2,
+        **kwargs,
     ):
         """
         Args:
@@ -52,17 +44,12 @@ class TrajectoryTrackingEnv(gym.Env):
             reward_configs: config of all rewards
         """
         # parse hyper-parameters
-        self.env_info: TrajectoryTrackingEnvironment = TrajectoryTrackingEnvironment()
-        self.env_info.hyper_parameters.step_interval = step_interval
-        self.env_info.hyper_parameters.tracking_length_lb = tracking_length_lb
-        self.env_info.hyper_parameters.tracking_length_ub = tracking_length_ub
-        self.env_info.hyper_parameters.init_state_lb.extend(init_state_lb)
-        self.env_info.hyper_parameters.init_state_ub.extend(init_state_ub)
-        self.env_info.hyper_parameters.n_observation_steps = n_observation_steps
+        self.env_info = TrajectoryTrackingEnvironment()
+        self.parse_hyper_parameter(self.env_info.hyper_parameter, **kwargs)
 
         # build manager classes
         self.reference_line_manager = ReferenceLineManager(
-            n_observation_steps=self.env_info.hyper_parameters.n_observation_steps,
+            n_observation_steps=self.env_info.hyper_parameter.n_observation_steps,
         )
         self.dynamics_model_manager = DynamicsModelManager(
             dynamics_model_configs=dynamics_model_configs,
@@ -74,6 +61,24 @@ class TrajectoryTrackingEnv(gym.Env):
 
         # build spaces
         self._build_spaces()
+
+    @classmethod
+    def parse_hyper_parameter(
+        cls,
+        hyper_parameter: TrajectoryTrackingHyperParameter,
+        step_interval: float,
+        tracking_length_lb: int,
+        tracking_length_ub: int,
+        init_state_lb: List[Union[float, None]],
+        init_state_ub: List[Union[float, None]],
+        n_observation_steps: int,
+    ):
+        hyper_parameter.step_interval = step_interval
+        hyper_parameter.tracking_length_lb = tracking_length_lb
+        hyper_parameter.tracking_length_ub = tracking_length_ub
+        hyper_parameter.init_state_lb.extend(init_state_lb)
+        hyper_parameter.init_state_ub.extend(init_state_ub)
+        hyper_parameter.n_observation_steps = n_observation_steps
 
     @override
     def reset(
@@ -89,8 +94,8 @@ class TrajectoryTrackingEnv(gym.Env):
         sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
 
         tracking_length = random.randint(
-            self.env_info.hyper_parameters.tracking_length_lb,
-            self.env_info.hyper_parameters.tracking_length_ub,
+            self.env_info.hyper_parameter.tracking_length_lb,
+            self.env_info.hyper_parameter.tracking_length_ub,
         )
         self.env_info.runtime_data.tracking_length = tracking_length
 
@@ -99,8 +104,8 @@ class TrajectoryTrackingEnv(gym.Env):
         reference_dynamics_model = deepcopy(sampled_dynamics_model)
         reference_line, trajectory = random_walk(
             dynamics_model=reference_dynamics_model,
-            step_interval=self.env_info.hyper_parameters.step_interval,
-            walk_length=tracking_length + self.env_info.hyper_parameters.n_observation_steps,  # TODO: verify the number
+            step_interval=self.env_info.hyper_parameter.step_interval,
+            walk_length=tracking_length + self.env_info.hyper_parameter.n_observation_steps,  # TODO: verify the number
         )
         self.reference_line_manager.set_reference_line(reference_line)
 
@@ -135,8 +140,8 @@ class TrajectoryTrackingEnv(gym.Env):
             self.state_space = self.dynamics_model_manager.get_sampled_dynamics_model().get_state_space()
         if self.init_state_space is None:
             self.init_state_space = gym.spaces.Box(
-                low=np.array((self.env_info.hyper_parameters.init_state_lb), dtype=DTYPE),
-                high=np.array((self.env_info.hyper_parameters.init_state_ub), dtype=DTYPE),
+                low=np.array((self.env_info.hyper_parameter.init_state_lb), dtype=DTYPE),
+                high=np.array((self.env_info.hyper_parameter.init_state_ub), dtype=DTYPE),
                 dtype=DTYPE,
             )
 
@@ -169,7 +174,7 @@ class TrajectoryTrackingEnv(gym.Env):
         extra_info['all_rewards'] = all_rewards
 
         # update state
-        current_dynamics_model.step(action, delta_t=self.env_info.hyper_parameters.step_interval)
+        current_dynamics_model.step(action, delta_t=self.env_info.hyper_parameter.step_interval)
         self.env_info.runtime_data.step_index += 1
         observation = self.observation_manager.get_observation(
             index=self.env_info.runtime_data.step_index,

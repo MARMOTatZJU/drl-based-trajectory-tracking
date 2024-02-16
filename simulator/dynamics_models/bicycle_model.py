@@ -37,7 +37,7 @@ class BicycleModel(BaseDynamicsModel):
         self.hyper_parameter = HyperParameter()
         if hyper_parameter is None:
             # parse from key-word arguments
-            self.parse_hyper_parameters(self.hyper_parameter, **kwargs)
+            self.parse_hyper_parameter(self.hyper_parameter, **kwargs)
         else:
             # set parsed hyper-parameter
             self.hyper_parameter = deepcopy(hyper_parameter)
@@ -47,9 +47,9 @@ class BicycleModel(BaseDynamicsModel):
         super().__init__(**kwargs)
 
     @classmethod
-    def parse_hyper_parameters(
+    def parse_hyper_parameter(
         cls,
-        hyper_parameter: Union[HyperParameter, None] = None,
+        hyper_parameter: HyperParameter = None,
         front_overhang: float = 0.0,
         wheelbase: float = 0.0,
         rear_overhang: float = 0.0,
