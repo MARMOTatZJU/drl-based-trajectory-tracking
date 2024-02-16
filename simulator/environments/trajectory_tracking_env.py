@@ -163,12 +163,12 @@ class TrajectoryTrackingEnv(gym.Env):
         state_vec: np.ndarray = current_dynamics_model.get_state()
         waypoint_vec = self.reference_line_manager.get_reference_line_waypoint(self.env_info.runtime_data.step_index)
         dist = np.linalg.norm(state_vec[:2] - waypoint_vec)
-        # TODO: add heading error
         all_rewards['tracking'] = -dist
+        # TODO: add heading error
         # action
         action_space = current_dynamics_model.get_action_space()
         normalized_action = (action - action_space.low) / (action_space.high - action_space.low)
-        all_rewards['action'] = -np.linalg.norm(normalized_action)
+        all_rewards['action'] = -(normalized_action**2).sum()
         # sum up
         scalar_reward = sum(all_rewards.values())
         extra_info['all_rewards'] = all_rewards
