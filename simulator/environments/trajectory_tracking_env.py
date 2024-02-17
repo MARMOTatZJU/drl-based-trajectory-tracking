@@ -8,6 +8,7 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
+from common.gym_helper import scale_action
 from . import ENVIRONMENTS
 from simulator import DTYPE
 from simulator.dynamics_models import (
@@ -173,10 +174,7 @@ class TrajectoryTrackingEnv(gym.Env):
         all_rewards['tracking'] = -dist
         # TODO: add heading error
         # action
-        action_space = current_dynamics_model.get_action_space()
-        scaled_action = (
-            2 * (action - action_space.low) / (action_space.high - action_space.low) - 1
-        )  # scaled_action \in [-1, +1]
+        scaled_action = scale_action(action, current_dynamics_model.get_action_space())
 
         all_rewards['action'] = -(scaled_action**2).sum()
         # sum up
