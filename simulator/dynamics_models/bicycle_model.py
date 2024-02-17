@@ -22,7 +22,6 @@ class BicycleModel(BaseDynamicsModel):
     Suitable for vehicle/bicycle kinematics
     """
 
-
     def __init__(
         self,
         hyper_parameter: Union[HyperParameter, None] = None,

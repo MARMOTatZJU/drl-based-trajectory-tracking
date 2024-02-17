@@ -17,7 +17,10 @@ from simulator.dynamics_models import (
 from simulator.trajectory.random_walk import random_walk
 from simulator.trajectory.reference_line import ReferenceLineManager
 from simulator.observation.observation_manager import ObservationManager
-from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEnvironment, TrajectoryTrackingHyperParameter
+from drltt_proto.environment.trajectory_tracking_pb2 import (
+    TrajectoryTrackingEnvironment,
+    TrajectoryTrackingHyperParameter,
+)
 
 
 @ENVIRONMENTS.register
