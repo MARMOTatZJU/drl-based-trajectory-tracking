@@ -174,8 +174,11 @@ class TrajectoryTrackingEnv(gym.Env):
         # TODO: add heading error
         # action
         action_space = current_dynamics_model.get_action_space()
-        normalized_action = (action - action_space.low) / (action_space.high - action_space.low)
-        all_rewards['action'] = -(normalized_action**2).sum()
+        scaled_action = (
+            2 * (action - action_space.low) / (action_space.high - action_space.low) - 1
+        )  # scaled_action \in [-1, +1]
+
+        all_rewards['action'] = -(scaled_action**2).sum()
         # sum up
         scalar_reward = sum(all_rewards.values())
         extra_info['all_rewards'] = all_rewards
