@@ -58,3 +58,7 @@ model:
 learning:
     total_timesteps: 3_000_000
     log_interval: 10
+
+evaluation:
+  n_episodes: 200
+  compute_metrics_name: "compute_bicycle_model_metrics"

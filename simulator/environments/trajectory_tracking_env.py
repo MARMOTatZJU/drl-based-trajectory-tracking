@@ -21,6 +21,7 @@ from simulator.observation.observation_manager import ObservationManager
 from drltt_proto.environment.trajectory_tracking_pb2 import (
     TrajectoryTrackingEnvironment,
     TrajectoryTrackingHyperParameter,
+    TrajectoryTrackingEpisode,
 )
 
 
@@ -92,10 +93,11 @@ class TrajectoryTrackingEnv(gym.Env):
     ):
         extra_info = dict()
 
+        # clearn data in old episode
+        self.env_info.episode.Clear()
+        # reset data in old episode
         self.env_info.episode.step_index = 0
-        del self.env_info.episode.dynamics_model.states[:]
-        del self.env_info.episode.dynamics_model.actions[:]
-        del self.env_info.episode.rewards[:]
+        self.env_info.episode.hyper_parameter.CopyFrom(self.env_info.hyper_parameter)
 
         # TODO: decide whether keep a handler to the sampled dynamics model in env object
         sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
@@ -116,6 +118,7 @@ class TrajectoryTrackingEnv(gym.Env):
             walk_length=tracking_length + self.env_info.hyper_parameter.n_observation_steps,  # TODO: verify the number
         )
         self.reference_line_manager.set_reference_line(reference_line)
+        self.env_info.episode.reference_line.CopyFrom(reference_line)
 
         # TODO: use closest waypoint assignment
 
@@ -204,5 +207,13 @@ class TrajectoryTrackingEnv(gym.Env):
 
         # return observation, scalar_reward, terminated, truncated, extra_info
         return observation, scalar_reward, terminated, extra_info
+
+    def export_episode_data(
+        self,
+    ) -> TrajectoryTrackingEpisode:
+        episode_data = TrajectoryTrackingEpisode()
+        episode_data.CopyFrom(self.env_info.episode)
+
+        return episode_data
 
     # TODO: rendering

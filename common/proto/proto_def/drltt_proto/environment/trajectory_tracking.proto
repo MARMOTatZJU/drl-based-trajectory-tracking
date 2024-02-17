@@ -27,11 +27,11 @@ message DynamicsModelData {
 
 message TrajectoryTrackingEpisode {
     optional int32 step_index = 1;
-    optional ReferenceLine reference_line = 2;
-    optional int32 tracking_length = 3;
-    DynamicsModelData dynamics_model = 4;
-    repeated float rewards = 5;
-
+    optional TrajectoryTrackingHyperParameter hyper_parameter = 2;
+    optional ReferenceLine reference_line = 3;
+    optional int32 tracking_length = 4;
+    DynamicsModelData dynamics_model = 5;
+    repeated float rewards = 6;
 }
 
 message TrajectoryTrackingEnvironment {

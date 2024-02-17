@@ -1,6 +1,8 @@
 from typing import List, Tuple, Dict, Mapping
 import os
 import logging
+import random
+import string
 
 import yaml
 
@@ -44,3 +46,8 @@ def convert_list_to_tuple_within_dict(
             continue
 
     return dictionary
+
+
+def generate_random_string(n):
+    """Generate a string with characters randomly choosen"""
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=n))
