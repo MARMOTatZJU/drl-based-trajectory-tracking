@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package drl_based_trajectory_tracking;
+
+
+message Action {
+    optional BicycleModelAction bicycle_model = 1;
+}
+
+
+message BicycleModelAction {
+    // acceleration in [m/s^2]
+    optional float a = 1;
+    // steering angle in [rad]
+    optional float s = 2;
+}

@@ -168,3 +168,6 @@ work_dirs/
 *.png
 *.mp4
 *.zip
+
+# protobuf
+common/proto/proto_gen_*/**/*

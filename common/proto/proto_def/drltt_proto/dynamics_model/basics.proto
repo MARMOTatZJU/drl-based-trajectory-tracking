@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package drl_based_trajectory_tracking;
+
+// State coordinates in fixed space frame
+message BodyState {
+    // x-coordinate in [m]
+    optional float x = 1;
+    // y-coordinate in [m]
+    optional float y = 2;
+    // heading in [rad]
+    optional float r = 3;
+}
