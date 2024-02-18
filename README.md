@@ -46,3 +46,37 @@ This project utilizes *pytest* for testing. To launch testing, run in command li
 ```
 pytest
 ```
+
+
+### Contribute to Documentation
+
+```
+pip install -r requirements/pypi-doc.txt
+```
+
+Initialize Sphinx project
+
+```
+mkdir docs && cd docs
+sphinx-quickstart
+```
+
+Build html
+
+```
+cd build
+make html
+```
+
+Start http server on the remote side
+
+```
+cd build/html
+python m http.server 8080 -b localhost
+```
+
+Create a ssh tunneling on the local side, which forward connections/requests from local to remote (server)
+
+```
+ssh -L 8080:localhost:8080 remote-server
+```
