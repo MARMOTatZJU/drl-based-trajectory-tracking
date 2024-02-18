@@ -30,7 +30,7 @@ class BicycleModel(BaseDynamicsModel):
         """
         Args:
             hyper_parameters: hyper parameter of bicylce model
-                if protobuf-typed hyper-parameters is not provided, then parse arguments from **kwargs
+                if protobuf-typed hyper-parameters is not provided, then parse arguments from kwargs
                 if protobuf-typed hyper-parameters are provided, then assign them to the underlying `hyper_hyperparameters`
         """
         self.hyper_parameter = HyperParameter()

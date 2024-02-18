@@ -10,6 +10,8 @@ from drltt_proto.dynamics_model.basics_pb2 import BodyState
 
 
 class ReferenceLineManager:
+    """Manager for Reference Line"""
+
     reference_line: ReferenceLine
 
     def __init__(self, n_observation_steps: int, dtype=DTYPE):

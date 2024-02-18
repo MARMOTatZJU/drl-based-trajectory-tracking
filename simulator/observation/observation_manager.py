@@ -7,6 +7,8 @@ from simulator.trajectory.reference_line import ReferenceLineManager
 
 
 class ObservationManager:
+    """Manager for observation"""
+
     def __init__(
         self,
         reference_line_manager: ReferenceLineManager,

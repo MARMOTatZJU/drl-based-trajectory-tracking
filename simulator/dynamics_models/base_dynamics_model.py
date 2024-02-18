@@ -34,13 +34,27 @@ class BaseDynamicsModel(ABC):
             self.set_state(init_state)
 
     def get_state(self) -> np.ndarray:
+        """Get the state in `np.ndarray` (deserialized form)
+
+        Return:
+            state in `np.ndarray`
+        """
         return self.deserialize_state(self.state)
 
-    def get_state_proto(self) -> np.ndarray:
+    def get_state_proto(self) -> State:
+        """Get the state in proto (serialized form)
+
+        Returns: state in proto
+        """
         return self.state
 
     @abstractmethod
     def get_body_state_proto(self) -> BodyState:
+        """Return agent body's state
+
+        Return:
+            State of the agent body
+        """
         raise NotImplementedError
 
     def set_state(self, new_state: np.ndarray):

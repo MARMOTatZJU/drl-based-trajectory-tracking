@@ -6,6 +6,8 @@ from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 
 class DynamicsModelManager:
+    """Manager for Dynamics Models"""
+
     dynamics_models: List[BaseDynamicsModel]
     sampled_dynamics_model: Union[BaseDynamicsModel, None] = None
 

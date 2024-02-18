@@ -41,12 +41,7 @@ class TrajectoryTrackingEnv(gym.Env):
     ):
         """
         Args:
-            step_interval: step interval by which each step moves forward temporally
-            dynamics_model_configs: dynamics model's configs (to be sampled during training time)
-            init_state_lb: lower bound of state space
-            init_state_ub: upper bound of state space
-            n_observation_steps: number of the steps within the observation
-            reward_configs: config of all rewards
+            dynamics_model_configs: configurations of all dynamics models
         """
         # parse hyper-parameters
         self.env_info = TrajectoryTrackingEnvironment()
@@ -78,6 +73,16 @@ class TrajectoryTrackingEnv(gym.Env):
         init_state_ub: List[Union[float, None]],
         n_observation_steps: int,
     ):
+        """
+        Args:
+            hyper_parameter: destination of the parsed hyper-parameters
+            step_interval: step interval by which each step moves forward temporally
+            tracking_length_lb: lower bound of tracking length
+            tracking_length_ub: upper bound of tracking length
+            init_state_lb: lower bound of state space
+            init_state_ub: upper bound of state space
+            n_observation_steps: number of the steps within the observation
+        """
         hyper_parameter.step_interval = step_interval
         hyper_parameter.tracking_length_lb = tracking_length_lb
         hyper_parameter.tracking_length_ub = tracking_length_ub
@@ -88,9 +93,18 @@ class TrajectoryTrackingEnv(gym.Env):
     @override
     def reset(
         self,
-        seed: int = None,
-        init_state: np.ndarray = None,
+        init_state: Union[np.ndarray, None] = None,
     ):
+        """Reset environment for Trajectory Tracking
+
+        - Setup reference line
+        - Clear and replace self episode
+        - Randomly sample a dynamics model
+
+        Args:
+            init_state: specified initial state of dynamics model.
+                Default to `None` which denotes random sampling from pre-defined initial state space
+        """
         extra_info = dict()
 
         # clearn data in old episode
@@ -109,7 +123,8 @@ class TrajectoryTrackingEnv(gym.Env):
         )
         self.env_info.episode.tracking_length = tracking_length
 
-        init_state = self.init_state_space.sample()
+        if init_state is None:
+            init_state = self.init_state_space.sample()
         sampled_dynamics_model.set_state(init_state)
         reference_dynamics_model = deepcopy(sampled_dynamics_model)
         reference_line, trajectory = random_walk(
@@ -136,7 +151,7 @@ class TrajectoryTrackingEnv(gym.Env):
         self,
     ):
         """
-        Build spaces (observation / action / state / init_state / etc.)
+        Build spaces (observation/action/state/init_state / etc.)
 
         Dependency (class attributes needed to be set before):
         - self.env_info
@@ -162,7 +177,8 @@ class TrajectoryTrackingEnv(gym.Env):
     @override
     def step(self, action: np.ndarray):
         """
-        TODO: verify this function
+        Args:
+            action: action given to the environment to step the state
         """
         extra_info = dict()  # WARNING: `extra_info` can not store large object
 
@@ -211,6 +227,11 @@ class TrajectoryTrackingEnv(gym.Env):
     def export_episode_data(
         self,
     ) -> TrajectoryTrackingEpisode:
+        """Export episode data
+
+        Return:
+            Episode data in proto structure
+        """
         episode_data = TrajectoryTrackingEpisode()
         episode_data.CopyFrom(self.env_info.episode)
 

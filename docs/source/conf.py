@@ -1,3 +1,4 @@
+# fmt: off
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -5,10 +6,6 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-import os
-project_root_dir = os.path.realpath(f'{os.path.dirname(__file__)}/../..')  # hardcoded
-os.environ['PYTHONPATH'] = f'{project_root_dir}:{os.environ.get('PYTHONPATH', '')}'
 
 project = 'DRL-based Trajectory Tracking (DRLTT)'
 copyright = '2024, Yinda Xu, Lidong Yu'

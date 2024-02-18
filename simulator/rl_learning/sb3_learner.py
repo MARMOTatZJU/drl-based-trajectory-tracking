@@ -47,6 +47,7 @@ def train_with_sb3(
     learning_config: Dict,
     checkpoint_file: str = '',
 ) -> Union[BaseAlgorithm, None]:
+    """Training with Stable Baselines3"""
     if os.path.exists(checkpoint_file):
         logging.warn(f'Training aborted as checkpoint exists: {checkpoint_file}')
         return None
@@ -70,6 +71,7 @@ def eval_with_sb3(
     n_episodes: int,
     compute_metrics_name: str,
 ) -> Union[BaseAlgorithm, None]:
+    """Evaluate with Stable Baselines3"""
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
