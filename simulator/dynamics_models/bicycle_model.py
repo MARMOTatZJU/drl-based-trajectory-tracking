@@ -152,11 +152,6 @@ class BicycleModel(BaseDynamicsModel):
         return next_state
 
     @override
-    def step(self, action: np.ndarray, delta_t: float):
-        next_state = self.compute_next_state(action, delta_t)
-        self.state = next_state
-
-    @override
     def get_dynamics_model_observation(self) -> np.ndarray:
         hyper_parameter = self.hyper_parameter.bicycle_model
         observation = np.array(

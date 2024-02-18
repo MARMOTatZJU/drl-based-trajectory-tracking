@@ -66,13 +66,10 @@ class BaseDynamicsModel(ABC):
     def deserialize_action(cls, action: Action) -> np.ndarray:
         raise NotImplementedError
 
-    @abstractmethod
     def step(self, action: np.ndarray, delta_t: float):
-        """Step the model's state forward by a specified time interval
-
-        TODO: provide default implementation of `step` function (e.g. `step_without_update` + apply_delta_state)
-        """
-        raise NotImplementedError
+        """Step the model's state forward by a specified time interval"""
+        next_state = self.compute_next_state(action, delta_t)
+        self.state = next_state
 
     @abstractmethod
     def compute_next_state(self, action: np.ndarray, delta_t: float) -> State:
