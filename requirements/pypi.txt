@@ -1,3 +1,4 @@
+# common dependencies
 pytest
 numpy
 pandas
@@ -9,6 +10,7 @@ black==23.11.0
 PyYAML
 frozendict
 
+# deep reinforcement learning (DRL)-related
 torch
 torchvision
 gym>=0.26.2  # SB3 specifies a version of 0.21.0, which is not compatible with up-to-date version of SB3
