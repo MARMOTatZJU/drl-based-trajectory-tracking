@@ -15,8 +15,7 @@ def _register_generic(
 
 
 class Registry(dict):
-    r"""
-    A helper class for registering and managing modules
+    """A helper class for registering and managing modules
 
     >>> # build registry
     >>> REGISTRY_NAME = Registry(name='REGISTRY_NAME')
