@@ -14,13 +14,11 @@ from drltt_proto.dynamics_model.action_pb2 import Action
 
 
 class BaseDynamicsModel(ABC):
-    """Base class for dynamics models
-
-    Serve as definitions of dynamics/transition functions.
+    """Base class for dynamics models defining state/action space, dynamics/transition functions, and more.
 
     Attributes:
-        hyper_parameter: Hyper-parameter of the dynamics model
-        state: Vectorized state of the dynamics model
+        hyper_parameter: Hyper-parameter of the dynamics model.
+        state: Vectorized state of the dynamics model.
     """
 
     hyper_parameter: HyperParameter
@@ -33,33 +31,33 @@ class BaseDynamicsModel(ABC):
     ):
         """
         Args:
-            init_state: Initial state to be set
+            init_state: Initial state to be set.
         """
         if init_state is not None:
             self.set_state(init_state)
 
     def get_state(self) -> np.ndarray:
-        """Get the state in `np.ndarray` (deserialized form)
+        """Get the state in `np.ndarray` (deserialized form).
 
         Return:
-            np.ndarray: Returned state
+            np.ndarray: Returned state.
         """
         return self.deserialize_state(self.state)
 
     def get_state_proto(self) -> State:
-        """Get the state in proto (serialized form)
+        """Get the state in proto (serialized form).
 
         Returns:
-            State: State in proto
+            State: State in proto.
         """
         return self.state
 
     @abstractmethod
     def get_body_state_proto(self) -> BodyState:
-        """Return agent body's state in proto (serialized form)
+        """Return agent body's state in proto (serialized form).
 
         Return:
-            BodyState: Body state of the dynamics model
+            BodyState: Body state of the dynamics model.
         """
         raise NotImplementedError
 
@@ -69,72 +67,72 @@ class BaseDynamicsModel(ABC):
     @classmethod
     @abstractmethod
     def serialize_state(cls, state: np.ndarray) -> State:
-        """Serialize state to proto
+        """Serialize state to proto.
 
         Args:
-            state: Vectorized state
+            state: Vectorized state.
 
         Returns:
-            State: Serialized state
+            State: Serialized state.
         """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
     def deserialize_state(cls, state: State) -> np.ndarray:
-        """Deserialize state to np.ndarray
+        """Deserialize state to np.ndarray.
 
         Args:
-            state: Serialized state
+            state: Serialized state.
 
         Returns:
-            np.ndarray: Vectorized state
+            np.ndarray: Vectorized state.
         """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
     def serialize_action(cls, action: np.ndarray) -> Action:
-        """Serialize action to proto
+        """Serialize action to proto.
 
         Args:
-            action: Vectorized action
+            action: Vectorized action.
 
         Returns:
-            Action: Serialized action
+            Action: Serialized action.
         """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
     def deserialize_action(cls, action: Action) -> np.ndarray:
-        """Deserialize action to np.ndarray
+        """Deserialize action to np.ndarray.
 
         Args:
-            action: Serialized action
+            action: Serialized action.
 
         Returns:
-            np.ndarray: Vectorized action
+            np.ndarray: Vectorized action.
         """
         raise NotImplementedError
 
     def step(self, action: np.ndarray, delta_t: float):
-        """Step the model's state forward by a specified time interval
+        """Step the model's state forward by a specified time interval.
 
         Args:
-            action: Applied action
-            delta_t: Time interval
+            action: Applied action.
+            delta_t: Time interval.
         """
         next_state = self.compute_next_state(action, delta_t)
         self.state = next_state
 
     @abstractmethod
     def compute_next_state(self, action: np.ndarray, delta_t: float) -> State:
-        """Proceed a step forward by a specified time interval **without** update of internal state
+        """Proceed a step forward by a specified time interval **without** update of internal state.
 
         Args:
-            action: Applied vectorized action
-            delta_t: Time interval
+            action: Applied vectorized action.
+            delta_t: Time interval.
         """
         raise NotImplementedError
 
@@ -143,7 +141,7 @@ class BaseDynamicsModel(ABC):
         """Get dynamics model observationm usually containing hyper-parameter of the model.
 
         Returns:
-            np.ndarray: Vectorized dynamics model observation
+            np.ndarray: Vectorized dynamics model observation.
         """
         raise NotImplementedError
 
@@ -151,7 +149,7 @@ class BaseDynamicsModel(ABC):
         """Get dynamics model observation space where the dynamics model obervation lies in.
 
         Returns:
-            Space: Dynamics model observation space
+            Space: Dynamics model observation space.
         """
         observation = self.get_dynamics_model_observation()
         obs_size = observation.size
@@ -177,37 +175,37 @@ class BaseDynamicsModel(ABC):
         """Get state observation space where the state observation lies in.
 
         Returns:
-            Space: State obervstion space
+            Space: State obervstion space.
         """
         return self.get_state_space()
 
     @abstractmethod
     def get_state_space(self) -> Space:
-        """Get state space
+        """Get state space.
 
         Returns:
-            Space: State space
+            Space: State space.
         """
         raise NotImplementedError
 
     @abstractmethod
     def get_action_space(self) -> Space:
-        """Get action space
+        """Get action space.
 
         Returns:
-            Space: Action space
+            Space: Action space.
         """
         raise NotImplementedError
 
     @abstractmethod
     def jacobian(self, state: np.ndarray, action: np.ndarray) -> np.ndarray:
-        """Compute jacobian by performing linearization at a given point (state-action pair)
+        """Compute jacobian by performing linearization at a given point (state-action pair).
 
         Args:
-            state: State at the linearization point, shape=(n_dims_state,)
-            action: Action at the linearization point, shape(n_dims_action,)
+            state: State at the linearization point, shape=(n_dims_state,).
+            action: Action at the linearization point, shape(n_dims_action,).
 
         Returns:
-            np.ndarray: Jacobian matrix, shape=(n_dims_state, n_dims_state + n_dims_action)
+            np.ndarray: Jacobian matrix, shape=(n_dims_state, n_dims_state + n_dims_action).
         """
         raise NotImplementedError

@@ -27,11 +27,20 @@ from drltt_proto.environment.trajectory_tracking_pb2 import (
 
 @ENVIRONMENTS.register
 class TrajectoryTrackingEnv(gym.Env):
-    # dynamics_model: BaseDynamicsModel
+    """Environment for Trajectory Tracking.
+
+    Attributes:
+        observation_space: State space, utilized by RL framework such as Stable Baselines3.
+        action_space: State space, utilized by RL framework such as Stable Baselines3.
+        state_space: State space.
+        init_state_space: Initial state space.
+        env_info: Serialized data structure that contains hyper-parameter and episode data.
+    """
+
     state_space: Space = None
     init_state_space: Space = None
-    action_space: Space = None  # required by learning algorithm
-    observation_space: Space = None  # required by learning algorithm
+    action_space: Space = None
+    observation_space: Space = None
     env_info: TrajectoryTrackingEnvironment
 
     def __init__(
@@ -41,7 +50,7 @@ class TrajectoryTrackingEnv(gym.Env):
     ):
         """
         Args:
-            dynamics_model_configs: Configurations of all dynamics models
+            dynamics_model_configs: Configurations of all dynamics models.
         """
         # parse hyper-parameters
         self.env_info = TrajectoryTrackingEnvironment()
@@ -73,16 +82,16 @@ class TrajectoryTrackingEnv(gym.Env):
         init_state_ub: List[Union[float, None]],
         n_observation_steps: int,
     ):
-        """Parse hyper-parameter
+        """Parse hyper-parameter.
 
         Args:
-            hyper_parameter: Destination of the parsed hyper-parameters
-            step_interval: Step interval by which each step moves forward temporally
-            tracking_length_lb: Lower bound of tracking length
-            tracking_length_ub: Upper bound of tracking length
-            init_state_lb: lower Bound of state space
-            init_state_ub: upper Bound of state space
-            n_observation_steps: Number of the steps within the observation
+            hyper_parameter: Destination of the parsed hyper-parameters.
+            step_interval: Step interval by which each step moves forward temporally.
+            tracking_length_lb: Lower bound of tracking length.
+            tracking_length_ub: Upper bound of tracking length.
+            init_state_lb: lower Bound of state space.
+            init_state_ub: upper Bound of state space.
+            n_observation_steps: Number of the steps within the observation.
         """
         hyper_parameter.step_interval = step_interval
         hyper_parameter.tracking_length_lb = tracking_length_lb
@@ -96,17 +105,17 @@ class TrajectoryTrackingEnv(gym.Env):
         self,
         init_state: Union[np.ndarray, None] = None,
     ) -> np.ndarray:
-        """Reset environment for Trajectory Tracking
+        """Reset environment for Trajectory Tracking.
 
         - Setup reference line
         - Clear and replace self episode
         - Randomly sample a dynamics model
 
         Args:
-            init_state: Specified initial state of dynamics model. Default to `None` which denotes random sampling from pre-defined initial state space
+            init_state: Specified initial state of dynamics model. Default to `None` which denotes random sampling from pre-defined initial state space.
 
         Returns:
-            np.ndarray: First observation from the environment
+            np.ndarray: First observation from the environment.
         """
         extra_info = dict()
 
@@ -152,7 +161,7 @@ class TrajectoryTrackingEnv(gym.Env):
 
     def _build_spaces(self):
         """
-        Build spaces (observation/action/state/init_state / etc.)
+        Build spaces (observation/action/state/init_state / etc.).
 
         Dependency (class attributes needed to be set before):
         - self.env_info
@@ -179,7 +188,7 @@ class TrajectoryTrackingEnv(gym.Env):
     def step(self, action: np.ndarray):
         """
         Args:
-            action: Action given to the environment for stepping the state
+            action: Action given to the environment for stepping the state.
         """
         extra_info = dict()  # WARNING: `extra_info` can not store large object
 
@@ -228,10 +237,10 @@ class TrajectoryTrackingEnv(gym.Env):
     def export_episode_data(
         self,
     ) -> TrajectoryTrackingEpisode:
-        """Export episode data
+        """Export episode data.
 
         Return:
-            TrajectoryTrackingEpisode: Episode data in proto structure
+            TrajectoryTrackingEpisode: Episode data in proto structure.
         """
         episode_data = TrajectoryTrackingEpisode()
         episode_data.CopyFrom(self.env_info.episode)

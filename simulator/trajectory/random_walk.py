@@ -15,7 +15,18 @@ def random_walk(
     step_interval: float,
     walk_length: int,
 ) -> Tuple[ReferenceLine, Trajectory]:
-    """Perform random walk to generate reference line"""
+    """Perform random walk to generate reference line.
+
+    Args:
+        dynamics_model: Dynamics model for random walk.
+        step_interval: Time interval of a step.
+        walk_length: Length of the generated trajectory.
+
+    Returns:
+        Tuple[ReferenceLine, Trajectory]: ReferenceLine: Generated reference line.
+
+            Trajectory: Generated trajectory.
+    """
     assert walk_length >= 1, f'Illegal walk_length: {walk_length}'
 
     action_space: Space = dynamics_model.get_action_space()

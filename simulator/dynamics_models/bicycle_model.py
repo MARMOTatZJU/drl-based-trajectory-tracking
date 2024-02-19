@@ -17,10 +17,7 @@ from drltt_proto.dynamics_model.action_pb2 import Action
 
 @DYNAMICS_MODELS.register
 class BicycleModel(BaseDynamicsModel):
-    """Bicycle model
-
-    Suitable for vehicle/bicycle kinematics
-    """
+    """Bicycle model, suitable for modeling vehicle/bicycle kinematics."""
 
     def __init__(
         self,
@@ -30,8 +27,8 @@ class BicycleModel(BaseDynamicsModel):
         """
         Args:
             hyper_parameters: hyper parameter of bicylce model
-                if protobuf-typed hyper-parameters is not provided, then parse arguments from kwargs
-                if protobuf-typed hyper-parameters are provided, then assign them to the underlying `hyper_hyperparameters`
+                if protobuf-typed hyper-parameters is not provided, then parse arguments from kwargs.
+                if protobuf-typed hyper-parameters are provided, then assign them to the underlying `hyper_hyperparameters`.
         """
         self.hyper_parameter = HyperParameter()
         if hyper_parameter is None:
@@ -57,6 +54,16 @@ class BicycleModel(BaseDynamicsModel):
         action_space_ub: Iterable[float] = (+math.inf, +math.inf),
         **kwargs,
     ):
+        """
+        Args:
+            hyper_parameter: Hyper-parameter as parsing result.
+            front_overhang: Distance from front axle to vehicle front.
+            wheelbase: Distance between front axle and rear axle.
+            rear_overhang: Distance from rear axle to vehicle rear.
+            width: Width of vehicle.
+            action_space_lb: lower bound of action space.
+            action_space_ub: upper bound of action space.
+        """
         hyper_parameter.bicycle_model.front_overhang = front_overhang
         hyper_parameter.bicycle_model.wheelbase = wheelbase
         hyper_parameter.bicycle_model.rear_overhang = rear_overhang
@@ -215,4 +222,4 @@ class BicycleModel(BaseDynamicsModel):
 
     @override
     def jacobian(self, state: np.ndarray, action: np.ndarray) -> np.ndarray:
-        pass
+        raise NotImplementedError
