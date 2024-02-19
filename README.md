@@ -50,6 +50,11 @@ pytest
 
 ### Contribute to Documentation
 
+This project adopts [Google-style Python docstrings](https://google.github.io/styleguide/pyguide.html), [Example Google Style Python Docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
+
+The authors would like to thank [PyTorch](https://pytorch.org/docs/stable/index.html) for being an examplar of documentation.
+
+
 ```
 pip install -r requirements/pypi-doc.txt
 ```

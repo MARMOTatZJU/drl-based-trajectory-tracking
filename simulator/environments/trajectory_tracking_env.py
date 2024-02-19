@@ -41,7 +41,7 @@ class TrajectoryTrackingEnv(gym.Env):
     ):
         """
         Args:
-            dynamics_model_configs: configurations of all dynamics models
+            dynamics_model_configs: Configurations of all dynamics models
         """
         # parse hyper-parameters
         self.env_info = TrajectoryTrackingEnvironment()
@@ -73,15 +73,16 @@ class TrajectoryTrackingEnv(gym.Env):
         init_state_ub: List[Union[float, None]],
         n_observation_steps: int,
     ):
-        """
+        """Parse hyper-parameter
+
         Args:
-            hyper_parameter: destination of the parsed hyper-parameters
-            step_interval: step interval by which each step moves forward temporally
-            tracking_length_lb: lower bound of tracking length
-            tracking_length_ub: upper bound of tracking length
-            init_state_lb: lower bound of state space
-            init_state_ub: upper bound of state space
-            n_observation_steps: number of the steps within the observation
+            hyper_parameter: Destination of the parsed hyper-parameters
+            step_interval: Step interval by which each step moves forward temporally
+            tracking_length_lb: Lower bound of tracking length
+            tracking_length_ub: Upper bound of tracking length
+            init_state_lb: lower Bound of state space
+            init_state_ub: upper Bound of state space
+            n_observation_steps: Number of the steps within the observation
         """
         hyper_parameter.step_interval = step_interval
         hyper_parameter.tracking_length_lb = tracking_length_lb
@@ -94,7 +95,7 @@ class TrajectoryTrackingEnv(gym.Env):
     def reset(
         self,
         init_state: Union[np.ndarray, None] = None,
-    ):
+    ) -> np.ndarray:
         """Reset environment for Trajectory Tracking
 
         - Setup reference line
@@ -102,8 +103,10 @@ class TrajectoryTrackingEnv(gym.Env):
         - Randomly sample a dynamics model
 
         Args:
-            init_state: specified initial state of dynamics model.
-                Default to `None` which denotes random sampling from pre-defined initial state space
+            init_state: Specified initial state of dynamics model. Default to `None` which denotes random sampling from pre-defined initial state space
+
+        Returns:
+            np.ndarray: First observation from the environment
         """
         extra_info = dict()
 
@@ -147,9 +150,7 @@ class TrajectoryTrackingEnv(gym.Env):
         # return observation, extra_info
         return observation
 
-    def _build_spaces(
-        self,
-    ):
+    def _build_spaces(self):
         """
         Build spaces (observation/action/state/init_state / etc.)
 
@@ -178,7 +179,7 @@ class TrajectoryTrackingEnv(gym.Env):
     def step(self, action: np.ndarray):
         """
         Args:
-            action: action given to the environment to step the state
+            action: Action given to the environment for stepping the state
         """
         extra_info = dict()  # WARNING: `extra_info` can not store large object
 
@@ -230,7 +231,7 @@ class TrajectoryTrackingEnv(gym.Env):
         """Export episode data
 
         Return:
-            Episode data in proto structure
+            TrajectoryTrackingEpisode: Episode data in proto structure
         """
         episode_data = TrajectoryTrackingEpisode()
         episode_data.CopyFrom(self.env_info.episode)
