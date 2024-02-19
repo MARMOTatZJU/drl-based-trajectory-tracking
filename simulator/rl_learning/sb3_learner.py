@@ -46,7 +46,17 @@ def train_with_sb3(
     learning_config: Dict,
     checkpoint_file: str = '',
 ) -> Union[BaseAlgorithm, None]:
-    """Training with Stable Baselines3"""
+    """RL Training with Stable Baselines3.
+
+    Args:
+        environment: Training environment.
+        algorithm_config: Configuration of the algorithm.
+        learning_config: Configuration of the learning.
+        checkpoint_file: path to save checkpoint file.
+
+    Returns:
+        Union[BaseAlgorithm, None]: The algorithm object with trained models.
+    """
     if os.path.exists(checkpoint_file):
         logging.warn(f'Training aborted as checkpoint exists: {checkpoint_file}')
         return None
@@ -69,8 +79,16 @@ def eval_with_sb3(
     report_dir: str,
     n_episodes: int,
     compute_metrics_name: str,
-) -> Union[BaseAlgorithm, None]:
-    """Evaluate with Stable Baselines3"""
+):
+    """RL Evaluation with Stable Baselines3.
+
+    Args:
+        environment: Evaluation environment.
+        algorithm: The algorithm with models to be evaluated.
+        report_dir: Directory to export report JSON.
+        n_episodes: Number of episodes.
+        compute_metrics_name: Name of `compute_metrics`.
+    """
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
