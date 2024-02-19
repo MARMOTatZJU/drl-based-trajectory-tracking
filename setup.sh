@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eo pipefail
 
+source ./install-setup-protoc.sh
+
 repo_dir=${PWD}
 proto_dir=$(realpath common/proto)
 
