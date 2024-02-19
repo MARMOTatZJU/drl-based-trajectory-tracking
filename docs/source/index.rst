@@ -6,9 +6,6 @@
 Welcome to DRL-based Trajectory Tracking (DRLTT)'s documentation!
 =================================================================
 
-Introduction
-==================
-
 .. toctree::
    :maxdepth: 3
    :caption: Introduction
