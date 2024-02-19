@@ -7,6 +7,12 @@ This repo hosts code and script for training and deploying *DRL-Based Trajectory
 - Python>=3.12
 - `requirements/pypi.txt`
 
+### Protobuf Compiler
+
+```
+source install-steup-protoc.sh
+```
+
 ## RL training
 
 Setup a subfolder and create a `train.sh` with follwoing content, then execute it:
