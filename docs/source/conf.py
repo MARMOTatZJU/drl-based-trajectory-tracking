@@ -33,8 +33,15 @@ author = 'Yinda Xu, Lidong Yu'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'myst_parser',  # substitute of `recommonmark`
+    # 'myst_parser',  # substitute of `recommonmark`
+    'm2r2',  # TODO: figure out why myst_parser does not work.
 ]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}
 
 templates_path = ['_templates']
 exclude_patterns = []

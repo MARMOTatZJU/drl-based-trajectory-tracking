@@ -7,17 +7,22 @@ Welcome to DRL-based Trajectory Tracking (DRLTT)'s documentation!
 =================================================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
+   :caption: Introduction
+
+   rst_files/readme
 
 
+.. Indices and tables
+.. ==================
 
-Indices and tables
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
+
+
+API
 ==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. toctree::
    :maxdepth: 2
