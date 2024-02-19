@@ -20,63 +20,82 @@ from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEp
 SB3_MODULES = Registry().register_from_python_module(stable_baselines3)
 
 
-# TODO: change name `sb3_model` to `sb3_algorithm`
-def build_sb3_model_from_config(
+def build_sb3_algorithm_from_config(
     environment: gym.Env,
-    model_config: Dict,
+    algorithm_config: Dict,
 ) -> BaseAlgorithm:
     # add action noise object
-    action_noise_config = model_config.pop('scaled_action_noise')
-    model_config['action_noise'] = NormalActionNoise(
+    action_noise_config = algorithm_config.pop('scaled_action_noise')
+    algorithm_config['action_noise'] = NormalActionNoise(
         mean=np.array(action_noise_config['mean']),
         sigma=np.array(action_noise_config['sigma']),
     )
     # add environment object
-    model_config['env'] = environment
+    algorithm_config['env'] = environment
 
-    # build model object
-    model: BaseAlgorithm = build_object_within_registry_from_config(SB3_MODULES, model_config)
-    logging.info(f'Built model.policy: {model.policy}')
+    # build algorithm object
+    algorithm: BaseAlgorithm = build_object_within_registry_from_config(SB3_MODULES, algorithm_config)
+    logging.info(f'Built algorithm.policy: {algorithm.policy}')
 
-    return model
+    return algorithm
 
 
 def train_with_sb3(
     environment: gym.Env,
-    model_config: Dict,
+    algorithm_config: Dict,
     learning_config: Dict,
     checkpoint_file: str = '',
 ) -> Union[BaseAlgorithm, None]:
+    """RL Training with Stable Baselines3.
+
+    Args:
+        environment: Training environment.
+        algorithm_config: Configuration of the algorithm.
+        learning_config: Configuration of the learning.
+        checkpoint_file: path to save checkpoint file.
+
+    Returns:
+        Union[BaseAlgorithm, None]: The algorithm object with trained models.
+    """
     if os.path.exists(checkpoint_file):
         logging.warn(f'Training aborted as checkpoint exists: {checkpoint_file}')
         return None
 
-    model = build_sb3_model_from_config(environment, model_config)
-    model.learn(**learning_config)
+    algorithm = build_sb3_algorithm_from_config(environment, algorithm_config)
+    algorithm.learn(**learning_config)
 
     if checkpoint_file != '':
         checkpoint_dir = os.path.dirname(checkpoint_file)
         os.makedirs(checkpoint_dir, exist_ok=True)
-        model.save(checkpoint_file)
-        logging.info(f'SB3 Model/Policy saved at: {checkpoint_file}')
+        algorithm.save(checkpoint_file)
+        logging.info(f'SB3 Algorithm Policy saved at: {checkpoint_file}')
 
-    return model
+    return algorithm
 
 
 def eval_with_sb3(
     environment: gym.Env,
-    model: BaseAlgorithm,
+    algorithm: BaseAlgorithm,
     report_dir: str,
     n_episodes: int,
     compute_metrics_name: str,
-) -> Union[BaseAlgorithm, None]:
+):
+    """RL Evaluation with Stable Baselines3.
+
+    Args:
+        environment: Evaluation environment.
+        algorithm: The algorithm with models to be evaluated.
+        report_dir: Directory to export report JSON.
+        n_episodes: Number of episodes.
+        compute_metrics_name: Name of `compute_metrics`.
+    """
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
         obs = environment.reset()
         done = False
         while not done:
-            action, _states = model.predict(obs)
+            action, _states = algorithm.predict(obs)
             obs, reward, done, info = environment.step(action)
 
         compute_metrics = METRICS[compute_metrics_name]

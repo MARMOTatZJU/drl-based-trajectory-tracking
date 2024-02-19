@@ -7,9 +7,11 @@ cpp_output_dir=${src_dir}/../proto_gen_cpp/
 rm -rf ${cpp_output_dir}
 mkdir -p ${cpp_output_dir}
 
+# TODO: verify if `--experimental_allow_proto3_optional` is necessary
 protoc -I ${src_dir} \
     --python_out ${python_output_dir} \
     --cpp_out ${cpp_output_dir} \
+    --experimental_allow_proto3_optional \
     $(find ${src_dir} -name *.proto)
 
 # create `__init__.py` files for compiled Python package

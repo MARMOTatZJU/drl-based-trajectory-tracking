@@ -1,5 +1,6 @@
 import numpy as np
 import gym
+from gym.spaces import Space
 
 from drltt_proto.dynamics_model.basics_pb2 import BodyState
 from simulator.dynamics_models import BaseDynamicsModel, DynamicsModelManager
@@ -7,17 +8,35 @@ from simulator.trajectory.reference_line import ReferenceLineManager
 
 
 class ObservationManager:
+    """Manager for observation
+
+    Attributes:
+        reference_line_manager: handler of underlying reference line manager
+        dynamics_model_manager: handler of underlying Dynamics model manager
+    """
+
+    reference_line_manager: ReferenceLineManager
+    dynamics_model_manager: DynamicsModelManager
+
     def __init__(
         self,
         reference_line_manager: ReferenceLineManager,
         dynamics_model_manager: DynamicsModelManager,
     ):
+        """
+        Args:
+            reference_line_manager: Underlying reference line manager
+            dynamics_model_manager: underlying Dynamics model manager
+        """
         self.reference_line_manager = reference_line_manager
         self.dynamics_model_manager = dynamics_model_manager
 
-    def get_observation_space(
-        self,
-    ):
+    def get_observation_space(self) -> Space:
+        """Return observation space, usually consisting of multiple sub-observation spaces.
+
+        Returns:
+            Space: observation space.
+        """
         reference_line_observation_space = self.reference_line_manager.get_observation_space()
         state_observation_space = self.dynamics_model_manager.get_state_observation_space()
         synamics_model_observation_space = self.dynamics_model_manager.get_dynamics_model_observation_space()
@@ -33,7 +52,16 @@ class ObservationManager:
 
         return observation_space
 
-    def get_observation(self, index: int, body_state: BodyState):
+    def get_observation(self, index: int, body_state: BodyState) -> np.ndarray:
+        """Return the vectorized observation, which is usually ego-centric
+
+        Args:
+            index: Step index of the episode.
+            body_state: (Serialized) body state of agent/dynamics model.
+
+        Returns:
+            np.ndarray: Vectorized observation.
+        """
         reference_line_observation = self.reference_line_manager.get_observation_by_index(
             index=index, body_state=body_state
         )

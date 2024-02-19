@@ -10,21 +10,48 @@ from drltt_proto.dynamics_model.basics_pb2 import BodyState
 
 
 class ReferenceLineManager:
+    """Manager for Reference Line.
+
+    Attributes:
+        reference_line: Handler of underlying reference line manager.
+    """
+
     reference_line: ReferenceLine
 
     def __init__(self, n_observation_steps: int, dtype=DTYPE):
+        """
+        Args:
+            n_observation_steps: Number of observation steps on the forward part of the reference line.
+            dtype: Data type.
+        """
         self.dtype = dtype
         self.n_observation_steps = n_observation_steps
 
     def set_reference_line(self, reference_line: ReferenceLine):
+        """Set reference line.
+
+        Args:
+            reference_line: reference line to be set.
+        """
         self.reference_line = reference_line
 
-    def get_reference_line(
-        self,
-    ):
+    def get_reference_line(self) -> ReferenceLine:
+        """Return the underlygin reference line.
+
+        Returns:
+            ReferenceLine: Rreturned reference line
+        """
         return self.reference_line
 
     def get_reference_line_waypoint(self, index: int) -> np.ndarray:
+        """Get a waypoint on the reference line.
+
+        Args:
+            index: Step index of the desired waypoint.
+
+        Returns:
+            np.ndarray: Reference line waypoint (vectorized form).
+        """
         waypoint = np.array(
             (
                 self.reference_line.waypoints[index].x,
@@ -35,11 +62,11 @@ class ReferenceLineManager:
 
         return waypoint
 
-    def get_observation_space(
-        self,
-    ) -> Space:
-        """Get observation space
-        Composition: (x, y) x length
+    def get_observation_space(self) -> Space:
+        """Get observation space.
+
+        Returns:
+            Space: Observation space.
         """
         obs_size = 2 * self.n_observation_steps
         observation_space = gym.spaces.Box(
@@ -50,10 +77,17 @@ class ReferenceLineManager:
         )
         return observation_space
 
-    def get_observation_by_index(self, index: int, body_state: BodyState, reference_line: ReferenceLine = None):
-        if reference_line is not None:
-            self.set_reference_line(reference_line)
+    def get_observation_by_index(self, index: int, body_state: BodyState) -> np.ndarray:
+        """Get vectorized observation of reference line given waypoint index.
 
+        Args:
+            index: Waypoint index.
+            body_staate: Body state for ego-centric observation.
+
+        Returns:
+            np.ndarray: Vectorized reference line observation. Format: (x, y) x length.
+
+        """
         if index + self.n_observation_steps >= len(self.reference_line.waypoints) + 1:
             raise ValueError(
                 f'Getting observation from index {index} of length {self.n_observation_steps} will cause out-of-bound'
@@ -79,10 +113,10 @@ class ReferenceLineManager:
 
         return observation
 
-    def get_observation_by_state(self, body_state: BodyState, reference_line: ReferenceLine = None):
+    def get_observation_by_state(self, body_state: BodyState, reference_line: ReferenceLine = None) -> np.ndarray:
         """TODO: to implement"""
-        pass
+        raise NotImplementedError
 
-    def get_projected_waypoint_index(self, body_state: BodyState):
+    def get_projected_waypoint_index(self, body_state: BodyState) -> np.ndarray:
         """TODO: to implement"""
-        pass
+        raise NotImplementedError
