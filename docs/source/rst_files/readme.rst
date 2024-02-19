@@ -1,4 +1,4 @@
 Introduction
 ==================
 
-.. include:: ../../../README
+.. mdinclude:: ../../../README.md
