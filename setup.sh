@@ -1,5 +1,6 @@
 #!/bin/bash
-set -eo pipefail
+
+set -exo pipefail
 
 source ./install-setup-protoc.sh
 
@@ -13,4 +14,4 @@ export PYTHONPATH=:${proto_dir}/proto_gen_py:${PYTHONPATH}
 
 echo "set PYTHONPATH: $PYTHONPATH"
 
-set +eo pipefail
+set +exo pipefail

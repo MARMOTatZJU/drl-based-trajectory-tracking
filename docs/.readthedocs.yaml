@@ -5,7 +5,11 @@ build:
   tools:
     python: "3.12"
   apt_packages:
-  - "protobuf-compiler=3.12.4-1ubuntu7.22.04.1"
+  - "cmake"
+  - "protobuf-compiler"
+  jobs:
+    pre_build:
+      - bash ./setup.sh
 
 
 python:

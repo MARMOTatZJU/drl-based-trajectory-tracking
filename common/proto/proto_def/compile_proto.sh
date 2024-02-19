@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "Start compiling protobuf."
+
 src_dir=$(dirname $0)
 python_output_dir=${src_dir}/../proto_gen_py/
 rm -rf ${python_output_dir}
@@ -16,4 +19,5 @@ protoc -I ${src_dir} \
 
 # create `__init__.py` files for compiled Python package
 find ${python_output_dir} -mindepth 1 -type d -exec touch {}/__init__.py \;
-echo "Proto compiled."
+
+echo "Protobuf compiled."

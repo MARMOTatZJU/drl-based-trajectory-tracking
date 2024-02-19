@@ -17,7 +17,7 @@ common.io
    :private-members:
 
 common.gym_helper
-----------------
+------------------
 .. automodule:: common.gym_helper
    :members:
    :special-members:
