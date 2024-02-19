@@ -23,9 +23,10 @@ def random_walk(
         walk_length: Length of the generated trajectory.
 
     Returns:
-        Tuple[ReferenceLine, Trajectory]: ReferenceLine: Generated reference line.
+        Tuple[ReferenceLine, Trajectory]: Random walk results:
 
-            Trajectory: Generated trajectory.
+        * ReferenceLine: Generated reference line.
+        * Trajectory: Generated trajectory.
     """
     assert walk_length >= 1, f'Illegal walk_length: {walk_length}'
 

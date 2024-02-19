@@ -45,16 +45,16 @@ class Registry(dict):
         self.name = name
         super(Registry, self).__init__(**kwargs)
 
-    def register(self, module: object) -> Any:
-        """Register module (class/functino/etc.) into this registry
+    def register(self, module: Any) -> Any:
+        """Register module (class/functino/etc.) into this registry.
 
-        Typically used as decorater, thus return the input module itself
+        Typically used as decorater, thus return the input module itself.
 
         Args:
-            module: python object that needs to be registered
+            module: Python object that needs to be registered.
 
         Returns:
-            the registered module
+            Any: The registered module.
         """
         name = module.__name__
         _register_generic(self, name, module)
@@ -62,13 +62,21 @@ class Registry(dict):
         return module
 
     @override
-    def __getitem__(self, name: str) -> object:
+    def __getitem__(self, name: str) -> Any:
         if name not in self:
             raise ValueError(f'Object {name} does not exist')
 
         return super().__getitem__(name)
 
-    def register_from_python_module(self, module: object) -> Self:
+    def register_from_python_module(self, module: Any) -> Self:
+        """Register all members from a Python module.
+
+        Args:
+            module: Python module to be processed.
+
+        Returns:
+            Self: The yielded registry.
+        """
         self.name = module.__name__
         for k, v in module.__dict__.items():
             if k.startswith('__'):
@@ -88,10 +96,10 @@ def build_object_within_registry_from_config(
     Config should be in form of keyword arguments (dict-like).
     Support adding additional config items through kwargs.
 
-    NOTE: kwargs will not be deep-copied
+    NOTE: kwargs will not be deep-copied.
 
     Args:
-        registry: registry to retrieve class to construct
+        registry: registry to retrieve class to be constructed.
         config: config function that provide the class name and the corresponding arguments,
             which should be arranged in the following format:
 
@@ -102,7 +110,10 @@ def build_object_within_registry_from_config(
                     arg2: value2
                     ...
 
-        **kwargs: key-word arguments to be passed to the retrieved class function
+        **kwargs: key-word arguments to be passed to the retrieved class function.
+
+    Return:
+        Any: The built object.
     """
     config = deepcopy(config)
     config = dict(**config)

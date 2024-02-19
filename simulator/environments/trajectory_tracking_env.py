@@ -161,7 +161,7 @@ class TrajectoryTrackingEnv(gym.Env):
 
     def _build_spaces(self):
         """
-        Build spaces (observation/action/state/init_state / etc.).
+        Build spaces (observation/action/state/init_state/etc.).
 
         Dependency (class attributes needed to be set before):
         - self.env_info

@@ -8,7 +8,11 @@ import yaml
 
 
 def load_config_from_yaml(config_file: str) -> Dict:
-    """Load config from yaml and do exception handling"""
+    """Load config from yaml and handle exceptions.
+
+    Args:
+        config_file: Path to configuration file.
+    """
     if not os.path.exists(config_file):
         logging.warn(f'{config_file} does not exist')
         return None
@@ -22,7 +26,7 @@ def load_config_from_yaml(config_file: str) -> Dict:
 def convert_list_to_tuple_within_dict(
     dictionary: Dict,
     exceptions: Tuple[str] = tuple(),
-):
+) -> Dict:
     """Recursively cast list to tuple within a dict
 
     Avoid modification issue (mutable / immutable)
@@ -31,6 +35,13 @@ def convert_list_to_tuple_within_dict(
     Also deal with some type issues
     e.g. in case of stable-baselines3,
         https://github.com/DLR-RM/stable-baselines3/blob/v2.2.1/stable_baselines3/common/off_policy_algorithm.py#L157
+
+    Args:
+        dictionary: Dictionary to be processed.
+        exceptions: Exceptional keys.
+
+    Returns:
+        Dict: Processed dictionary.
     """
     for k in tuple(dictionary.keys()):
         if k in exceptions:
@@ -48,6 +59,13 @@ def convert_list_to_tuple_within_dict(
     return dictionary
 
 
-def generate_random_string(n):
-    """Generate a string with characters randomly choosen"""
+def generate_random_string(n: int) -> str:
+    """Generate a string with characters randomly choosen.
+
+    Args:
+        n: Desired length of string.
+
+    Returns:
+        str: Random string.
+    """
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=n))

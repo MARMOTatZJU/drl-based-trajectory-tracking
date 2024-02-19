@@ -4,22 +4,29 @@ import numpy as np
 
 
 def normalize_angle(angle: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-    """Normalize angle to [-pi, pi)
-
-    Compatible with Numpy vectorization
+    """Normalize angle to [-pi, pi), compatible with Numpy vectorization.
 
     Args:
-        angle: angle to be normalized
+        angle: Angle to be normalized.
 
     Returns:
-        normalized anlge
+        Normalized angle.
 
     """
     return (angle + np.pi) % (2 * np.pi) - np.pi
 
 
 # TODO: use screw theory to refactor this part
-def transform_points(points: np.ndarray, transform_matrix: np.ndarray):
+def transform_points(points: np.ndarray, transform_matrix: np.ndarray) -> np.ndarray:
+    """Transform 2-D points with transform matrix.
+
+    Args:
+        points: Points to be transformed, shape=(N, 2).
+        transform_matrix: trnasform_matrix which lies in group SO(2), shape=(3, 3).
+
+    Returns:
+        np.ndarray: Transformed points, shape=(N, 2).
+    """
     points = np.concatenate([points, np.ones((points.shape[0], 1))], axis=1)
     points = transform_matrix @ points.T
     points = points.T
@@ -28,13 +35,7 @@ def transform_points(points: np.ndarray, transform_matrix: np.ndarray):
     return points
 
 
-def transform_between_local_and_world(points: np.ndarray, body_state: np.ndarray, trans_dir: str):
-    """
-    Args:
-        points: shape=(N, 2)
-        body_state: shape=(3,),
-        trans_dir:
-    """
+def transform_between_local_and_world(points: np.ndarray, body_state: np.ndarray, trans_dir: str) -> np.ndarray:
     points, body_state = points.copy(), body_state.copy()
     x, y, r = body_state[:3]
 
@@ -64,7 +65,7 @@ def transform_between_local_and_world(points: np.ndarray, body_state: np.ndarray
     return transformed_points
 
 
-def transform_to_local_from_world(points: np.ndarray, body_state: np.ndarray):
+def transform_to_local_from_world(points: np.ndarray, body_state: np.ndarray) -> np.ndarray:
     return transform_between_local_and_world(
         points,
         body_state,
@@ -72,7 +73,7 @@ def transform_to_local_from_world(points: np.ndarray, body_state: np.ndarray):
     )
 
 
-def transform_to_world_from_local(points: np.ndarray, body_state: np.ndarray):
+def transform_to_world_from_local(points: np.ndarray, body_state: np.ndarray) -> np.ndarray:
     return transform_between_local_and_world(
         points,
         body_state,
