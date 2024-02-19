@@ -21,6 +21,12 @@ Indices and tables
 
 .. toctree::
    :maxdepth: 2
-   :caption: APIs
+   :caption: APIs: simulator
 
-   rst_files/api
+   rst_files/api-simulator
+
+.. toctree::
+   :maxdepth: 2
+   :caption: APIs: common
+
+   rst_files/api-common

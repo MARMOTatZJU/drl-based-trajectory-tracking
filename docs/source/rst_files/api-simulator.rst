@@ -1,5 +1,5 @@
-APIs
-====
+APIs: simulator
+==============
 
 simulator.environments
 ---------------------------------
@@ -36,9 +36,3 @@ simulator.trajectory
    :special-members:
    :private-members:
 
-common
----------------------------------
-.. automodule:: common
-   :members:
-   :special-members:
-   :private-members:
