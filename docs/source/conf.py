@@ -7,6 +7,22 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
+import sys
+import logging
+logging.basicConfig(level=logging.INFO)
+
+conf_py_file = os.path.dirname(__file__)
+project_dir = os.path.realpath(f'{conf_py_file}/../../')
+proto_dir = f'{project_dir}/common/proto/proto_gen_py'
+
+# Reference: https://stackoverflow.com/questions/10324393/sphinx-build-fail-autodoc-cant-import-find-module
+sys.path.append(project_dir)
+sys.path.append(proto_dir)
+logging.info('sys.path:')
+for p in sys.path:
+    logging.info(p)
+
 project = 'DRL-based Trajectory Tracking (DRLTT)'
 copyright = '2024, Yinda Xu, Lidong Yu'
 author = 'Yinda Xu, Lidong Yu'

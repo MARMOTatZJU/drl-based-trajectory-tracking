@@ -27,14 +27,12 @@ def convert_list_to_tuple_within_dict(
     dictionary: Dict,
     exceptions: Tuple[str] = tuple(),
 ) -> Dict:
-    """Recursively cast list to tuple within a dict
+    """Recursively cast list to tuple within a dict.
 
-    Avoid modification issue (mutable / immutable)
-    Support specified exception key
+    Avoid modification issue (mutable / immutable). Support specified exception key.
 
-    Also deal with some type issues
-    e.g. in case of stable-baselines3,
-        https://github.com/DLR-RM/stable-baselines3/blob/v2.2.1/stable_baselines3/common/off_policy_algorithm.py#L157
+    Also deal with some type issues.
+    e.g. in case of stable-baselines3, https://github.com/DLR-RM/stable-baselines3/blob/v2.2.1/stable_baselines3/common/off_policy_algorithm.py#L157
 
     Args:
         dictionary: Dictionary to be processed.
