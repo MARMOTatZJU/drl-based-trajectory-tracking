@@ -36,6 +36,12 @@ extensions = [
     'myst_parser',  # substitute of `recommonmark`
 ]
 
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}
+
 templates_path = ['_templates']
 exclude_patterns = []
 
