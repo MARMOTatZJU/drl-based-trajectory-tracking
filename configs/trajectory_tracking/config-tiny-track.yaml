@@ -38,7 +38,7 @@ environment:
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
 
-model:
+algorithm:
   type: TD3
   policy: MlpPolicy
   policy_kwargs:
