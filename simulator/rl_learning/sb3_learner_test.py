@@ -11,6 +11,7 @@ from simulator.rl_learning.sb3_learner import build_sb3_algorithm_from_config, t
 
 
 # TODO: use pytest fixture/steup to refactor tests within file, to avoid copy-paste of test codes
+# TODO: use unit-test config to override sample config.
 
 
 def test_train_with_sb3():
@@ -23,12 +24,12 @@ def test_train_with_sb3():
     config['algorithm']['learning_starts'] = 16
     config['algorithm']['batch_size'] = 16
     test_checkpoint_dir = f'/tmp/drltt-pytest-{generate_random_string(6)}'
-    test_checkpoint_file = f'{test_checkpoint_dir}/checkpoint.pkl'
+    test_checkpoint_file_prefix = f'{test_checkpoint_dir}/checkpoint'
     algorithm = train_with_sb3(
         environment=environment,
         algorithm_config=config['algorithm'],
         learning_config=config['learning'],
-        checkpoint_file=test_checkpoint_file,
+        checkpoint_file_prefix=test_checkpoint_file_prefix,
     )
     shutil.rmtree(test_checkpoint_dir)
 
@@ -42,7 +43,7 @@ def test_eval_with_sb3():
     algorithm_config = config['algorithm']
     algorithm = build_sb3_algorithm_from_config(environment, algorithm_config)
 
-    eval_config = config['evaluation']
+    eval_config = config['evaluation']['eval_config']
     eval_config['n_episodes'] = 10
     report_dir = f'/tmp/drltt-pytest-{generate_random_string(6)}'
     eval_with_sb3(environment, algorithm, report_dir, **eval_config)

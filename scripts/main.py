@@ -31,15 +31,15 @@ def main(args):
     # TODO: backup config
     # TODO: output log to file
 
-    checkpoint_file = f'{args.checkpoint_dir}/checkpoint.zip'  # without extension
+    checkpoint_file_prefix = f'{args.checkpoint_dir}/checkpoint'  # without extension
 
     if args.train:
         environment: Env = build_object_within_registry_from_config(ENVIRONMENTS, deepcopy(env_config))
         train_with_sb3(
             environment=environment,
-            algorithm_config=config['algorithm'],
-            learning_config=config['learning'],
-            checkpoint_file=checkpoint_file,
+            algorithm_config=deepcopy(config['algorithm']),
+            learning_config=deepcopy(config['learning']),
+            checkpoint_file_prefix=checkpoint_file_prefix,
         )
 
     if args.eval:
@@ -51,7 +51,7 @@ def main(args):
             eval_environment,
             config['algorithm'],
         )
-        eval_algorithm.load(checkpoint_file)
+        eval_algorithm.load(checkpoint_file_prefix)
 
         eval_with_sb3(
             eval_environment,
