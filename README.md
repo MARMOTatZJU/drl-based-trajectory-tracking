@@ -15,9 +15,9 @@ Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for d
 source install-steup-protoc.sh
 ```
 
-## RL training
+## RL Training & Evaluating
 
-Setup a subfolder and create a `train.sh` with follwoing content, then execute it:
+Setup a subfolder and create a `main.sh` with follwoing content, then execute it:
 
 ```
 #!/bin/bash
@@ -25,7 +25,7 @@ source setup.sh
 work_dir=$(dirname $0)
 python scripts/train.py \
     --config-file configs/trajectory_tracking/config-tiny-track.yaml \
-    --checkpoint-file $work_dir/checkpoint.pkl \
+    --checkpoint-dir $work_dir/checkpoint/ \
     #
 ```
 

@@ -67,3 +67,38 @@ def generate_random_string(n: int) -> str:
         str: Random string.
     """
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=n))
+
+
+def override_config(
+    base_config: Dict,
+    update_config: Dict,
+    allow_new_key: bool = False,
+) -> Dict:
+    """Override the value config.
+
+    Args:
+        base_config: Base config to be processed.
+        update_config: Incremental config which contains key-value pair for overriding.
+        allow_new_key: Whether allow creation of new key.
+
+    Returns:
+        Dict: The overriden config.
+    """
+    for k in tuple(update_config.keys()):
+        if k not in base_config:
+            if allow_new_key:
+                base_config[k] = update_config[k]
+            else:
+                continue
+        if type(base_config[k]) != type(update_config[k]):
+            continue
+        if isinstance(update_config[k], Dict):
+            base_config[k] = override_config(
+                base_config[k],
+                update_config[k],
+                insert_new_key=allow_new_key,
+            )
+        else:
+            base_config[k] = update_config[k]
+
+    return base_config
