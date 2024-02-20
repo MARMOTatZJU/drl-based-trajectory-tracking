@@ -11,6 +11,7 @@ from common import Registry, build_object_within_registry_from_config
 from common.gym_helper import scale_action
 import gym
 import stable_baselines3
+from stable_baselines3.common.utils import configure
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.noise import NormalActionNoise
 from . import METRICS
@@ -18,6 +19,7 @@ from . import METRICS
 from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
 
 SB3_MODULES = Registry().register_from_python_module(stable_baselines3)
+SB3_LOGGING_FORMAT_STRINGS = ['stdout', 'log', 'csv']
 
 
 def build_sb3_algorithm_from_config(
@@ -59,15 +61,16 @@ def train_with_sb3(
         Union[BaseAlgorithm, None]: The algorithm object with trained models.
     """
     checkpoint_file = f'{checkpoint_file_prefix}.zip'
+    checkpoint_dir = os.path.dirname(checkpoint_file)
     if os.path.exists(checkpoint_file):
         logging.warn(f'Training aborted as checkpoint exists: {checkpoint_file}')
         return None
 
     algorithm = build_sb3_algorithm_from_config(environment, algorithm_config)
+    algorithm.set_logger(configure(f'{checkpoint_dir}/sb3-train', format_strings=SB3_LOGGING_FORMAT_STRINGS))
     algorithm.learn(**learning_config)
 
     if checkpoint_file_prefix != '':
-        checkpoint_dir = os.path.dirname(checkpoint_file)
         os.makedirs(checkpoint_dir, exist_ok=True)
         algorithm.save(checkpoint_file_prefix)
         logging.info(f'SB3 Algorithm Policy saved at: {checkpoint_file}')
@@ -91,6 +94,7 @@ def eval_with_sb3(
         n_episodes: Number of episodes.
         compute_metrics_name: Name of `compute_metrics`.
     """
+    algorithm.set_logger(configure(f'{report_dir}/sb3-eval', format_strings=SB3_LOGGING_FORMAT_STRINGS))
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
