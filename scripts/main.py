@@ -1,5 +1,8 @@
 import argparse
+import os
+import sys
 from copy import deepcopy
+import logging
 import shutil
 
 import gym
@@ -24,7 +27,29 @@ def parse_args():
     return args
 
 
+def configure_root_logger(log_dir: str):
+    os.makedirs(log_dir, exist_ok=True)
+    FORMAT = '%(asctime)s :: %(name)s :: %(levelname)-8s :: %(message)s'
+    FORMATTER = logging.Formatter(fmt=FORMAT)
+
+    logger = logging.root
+
+    stream_handler = logging.StreamHandler(stream=sys.stdout)
+    stream_handler.setFormatter(FORMATTER)
+    stream_handler.setLevel(logging.INFO)
+    logger.addHandler(stream_handler)
+
+    file_handler = logging.FileHandler(filename=f'{log_dir}/log.txt')
+    file_handler.setFormatter(FORMATTER)
+    file_handler.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
+
+    logging.info(f'Logging directory configured at: {log_dir}')
+
+
 def main(args):
+    configure_root_logger(args.checkpoint_dir)
+
     config = load_config_from_yaml(args.config_file)
     config = convert_list_to_tuple_within_dict(config)
     env_config = config['environment']
@@ -32,8 +57,6 @@ def main(args):
     # backup config
     os.makedirs(args.checkpoint_dir, exist_ok=True)
     shutil.copy(args.config_file, args.checkpoint_dir)
-
-    # TODO: output log to file
 
     checkpoint_file_prefix = f'{args.checkpoint_dir}/checkpoint'  # without extension
 
