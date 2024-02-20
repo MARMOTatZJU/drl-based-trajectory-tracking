@@ -1,5 +1,6 @@
 import argparse
 from copy import deepcopy
+import shutil
 
 import gym
 from gym import Env
@@ -28,7 +29,10 @@ def main(args):
     config = convert_list_to_tuple_within_dict(config)
     env_config = config['environment']
 
-    # TODO: backup config
+    # backup config
+    os.makedirs(args.checkpoint_dir, exist_ok=True)
+    shutil.copy(args.config_file, args.checkpoint_dir)
+
     # TODO: output log to file
 
     checkpoint_file_prefix = f'{args.checkpoint_dir}/checkpoint'  # without extension
