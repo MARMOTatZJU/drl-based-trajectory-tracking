@@ -60,5 +60,7 @@ learning:
     log_interval: 10
 
 evaluation:
-  n_episodes: 200
-  compute_metrics_name: "compute_bicycle_model_metrics"
+  eval_config:
+    n_episodes: 200
+    compute_metrics_name: "compute_bicycle_model_metrics"
+  overriden_environment: {}

@@ -25,6 +25,7 @@ def build_sb3_algorithm_from_config(
     algorithm_config: Dict,
 ) -> BaseAlgorithm:
     # add action noise object
+    # TODO: check existence of `scaled_action_noise`
     action_noise_config = algorithm_config.pop('scaled_action_noise')
     algorithm_config['action_noise'] = NormalActionNoise(
         mean=np.array(action_noise_config['mean']),
@@ -44,7 +45,7 @@ def train_with_sb3(
     environment: gym.Env,
     algorithm_config: Dict,
     learning_config: Dict,
-    checkpoint_file: str = '',
+    checkpoint_file_prefix: str = '',
 ) -> Union[BaseAlgorithm, None]:
     """RL Training with Stable Baselines3.
 
@@ -52,11 +53,12 @@ def train_with_sb3(
         environment: Training environment.
         algorithm_config: Configuration of the algorithm.
         learning_config: Configuration of the learning.
-        checkpoint_file: path to save checkpoint file.
+        checkpoint_file_prefix: File prefix (i.e. path without extension) to save checkpoint file.
 
     Returns:
         Union[BaseAlgorithm, None]: The algorithm object with trained models.
     """
+    checkpoint_file = f'{checkpoint_file_prefix}.zip'
     if os.path.exists(checkpoint_file):
         logging.warn(f'Training aborted as checkpoint exists: {checkpoint_file}')
         return None
@@ -64,10 +66,10 @@ def train_with_sb3(
     algorithm = build_sb3_algorithm_from_config(environment, algorithm_config)
     algorithm.learn(**learning_config)
 
-    if checkpoint_file != '':
+    if checkpoint_file_prefix != '':
         checkpoint_dir = os.path.dirname(checkpoint_file)
         os.makedirs(checkpoint_dir, exist_ok=True)
-        algorithm.save(checkpoint_file)
+        algorithm.save(checkpoint_file_prefix)
         logging.info(f'SB3 Algorithm Policy saved at: {checkpoint_file}')
 
     return algorithm

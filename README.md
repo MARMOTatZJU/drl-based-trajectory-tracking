@@ -1,6 +1,8 @@
-# DRL-Based Trajectory Tracking
+# DRL-Based Trajectory Tracking (DRLTT)
 
-This repo hosts code and script for training and deploying *DRL-Based Trajectory Tracking* algorithm.
+This repo hosts code and script for training and deploying *DRL-Based Trajectory Tracking (DRLTT)*  algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task. Benifiting from its methological simplicity, DRLTT is able to process 32 trajectories (each contains 50 stpes) within several miliseconds on edge computing devices.
+
+Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for details.
 
 ## Installation
 
@@ -13,9 +15,9 @@ This repo hosts code and script for training and deploying *DRL-Based Trajectory
 source install-steup-protoc.sh
 ```
 
-## RL training
+## RL Training & Evaluating
 
-Setup a subfolder and create a `train.sh` with follwoing content, then execute it:
+Setup a subfolder and create a `main.sh` with follwoing content, then execute it:
 
 ```
 #!/bin/bash
@@ -23,7 +25,7 @@ source setup.sh
 work_dir=$(dirname $0)
 python scripts/train.py \
     --config-file configs/trajectory_tracking/config-tiny-track.yaml \
-    --checkpoint-file $work_dir/checkpoint.pkl \
+    --checkpoint-dir $work_dir/checkpoint/ \
     #
 ```
 
@@ -31,11 +33,27 @@ python scripts/train.py \
 
 ### System Design
 
-- SB3-BaseAlgorithm
-  - `TrajectoryTrackingEnv`
-      - `ObservationManager`
-          - `ReferenceLineManager`
-          - `DynamicsModelManager`
+```
+SB3-BaseAlgorithm
+├── SB3 hyper-parameter
+├── SB3 components
+└── TrajectoryTrackingEnv
+    ├── observation_space
+    ├── action_space
+    ├── ObservationManager
+    │   ├── ReferenceLineManager
+    │   │   └── ReferenceLine
+    │   └── DynamicsModelManager
+    │       List[DynamicsModel]
+    │           ├── HyperParameter
+    │           ├── State
+    │           ├── Action
+    │           └── step()
+    ├── reset()
+    │   └── random_walk()
+    └── step()
+        └── compute_reward()
+```
 
 ### Formatting
 
@@ -90,4 +108,13 @@ Create a ssh tunneling on the local side, which forward connections/requests fro
 
 ```
 ssh -L 8080:localhost:8080 remote-server
+```
+
+
+## Citation
+
+If you wish to cite this work, you may consider using the following reference form:
+
+```
+Xu, Yinda, and Lidong Yu. "DRL-Based Trajectory Tracking for Motion-Related Modules in Autonomous Driving." arXiv preprint arXiv:2308.15991 (2023).
 ```
