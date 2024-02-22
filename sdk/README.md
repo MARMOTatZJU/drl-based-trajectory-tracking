@@ -14,6 +14,6 @@ docker image build --tag drltt-sdk - < ./Dockerfile
 
 Secondly, launch compilation by running `sdk/compile-in-docker.sh`. Inside the container, it will first compile the Protobuf (this is important for Protobuf to be included successfully) and then compile source files with cmake as build system.
 
-```
+```bash
 bash ./compile-in-docker.sh
 ```

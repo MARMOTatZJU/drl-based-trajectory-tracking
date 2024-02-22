@@ -11,7 +11,7 @@ Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for d
 
 ### Protobuf Compiler
 
-```
+```bash
 source install-steup-protoc.sh
 ```
 
@@ -19,7 +19,7 @@ source install-steup-protoc.sh
 
 Setup a subfolder and create a `main.sh` with the following content, then execute it:
 
-```
+```bash
 #!/bin/bash
 source setup.sh
 work_dir=$(dirname $0)
@@ -33,7 +33,7 @@ python scripts/train.py \
 
 ### System Design
 
-```
+```text
 SB3-BaseAlgorithm
 ├── SB3 hyper-parameter
 ├── SB3 components
@@ -59,7 +59,7 @@ SB3-BaseAlgorithm
 
 This project uses `black` for code formatting.
 
-```
+```bash
 black --config ./configs/code_formatting/pyproject.toml ./
 ```
 
@@ -67,7 +67,7 @@ black --config ./configs/code_formatting/pyproject.toml ./
 
 This project utilizes *pytest* for testing. To launch testing, run in command line:
 
-```
+```bash
 pytest
 ```
 
@@ -79,34 +79,34 @@ This project adopts [Google-style Python docstrings](https://google.github.io/st
 The authors would like to thank [PyTorch](https://pytorch.org/docs/stable/index.html) for being an exemplar of documentation.
 
 
-```
+```bash
 pip install -r requirements/pypi-doc.txt
 ```
 
 Initialize Sphinx project
 
-```
+```bash
 mkdir docs && cd docs
 sphinx-quickstart
 ```
 
 Build html
 
-```
+```bash
 cd build
 make html
 ```
 
 Start http server on the remote side
 
-```
+```bash
 cd build/html
 python m http.server 8080 -b localhost
 ```
 
 Create a ssh tunneling on the local side, which forward connections/requests from local to remote (server)
 
-```
+```bash
 ssh -L 8080:localhost:8080 remote-server
 ```
 
@@ -116,7 +116,7 @@ ssh -L 8080:localhost:8080 remote-server
 
 `.vscode/settings.json`
 
-```
+```json
 {
     "python.analysis.extraPaths": [
         "${workspaceFolder}/common/proto/proto_gen_py"
