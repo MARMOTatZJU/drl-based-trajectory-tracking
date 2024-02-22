@@ -1,6 +1,6 @@
 # DRL-Based Trajectory Tracking (DRLTT)
 
-This repo hosts code and script for training and deploying *DRL-Based Trajectory Tracking (DRLTT)*  algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task. Benifiting from its methological simplicity, DRLTT is able to process 32 trajectories (each contains 50 stpes) within several miliseconds on edge computing devices.
+This repo hosts code and script for training and deploying the *DRL-Based Trajectory Tracking (DRLTT)*  algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task. Benefiting from its methodological simplicity, DRLTT is able to process 32 trajectories (each contains 50 steps) within several milliseconds on edge computing devices.
 
 Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for details.
 
@@ -17,7 +17,7 @@ source install-steup-protoc.sh
 
 ## RL Training & Evaluating
 
-Setup a subfolder and create a `main.sh` with follwoing content, then execute it:
+Setup a subfolder and create a `main.sh` with the following content, then execute it:
 
 ```
 #!/bin/bash
@@ -76,7 +76,7 @@ pytest
 
 This project adopts [Google-style Python docstrings](https://google.github.io/styleguide/pyguide.html), [Example Google Style Python Docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
 
-The authors would like to thank [PyTorch](https://pytorch.org/docs/stable/index.html) for being an examplar of documentation.
+The authors would like to thank [PyTorch](https://pytorch.org/docs/stable/index.html) for being an exemplar of documentation.
 
 
 ```

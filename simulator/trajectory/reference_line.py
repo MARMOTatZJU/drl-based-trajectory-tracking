@@ -36,10 +36,10 @@ class ReferenceLineManager:
         self.reference_line = reference_line
 
     def get_reference_line(self) -> ReferenceLine:
-        """Return the underlygin reference line.
+        """Return the underlying reference line.
 
         Returns:
-            ReferenceLine: Rreturned reference line
+            ReferenceLine: Returned reference line
         """
         return self.reference_line
 
@@ -82,7 +82,7 @@ class ReferenceLineManager:
 
         Args:
             index: Waypoint index.
-            body_staate: Body state for ego-centric observation.
+            body_state: Body state for ego-centric observation.
 
         Returns:
             np.ndarray: Vectorized reference line observation. Format: (x, y) x length.

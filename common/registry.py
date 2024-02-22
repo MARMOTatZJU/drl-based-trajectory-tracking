@@ -20,12 +20,12 @@ class Registry(dict):
     >>> # build registry
     >>> REGISTRY_NAME = Registry(name='REGISTRY_NAME')
 
-    >>> # registr function
+    >>> # register function
     >>> @REGISTRY_NAME.register
     >>> def foo():
     >>>     pass
 
-    >>> # registr class
+    >>> # register class
     >>> @REGISTRY_NAME.register
     >>> class bar():
     >>>     pass
@@ -46,9 +46,9 @@ class Registry(dict):
         super(Registry, self).__init__(**kwargs)
 
     def register(self, module: Any) -> Any:
-        """Register module (class/functino/etc.) into this registry.
+        """Register module (class/function/etc.) into this registry.
 
-        Typically used as decorater, thus return the input module itself.
+        Typically used as decorator, thus return the input module itself.
 
         Args:
             module: Python object that needs to be registered.

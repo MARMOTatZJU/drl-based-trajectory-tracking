@@ -58,7 +58,7 @@ def convert_list_to_tuple_within_dict(
 
 
 def generate_random_string(n: int) -> str:
-    """Generate a string with characters randomly choosen.
+    """Generate a string with characters randomly chosen.
 
     Args:
         n: Desired length of string.
@@ -82,7 +82,7 @@ def override_config(
         allow_new_key: Whether allow creation of new key.
 
     Returns:
-        Dict: The overriden config.
+        Dict: The overridden config.
     """
     for k in tuple(update_config.keys()):
         if k not in base_config:

@@ -22,7 +22,7 @@ def transform_points(points: np.ndarray, transform_matrix: np.ndarray) -> np.nda
 
     Args:
         points: Points to be transformed, shape=(N, 2).
-        transform_matrix: trnasform_matrix which lies in group SO(2), shape=(3, 3).
+        transform_matrix: Transform matrix which lies in group SO(2), shape=(3, 3).
 
     Returns:
         np.ndarray: Transformed points, shape=(N, 2).
