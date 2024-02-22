@@ -12,6 +12,12 @@ Welcome to DRL-based Trajectory Tracking (DRLTT)'s documentation!
 
    rst_files/readme
 
+.. toctree::
+   :maxdepth: 3
+   :caption: SDK
+
+   rst_files/readme-sdk
+
 
 .. Indices and tables
 .. ==================
