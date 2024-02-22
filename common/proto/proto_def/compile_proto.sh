@@ -10,6 +10,8 @@ cpp_output_dir=${src_dir}/../proto_gen_cpp/
 rm -rf ${cpp_output_dir}
 mkdir -p ${cpp_output_dir}
 
+# NOTE: if build cpp target within docker, protobuf also need to be compiled within docker.
+#       otherwise, cpp compiler will not find protobuf include file.
 # TODO: verify if `--experimental_allow_proto3_optional` is necessary
 protoc -I ${src_dir} \
     --python_out ${python_output_dir} \
