@@ -29,11 +29,19 @@ def parse_args():
 
 
 def configure_root_logger(log_dir: str):
+    """Configure root logger.
+
+    Remove all default handlers and add customized handlers.
+
+    Args:
+        log_dir: Directory to dump log output.
+    """
     os.makedirs(log_dir, exist_ok=True)
     FORMAT = '%(asctime)s :: %(name)s :: %(levelname)-8s :: %(message)s'
     FORMATTER = logging.Formatter(fmt=FORMAT)
 
     logger = logging.root
+    logger.handlers.clear()
 
     stream_handler = logging.StreamHandler(stream=sys.stdout)
     stream_handler.setFormatter(FORMATTER)

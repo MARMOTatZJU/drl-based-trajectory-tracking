@@ -118,6 +118,7 @@ def eval_with_sb3(
         json.dump(json.loads(json_str), f, sort_keys=True, indent=2, separators=(',', ': '))
 
     logging.info(f'Report file dumped at: {report_file}')
+    logging.info(json_str)
 
 
 @METRICS.register
