@@ -111,6 +111,23 @@ ssh -L 8080:localhost:8080 remote-server
 ```
 
 
+
+### configure vscode
+
+`.vscode/settings.json`
+
+```
+{
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/common/proto/proto_gen_py"
+    ],
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/common/proto/proto_gen_cpp"
+    ]
+}
+
+```
+
 ## Citation
 
 If you wish to cite this work, you may consider using the following reference form:
