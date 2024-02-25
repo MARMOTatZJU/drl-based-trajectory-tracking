@@ -43,8 +43,8 @@ algorithm:
   policy: MlpPolicy
   policy_kwargs:
     net_arch:
-      pi: [128, 32]
-      qf: [512, 256, 128]
+      pi: [256, 256, 128, 128, 64, 64]
+      qf: [1024, 512, 256, 128]
   train_freq: [4, "episode"]
   learning_rate: 4.0e-5
   scaled_action_noise:
