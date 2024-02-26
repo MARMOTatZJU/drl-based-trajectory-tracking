@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package drl_based_trajectory_tracking;
+package drltt_proto;
 
 // State coordinates in fixed space frame
 message BodyState {
