@@ -5,7 +5,7 @@ import "drltt_proto/dynamics_model/action.proto";
 import "drltt_proto/dynamics_model/hyper_parameter.proto";
 import "drltt_proto/trajectory/trajectory.proto";
 
-package drl_based_trajectory_tracking;
+package drltt_proto;;
 
 message TrajectoryTrackingHyperParameter {
     optional float step_interval = 1;

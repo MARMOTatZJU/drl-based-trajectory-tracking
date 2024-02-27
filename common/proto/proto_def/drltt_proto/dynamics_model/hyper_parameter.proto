@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package drl_based_trajectory_tracking;
+package drltt_proto;;
 
 message HyperParameter {
     optional BicycleModelHyperParameter bicycle_model = 1;

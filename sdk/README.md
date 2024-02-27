@@ -4,13 +4,17 @@ Software Development Kit (SDK) for deploying DRLTT into real-time system, CPU-on
 
 ## Compilation
 
-The compilation is recomended to be done within a Docker container.
+The compilation is recommended to be done within a Docker container.
+
+### Build Docker image
 
 Firstly, build an image named `drltt-sdk` for compilation with the provided Dockerfile.
 
+```bash
+docker image build --tag drltt-sdk:dev - < ./Dockerfile
 ```
-docker image build --tag drltt-sdk - < ./Dockerfile
-```
+
+### Compile source within Docker container
 
 Secondly, launch compilation by running `sdk/compile-in-docker.sh`. Inside the container, it will first compile the Protobuf (this is important for Protobuf to be included successfully) and then compile source files with cmake as build system.
 
@@ -18,13 +22,36 @@ Secondly, launch compilation by running `sdk/compile-in-docker.sh`. Inside the c
 bash ./compile-in-docker.sh
 ```
 
+#### Tree structure within docker container
+
+```text
+/
+├── usr
+│   └── local
+│       ├── bin
+│       └── lib
+├── proto_src -> $PROJECT_ROOT/common/proto/proto_def
+├── proto -> $PROJECT_ROOT/common/proto:/proto
+├── drltt-sdk -> $PROJECT_ROOT/sdk/drltt-sdk
+└── work_dir
+```
+
+### Tree structure within docker container
+
+Run sample script.
+
+```bash
+bash run-main.sh
+```
+
+
 ## Development
 
 ### Code format
 
 This project uses `clang-format` to format CXX code.
 
-```
+```bash
 clang-format -style=llvm -dump-config > .clang-format
 find . -regex '.*\.\(cpp\|hpp\|cu\|cuh\|c\|h\)' -exec clang-format --style=file -i {} \;
 ```
