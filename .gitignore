@@ -164,10 +164,11 @@ cython_debug/
 work_dirs/
 *.json
 *.txt
+!CMakeLists.txt
 *.jpg
 *.png
 *.mp4
 *.zip
 
-# protobuf
-common/proto/proto_gen_*/**/*
+# protobuf generated code
+**/*proto_gen*/**/*
