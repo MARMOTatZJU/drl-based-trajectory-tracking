@@ -11,8 +11,13 @@ export LDFLAGS="-Wl,--copy-dt-needed-entries"
 # Check version and location of Protobuf compiler
 echo "Using protoc $(protoc --version) at $(which protoc)"
 
-rm -r ./build
+# Clear exisiting compiled files
+rm -rf ./build
 mkdir -p ./build
+rm -rf ./proto_gen
+mkdir -p ./proto_gen
+
+# Configure and build
 pushd build
     cmake .. && make -j$(nproc --all)
     cp -r $ld_lib_dir ./    # export shared library.

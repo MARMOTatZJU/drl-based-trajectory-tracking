@@ -15,3 +15,4 @@ add_subdirectory(/proto/proto_def proto_def)
 include_directories(/drltt-sdk/proto_gen)  # TODO resolve it in more formal way, try to find a nother place in sdk folder
 
 add_subdirectory(drltt-sdk)
+
