@@ -4,7 +4,7 @@ Software Development Kit (SDK) for deploying DRLTT into real-time system, CPU-on
 
 ## Compilation
 
-The compilation is recommended to be done within a Docker container.
+This project employs `cmake` as build system.. The compilation is recommended to be done within a Docker container.
 
 ### Build Docker image
 
@@ -16,11 +16,16 @@ docker image build --tag drltt-sdk:dev - < ./Dockerfile
 
 ### Compile source within Docker container
 
-Secondly, launch compilation by running `sdk/compile-in-docker.sh`. Inside the container, it will first compile the Protobuf (this is important for Protobuf to be included successfully) and then compile source files with cmake as build system.
+Secondly, launch compilation by running `bash ./compile-in-docker.sh`.
 
-```bash
-bash ./compile-in-docker.sh
-```
+.. literalinclude:: ../../../sdk/compile-in-docker.sh
+  :language: bash
+
+Inside the container, it will first compile the Protobuf (this is important for Protobuf to be included successfully) and then compile source files.
+
+.. literalinclude:: ../../../sdk/compile-source.sh
+  :language: bash
+
 
 #### Tree structure within docker container
 
@@ -30,9 +35,9 @@ bash ./compile-in-docker.sh
 │   └── local
 │       ├── bin
 │       └── lib
-├── proto_src -> $PROJECT_ROOT/common/proto/proto_def
-├── proto -> $PROJECT_ROOT/common/proto:/proto
-├── drltt-sdk -> $PROJECT_ROOT/sdk/drltt-sdk
+├── proto -> $PROJECT_ROOT/common/proto:/proto      # protobuf source
+├── drltt-sdk -> $PROJECT_ROOT/sdk/drltt-sdk        # `source_dir`
+│   └── proto_gen                                   # generated protobuf
 └── work_dir
 ```
 
@@ -42,20 +47,18 @@ bash ./compile-in-docker.sh
 /build
 ├── ...
 ├── proto_def
-├── drltt-sdk
+├── drltt-sdk   # compiled libraries and executables
 │   └── main
-├── lib
+├── lib         # exported shared library for running
 └── ...
 ```
 
 ### Run compiled binaries
 
-Run sample script.
+To run sample script, launch `bash run-main.sh`:
 
-```bash
-bash run-main.sh
-```
-
+.. literalinclude:: ../../../sdk/run-main.sh
+  :language: bash
 
 ## Development
 
@@ -63,10 +66,17 @@ bash run-main.sh
 
 This project uses `clang-format` to format CXX code.
 
+To launch code-format, run `bash format-code.sh`:
+
+.. literalinclude:: ../../../sdk/format-code.sh
+  :language: bash
+
+To customize your own `clang-format` config file, run:
+
 ```bash
 clang-format -style=llvm -dump-config > .clang-format
-find . -regex '.*\.\(cpp\|hpp\|cu\|cuh\|c\|h\)' -exec clang-format --style=file -i {} \;
 ```
+
 
 References:
 

@@ -12,7 +12,7 @@ Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for d
 ### Protobuf Compiler
 
 ```bash
-source install-steup-protoc.sh
+source install-setup-protoc.sh
 ```
 
 ## RL Training & Evaluating
@@ -21,6 +21,7 @@ Setup a subfolder and create a `main.sh` with the following content, then execut
 
 ```bash
 #!/bin/bash
+
 source setup.sh
 work_dir=$(dirname $0)
 python scripts/train.py \
@@ -57,11 +58,10 @@ SB3-BaseAlgorithm
 
 ### Formatting
 
-This project uses `black` for code formatting.
+This project uses `black` for Python code formatting and `clang-format` for CXX code formatting:
 
-```bash
-black --config ./configs/code_formatting/pyproject.toml ./
-```
+.. literalinclude:: ../../../format-code.sh
+  :language: bash
 
 ## Testing
 
@@ -74,28 +74,41 @@ pytest
 
 ### Contribute to Documentation
 
-This project adopts [Google-style Python docstrings](https://google.github.io/styleguide/pyguide.html), [Example Google Style Python Docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
+This project adopts [Google-style Python docstrings](https://google.github.io/styleguide/pyguide.html), [Example Google Style Python Docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) for auto-generation of API pages .
 
 The authors would like to thank [PyTorch](https://pytorch.org/docs/stable/index.html) for being an exemplar of documentation.
 
+#### For initialization
+
+Initialize requirements of documentation generation:
 
 ```bash
 pip install -r requirements/pypi-doc.txt
 ```
 
-Initialize Sphinx project
+Initialize Sphinx project:
 
 ```bash
 mkdir docs && cd docs
 sphinx-quickstart
 ```
 
-Build html
+Build html:
 
 ```bash
 cd build
 make html
 ```
+
+#### For incremental changes
+
+As documentation of current project has already been set up, you can only run `make-html.sh` instead of previous steps:
+
+.. literalinclude:: ../../../make-html.sh
+  :language: bash
+
+
+#### Start server and view documentation pages
 
 Start http server on the remote side
 
