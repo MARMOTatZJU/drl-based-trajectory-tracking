@@ -36,7 +36,19 @@ bash ./compile-in-docker.sh
 └── work_dir
 ```
 
-### Tree structure within docker container
+#### `build` folder structure
+
+```text
+/build
+├── ...
+├── proto_def
+├── drltt-sdk
+│   └── main
+├── lib
+└── ...
+```
+
+### Run compiled binaries
 
 Run sample script.
 
