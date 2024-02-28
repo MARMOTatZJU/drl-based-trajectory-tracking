@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 project(drltt-sdk)
 set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
+
+
+set(CMAKE_CXX_FLAGS "-fpic -Werror -O2 -std=c++20 -march=native -ftree-vectorize")
 
 # TODO resolve it in more formal way
 # https://github.com/protocolbuffers/protobuf/issues/14500
