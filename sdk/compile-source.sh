@@ -22,4 +22,5 @@ pushd build
     cmake .. && make -j$(nproc --all)
     cp -r $ld_lib_dir ./    # export shared library.
                             # TODO: consider a more elegant way, like packaging
+    ctest -v
 popd

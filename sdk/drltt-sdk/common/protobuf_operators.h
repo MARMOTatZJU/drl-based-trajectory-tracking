@@ -4,7 +4,7 @@
 #include "drltt_proto/dynamics_model/state.pb.h"
 
 /**
- * Add to body state together. Perform normalization on heading.
+ * Add two body state together. Perform normalization on heading.
  * @param lhs Left hand side body state.
  * @param rhs Right hand side body state.
  * @return Added body state

@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <cmath>
 
-
 // TODO: import from: https://github.com/ros/angles
 
 /**
