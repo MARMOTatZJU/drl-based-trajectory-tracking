@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 project(drltt-sdk)
 set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
+
+
+set(CMAKE_CXX_FLAGS "-fpic -Werror -O2 -std=c++20 -march=native -ftree-vectorize")
 
 # TODO resolve it in more formal way
 # https://github.com/protocolbuffers/protobuf/issues/14500
@@ -11,7 +14,15 @@ set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# gtest
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIR})
+include(GoogleTest)
+enable_testing()
+
 add_subdirectory(/proto/proto_def proto_def)
 include_directories(/drltt-sdk/proto_gen)  # TODO resolve it in more formal way, try to find a nother place in sdk folder
 
+
 add_subdirectory(drltt-sdk)
+

@@ -60,11 +60,13 @@ To run sample script, launch `bash run-main.sh`:
 .. literalinclude:: ../../../sdk/run-main.sh
   :language: bash
 
+If you prefer to use shared libraries on your host machine, please *prepend* your shared libraries' path to `LD_LIBRARY_PATH`.
+
 ## Development
 
 ### Code format
 
-This project uses `clang-format` to format CXX code.
+This project uses `clang-format` to format CXX code according to *Google C/C++ Code Style settings*.
 
 To launch code-format, run `bash format-code.sh`:
 

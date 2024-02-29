@@ -50,6 +50,7 @@ RUN \
     echo "apt package installation and bashrc modification done."
 
 RUN \
+    echo "Installing Protobuf" && \
     PROTO_VERSION=25.3 && \
     git clone --depth=1 --progress -b v${PROTO_VERSION} https://github.com/protocolbuffers/protobuf && \
         ( \
@@ -64,3 +65,16 @@ RUN \
         make -j$(nproc --all) install; \
         ) && \
         rm -rf protobuf
+
+RUN \
+    echo "Installing gtest" && \
+    GTEST_VERSION=1.14.0 && \
+    git clone --depth=1 --progress -b v${GTEST_VERSION} https://github.com/google/googletest.git && \
+        ( \
+        cd googletest; \
+        mkdir build; \
+        cd build; \
+        cmake ..; \
+        make -j$(nproc --all) install; \
+        ) && \
+        rm -rf googletest
