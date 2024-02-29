@@ -10,4 +10,7 @@ TEST(DynamicsModelTest, BicycleModelTest) {
   hyper_parameter.mutable_bicycle_model()->set_wheelbase(2.7);
   hyper_parameter.mutable_bicycle_model()->set_width(1.8);
   BicycleModel dynamics_model(hyper_parameter);
+  drltt_proto::Action action;
+  float delta_t = 0.1;
+  dynamics_model.step(action, delta_t);
 }
