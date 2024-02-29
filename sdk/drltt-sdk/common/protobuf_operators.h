@@ -8,6 +8,6 @@
  * @param lhs Left hand side body state.
  * @param rhs Right hand side body state.
  * @return Added body state
-*/
+ */
 drltt_proto::BodyState operator+(drltt_proto::BodyState lhs,
                                  const drltt_proto::BodyState& rhs);
