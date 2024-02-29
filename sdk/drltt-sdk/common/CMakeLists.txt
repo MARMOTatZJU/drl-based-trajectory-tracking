@@ -11,9 +11,10 @@ target_link_libraries(common
 )
 
 # gtest
+file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
 add_executable(
   common_test
-  protobuf_operators_test.cpp
+  ${_TEST_SRCS}
 )
 target_link_libraries(
   common_test
