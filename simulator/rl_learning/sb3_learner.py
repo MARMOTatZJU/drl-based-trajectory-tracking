@@ -6,14 +6,15 @@ import json
 
 import numpy as np
 import pandas as pd
-
-from common import Registry, build_object_within_registry_from_config
-from common.gym_helper import scale_action
 import gym
 import stable_baselines3
 from stable_baselines3.common.utils import configure
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.noise import NormalActionNoise
+
+from common import Registry, build_object_within_registry_from_config
+from common.gym_helper import scale_action
+from simulator.environments import ExtendedGymEnv
 from . import METRICS
 
 from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
@@ -44,7 +45,7 @@ def build_sb3_algorithm_from_config(
 
 
 def train_with_sb3(
-    environment: gym.Env,
+    environment: ExtendedGymEnv,
     algorithm_config: Dict,
     learning_config: Dict,
     checkpoint_file_prefix: str = '',
@@ -71,9 +72,16 @@ def train_with_sb3(
     algorithm.learn(**learning_config)
 
     if checkpoint_file_prefix != '':
+        # save model
         os.makedirs(checkpoint_dir, exist_ok=True)
         algorithm.save(checkpoint_file_prefix)
         logging.info(f'SB3 Algorithm Policy saved at: {checkpoint_file}')
+        # save environment
+        env_data = environment.export_environment_data()
+        env_data_save_path = f'{checkpoint_dir}/env_data.bin'
+        with open(env_data_save_path, 'wb') as f:
+            f.write(env_data.SerializeToString())
+        logging.info('Environment data saved toL {}')
 
     return algorithm
 
@@ -124,7 +132,7 @@ def eval_with_sb3(
 @METRICS.register
 def compute_bicycle_model_metrics(
     episode: TrajectoryTrackingEpisode,
-    environment: gym.Env,
+    environment: ExtendedGymEnv,
 ) -> Dict[str, Any]:
     dists = list()
     scaled_action_norms = list()

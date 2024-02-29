@@ -34,6 +34,7 @@ message TrajectoryTrackingEpisode {
     repeated float rewards = 6;
 }
 
+// TODO use composition to achieve inheritance, e.g. env.trajectory_tracking.env_data...
 message TrajectoryTrackingEnvironment {
     optional TrajectoryTrackingHyperParameter hyper_parameter = 1;
     optional TrajectoryTrackingEpisode episode = 2;
