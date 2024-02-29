@@ -234,17 +234,17 @@ class TrajectoryTrackingEnv(gym.Env):
         # return observation, scalar_reward, terminated, truncated, extra_info
         return observation, scalar_reward, terminated, extra_info
 
-    def export_episode_data(
+    def export_environment_data(
         self,
-    ) -> TrajectoryTrackingEpisode:
-        """Export episode data.
+    ) -> TrajectoryTrackingEnvironment:
+        """Export environment data.
 
         Return:
-            TrajectoryTrackingEpisode: Episode data in proto structure.
+            TrajectoryTrackingEnvironment: Environment data in proto structure.
         """
-        episode_data = TrajectoryTrackingEpisode()
-        episode_data.CopyFrom(self.env_info.episode)
+        env_data = TrajectoryTrackingEnvironment()
+        env_data.CopyFrom(self.env_info)
 
-        return episode_data
+        return env_data
 
     # TODO: rendering

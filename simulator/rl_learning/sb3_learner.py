@@ -105,7 +105,7 @@ def eval_with_sb3(
             obs, reward, done, info = environment.step(action)
 
         compute_metrics = METRICS[compute_metrics_name]
-        episode: TrajectoryTrackingEpisode = environment.export_episode_data()
+        episode: TrajectoryTrackingEpisode = environment.export_environment_data().episode
         metrics = compute_metrics(episode, environment)  # metric[metric_name][reduce_method]
         all_episodes_metrics.append(metrics)
 
