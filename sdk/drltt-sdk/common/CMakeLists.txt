@@ -4,10 +4,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 file(GLOB_RECURSE _SRCS "*.[hc]pp")
 list(FILTER _SRCS EXCLUDE REGEX "_test.[hc]pp$")
 add_library(common STATIC ${_SRCS})
-target_link_libraries(common
+target_link_libraries(
+    common
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PROTOBUF_LIBRARY}
+    proto
 )
 
 # gtest
@@ -18,11 +20,7 @@ add_executable(
 )
 target_link_libraries(
   common_test
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-  ${PROTOBUF_LIBRARY}
   GTest::gtest_main
-  proto
   common
   )
 gtest_discover_tests(common_test)

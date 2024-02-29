@@ -5,6 +5,7 @@ namespace drltt {
 BaseDynamicsModel::BaseDynamicsModel(
     const drltt_proto::HyperParameter& hyper_parameter) {
   _hyper_parameter.CopyFrom(hyper_parameter);
+  this->parse_hyper_parameter();
 }
 
 BaseDynamicsModel::BaseDynamicsModel(

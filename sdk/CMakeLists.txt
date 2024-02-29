@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(drltt-sdk)
 set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
-
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(CMAKE_CXX_FLAGS "-fpic -Werror -O2 -std=c++20 -march=native -ftree-vectorize")
 
