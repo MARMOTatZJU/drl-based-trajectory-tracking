@@ -21,7 +21,6 @@ drltt_proto::BodyState operator+(drltt_proto::BodyState lhs,
  */
 drltt_proto::BodyState operator*(drltt_proto::BodyState lhs, float rhs);
 
-
 /**
  * Scale a body state with a scalar to represent a difference in body state. No
  * normalization performed on heading in this case.
