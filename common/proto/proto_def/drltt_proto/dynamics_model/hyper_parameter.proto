@@ -12,8 +12,8 @@ message BicycleModelHyperParameter {
     optional float rear_overhang = 3;
     optional float wheelbase = 4;
     optional float width = 5;
-    optional float frontwheel_to_CoG = 6;
-    optional float rearwheel_to_CoG = 7;
+    optional float frontwheel_to_cog = 6;
+    optional float rearwheel_to_cog = 7;
     repeated float action_space_lb = 8;
     repeated float action_space_ub = 9;
 }

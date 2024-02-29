@@ -70,8 +70,8 @@ class BicycleModel(BaseDynamicsModel):
         hyper_parameter.bicycle_model.width = width
         length = front_overhang + wheelbase + rear_overhang
         hyper_parameter.bicycle_model.length = length
-        hyper_parameter.bicycle_model.frontwheel_to_CoG = wheelbase + rear_overhang - length / 2
-        hyper_parameter.bicycle_model.rearwheel_to_CoG = wheelbase + front_overhang - length / 2
+        hyper_parameter.bicycle_model.frontwheel_to_cog = wheelbase + rear_overhang - length / 2
+        hyper_parameter.bicycle_model.rearwheel_to_cog = wheelbase + front_overhang - length / 2
         hyper_parameter.bicycle_model.action_space_ub.extend(action_space_ub)
         hyper_parameter.bicycle_model.action_space_lb.extend(action_space_lb)
 
@@ -129,15 +129,15 @@ class BicycleModel(BaseDynamicsModel):
         a = action.bicycle_model.a
         s = action.bicycle_model.s
 
-        gravity_center_relative_position = hyper_parameter.rearwheel_to_CoG / (
-            hyper_parameter.rearwheel_to_CoG + hyper_parameter.frontwheel_to_CoG
+        gravity_center_relative_position = hyper_parameter.rearwheel_to_cog / (
+            hyper_parameter.rearwheel_to_cog + hyper_parameter.frontwheel_to_cog
         )
         omega = np.arctan(gravity_center_relative_position * np.tan(s))
         omega = normalize_angle(omega)
 
         dx_dt = v * np.cos(r + omega)
         dy_dt = v * np.sin(r + omega)
-        dr_dt = v / hyper_parameter.rearwheel_to_CoG * np.sin(omega)
+        dr_dt = v / hyper_parameter.rearwheel_to_cog * np.sin(omega)
         dv_dt = a
 
         derivative = State()

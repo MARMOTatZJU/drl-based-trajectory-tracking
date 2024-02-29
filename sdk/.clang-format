@@ -60,7 +60,7 @@ NamespaceIndentation: None
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
 PointerAlignment: Left
-ReflowComments: false
+ReflowComments: true
 # SeparateDefinitionBlocks: Always   # Only support since clang-format 14
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
