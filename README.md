@@ -65,11 +65,13 @@ This project uses `black` for Python code formatting and `clang-format` for CXX 
 
 ## Testing
 
-This project utilizes *pytest* for testing. To launch testing, run in command line:
+This project utilizes *pytest* for Python testing. To launch testing, run in command line:
 
 ```bash
 pytest
 ```
+
+CPP testing is performed through *gtest* immediately after building. Please refer to [./sdk/README.md](SDK-README for detail).
 
 
 ### Contribute to Documentation
