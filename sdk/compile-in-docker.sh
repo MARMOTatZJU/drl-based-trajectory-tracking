@@ -9,4 +9,4 @@ docker run --name drltt-sdk --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=
     -v $PWD/../common/proto:/proto:rw \
     --user "$(id -u):$(id -g)" \
     ${image_name} \
-    -c "cd ${source_dir} && bash compile-source.sh"
+    -c "cd ${source_dir} && bash ./compile-source.sh"

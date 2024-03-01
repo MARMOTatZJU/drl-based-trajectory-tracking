@@ -10,6 +10,7 @@ from gym.spaces import Space
 
 from common.gym_helper import scale_action
 from . import ENVIRONMENTS
+from simulator.environments.env_interface import CustomizedEnvInterface
 from simulator import DTYPE
 from simulator.dynamics_models import (
     BaseDynamicsModel,
@@ -26,7 +27,7 @@ from drltt_proto.environment.trajectory_tracking_pb2 import (
 
 
 @ENVIRONMENTS.register
-class TrajectoryTrackingEnv(gym.Env):
+class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
     """Environment for Trajectory Tracking.
 
     Attributes:
@@ -234,17 +235,18 @@ class TrajectoryTrackingEnv(gym.Env):
         # return observation, scalar_reward, terminated, truncated, extra_info
         return observation, scalar_reward, terminated, extra_info
 
-    def export_episode_data(
+    @override
+    def export_environment_data(
         self,
-    ) -> TrajectoryTrackingEpisode:
-        """Export episode data.
+    ) -> TrajectoryTrackingEnvironment:
+        """Export environment data.
 
         Return:
-            TrajectoryTrackingEpisode: Episode data in proto structure.
+            TrajectoryTrackingEnvironment: Environment data in proto structure.
         """
-        episode_data = TrajectoryTrackingEpisode()
-        episode_data.CopyFrom(self.env_info.episode)
+        env_data = TrajectoryTrackingEnvironment()
+        env_data.CopyFrom(self.env_info)
 
-        return episode_data
+        return env_data
 
     # TODO: rendering
