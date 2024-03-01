@@ -19,8 +19,8 @@ mkdir -p ./proto_gen
 
 # Configure and build
 pushd build
-    cmake .. && make -j$(nproc --all)
+    cmake .. && make -j$(nproc --all) 2>&1 | tee ./build.log
     cp -r $ld_lib_dir ./    # export shared library.
                             # TODO: consider a more elegant way, like packaging
-    ctest -v
+    ctest -VV 2>&1 | tee ./test.log
 popd
