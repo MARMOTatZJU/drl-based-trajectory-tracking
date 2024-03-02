@@ -41,10 +41,6 @@ environment:
 algorithm:
   type: TD3
   policy: MlpPolicy
-  policy_kwargs:
-    net_arch:
-      pi: [128, 32]
-      qf: [1024, 512, 256, 128]
   train_freq: [4, "episode"]
   learning_rate: 4.0e-5
   scaled_action_noise:
@@ -54,6 +50,16 @@ algorithm:
   learning_starts: 4096
   batch_size: 4096
   tau: 0.001
+
+learning:
+    total_timesteps: 3_000_000
+    log_interval: 10
+
+evaluation:
+  eval_config:
+    n_episodes: 200
+    compute_metrics_name: "compute_bicycle_model_metrics"
+  overriden_environment: {}
 
 learning:
     total_timesteps: 3_000_000

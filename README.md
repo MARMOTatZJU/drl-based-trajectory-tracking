@@ -25,10 +25,13 @@ Setup a subfolder and create a `main.sh` with the following content, then execut
 source setup.sh
 work_dir=$(dirname $0)
 python scripts/main.py \
-    --config-file configs/trajectory_tracking/config-tiny-track.yaml \
+    --config-files configs/trajectory_tracking/config-tiny-track.yaml \
     --checkpoint-dir $work_dir/checkpoint/ \
+    --train --eval \
     #
 ```
+
+The checkpoint (trained model/log/evaluation results/etc.) will be output at `$work_dir/checkpoint/`.
 
 ## Development
 

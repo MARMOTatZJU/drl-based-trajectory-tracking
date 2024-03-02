@@ -1,3 +1,4 @@
+from typing import List
 import argparse
 import os
 import sys
@@ -18,7 +19,16 @@ from simulator.rl_learning.sb3_learner import SB3_MODULES
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config-file', type=str)
+    parser.add_argument(
+        '--config-files',
+        metavar='N',
+        type=str,
+        nargs='+',
+        help=(
+            'Config file(s). If multiple paths provided, the first config is base and will overridden by the rest'
+            ' respectively.'
+        ),
+    )
     parser.add_argument('--checkpoint-dir', type=str)
     parser.add_argument('--train', action='store_true', default=False)
     parser.add_argument('--eval', action='store_true', default=False)
@@ -56,16 +66,31 @@ def configure_root_logger(log_dir: str):
     logging.info(f'Logging directory configured at: {log_dir}')
 
 
+def load_and_override_configs(config_paths : List[str]):
+    config = load_config_from_yaml(config_paths[0])
+
+    for overriding_cfg_file in config_paths[1:]:
+        overriding_config = load_config_from_yaml(overriding_cfg_file)
+        override_config(config, overriding_config, allow_new_key=True)
+
+    config = convert_list_to_tuple_within_dict(config)
+
+    return config
+
+
 def main(args):
     configure_root_logger(args.checkpoint_dir)
 
-    config = load_config_from_yaml(args.config_file)
-    config = convert_list_to_tuple_within_dict(config)
+    config = load_and_override_configs(args.config_files)
     env_config = config['environment']
 
     # backup config
     os.makedirs(args.checkpoint_dir, exist_ok=True)
-    shutil.copy(args.config_file, args.checkpoint_dir)
+    for i_config, config_p in enumerate(args.config_files):
+        config_basename = os.path.basename(config_p)
+        config_save_path = f'{i_config:02}-{config_basename}'
+        shutil.copy(config_p, f'{args.checkpoint_dir}/{config_save_path}')
+        logging.info(f'Config file backed up at: {config_save_path}')
 
     checkpoint_file_prefix = f'{args.checkpoint_dir}/checkpoint'  # without extension
 
