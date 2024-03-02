@@ -24,7 +24,7 @@ Setup a subfolder and create a `main.sh` with the following content, then execut
 
 source setup.sh
 work_dir=$(dirname $0)
-python scripts/train.py \
+python scripts/main.py \
     --config-file configs/trajectory_tracking/config-tiny-track.yaml \
     --checkpoint-dir $work_dir/checkpoint/ \
     #
