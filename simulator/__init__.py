@@ -5,4 +5,9 @@ logging.basicConfig(level=logging.INFO)
 import numpy as np
 
 DTYPE = np.float32
-SAMPLE_CONFIG_PATH = 'configs/trajectory_tracking/config-tiny-track.yaml'
+
+TEST_CONFIG_PATHS = (
+    'configs/trajectory_tracking/config-track-base.yaml',
+    'configs/trajectory_tracking/config-track-tiny.yaml',
+    'configs/trajectory_tracking/utils/config-track-test.yaml',
+)

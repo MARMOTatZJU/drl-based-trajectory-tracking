@@ -1,4 +1,4 @@
-# override for debugging
+# override for testing/debugging
 learning:
     total_timesteps: 3_000
     log_interval: 10

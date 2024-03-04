@@ -14,13 +14,19 @@ def load_config_from_yaml(config_file: str) -> Dict:
         config_file: Path to configuration file.
     """
     if not os.path.exists(config_file):
-        logging.warn(f'{config_file} does not exist')
-        return None
+        raise FileNotFoundError(f'{config_file} does not exist')
     with open(config_file, 'r') as f:
         config = yaml.safe_load(f)
-    logging.info(f'Loaded config at: {config_file}')
+    logging.info(f'Loaded config from: {config_file}')
 
     return config
+
+
+def save_config_to_yaml(config: Dict, config_file: str):
+    with open(config_file, 'w') as f:
+        yaml.dump(config, f)
+
+    logging.info(f'Saved config at: {config_file}')
 
 
 def convert_list_to_tuple_within_dict(
@@ -102,3 +108,26 @@ def override_config(
             base_config[k] = update_config[k]
 
     return base_config
+
+
+def load_and_override_configs(config_paths: List[str]) -> Dict:
+    """Load and override a series of config files.
+
+    Args:
+        config_paths: The base config and the overriding configs.
+
+            * The first config will serve as base config.
+            * The rest configs will override the base config, respectively.
+
+    Returns:
+        Dict: The loaded and overridden config.
+    """
+    config = load_config_from_yaml(config_paths[0])
+
+    for overriding_cfg_file in config_paths[1:]:
+        overriding_config = load_config_from_yaml(overriding_cfg_file)
+        override_config(config, overriding_config, allow_new_key=True)
+
+    config = convert_list_to_tuple_within_dict(config)
+
+    return config
