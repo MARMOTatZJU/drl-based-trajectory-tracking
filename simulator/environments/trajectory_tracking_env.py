@@ -60,6 +60,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         # build manager classes
         self.reference_line_manager = ReferenceLineManager(
             n_observation_steps=self.env_info.hyper_parameter.n_observation_steps,
+            pad_mode=self.env_info.hyper_parameter.reference_line_pad_mode,
         )
         self.dynamics_model_manager = DynamicsModelManager(
             dynamics_model_configs=dynamics_model_configs,
@@ -79,6 +80,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         step_interval: float,
         tracking_length_lb: int,
         tracking_length_ub: int,
+        reference_line_pad_mode: str,
         init_state_lb: List[Union[float, None]],
         init_state_ub: List[Union[float, None]],
         n_observation_steps: int,
@@ -90,6 +92,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             step_interval: Step interval by which each step moves forward temporally.
             tracking_length_lb: Lower bound of tracking length.
             tracking_length_ub: Upper bound of tracking length.
+            reference_line_pad_mode: Mode for padding reference line.
             init_state_lb: lower Bound of state space.
             init_state_ub: upper Bound of state space.
             n_observation_steps: Number of the steps within the observation.
@@ -97,6 +100,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         hyper_parameter.step_interval = step_interval
         hyper_parameter.tracking_length_lb = tracking_length_lb
         hyper_parameter.tracking_length_ub = tracking_length_ub
+        hyper_parameter.reference_line_pad_mode = reference_line_pad_mode
         hyper_parameter.init_state_lb.extend(init_state_lb)
         hyper_parameter.init_state_ub.extend(init_state_ub)
         hyper_parameter.n_observation_steps = n_observation_steps
@@ -140,12 +144,13 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             init_state = self.init_state_space.sample()
         sampled_dynamics_model.set_state(init_state)
         reference_dynamics_model = deepcopy(sampled_dynamics_model)
+        random_walk_length = tracking_length + self.env_info.hyper_parameter.n_observation_steps
         reference_line, trajectory = random_walk(
             dynamics_model=reference_dynamics_model,
             step_interval=self.env_info.hyper_parameter.step_interval,
-            walk_length=tracking_length + self.env_info.hyper_parameter.n_observation_steps,  # TODO: verify the number
+            walk_length=random_walk_length,
         )
-        self.reference_line_manager.set_reference_line(reference_line)
+        self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
         self.env_info.episode.reference_line.CopyFrom(reference_line)
 
         # TODO: use closest waypoint assignment

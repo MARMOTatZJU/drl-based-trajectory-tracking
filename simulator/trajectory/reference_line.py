@@ -1,4 +1,3 @@
-from typing import Iterable
 import numpy as np
 import gym
 from gym.spaces import Space
@@ -14,26 +13,62 @@ class ReferenceLineManager:
 
     Attributes:
         reference_line: Handler of underlying reference line manager.
+        pad_mode: Mode used for reference line padding.
+        dtype: Data type for reference line representation and observation
+
     """
 
     reference_line: ReferenceLine
+    pad_mode: str
+    dtype: np.dtype
 
-    def __init__(self, n_observation_steps: int, dtype=DTYPE):
+    def __init__(
+        self,
+        n_observation_steps: int,
+        pad_mode: str = 'none',
+        dtype: np.dtype = DTYPE,
+    ):
         """
         Args:
             n_observation_steps: Number of observation steps on the forward part of the reference line.
-            dtype: Data type.
+            pad_mode: Desired mode used for reference line padding.
+            dtype: Desired data type.
         """
-        self.dtype = dtype
         self.n_observation_steps = n_observation_steps
+        self.pad_mode = pad_mode
+        self.dtype = dtype
 
-    def set_reference_line(self, reference_line: ReferenceLine):
+    def set_reference_line(
+        self,
+        reference_line: ReferenceLine,
+        tracking_length: int = 0,
+    ):
         """Set reference line.
 
         Args:
-            reference_line: reference line to be set.
+            reference_line: Reference line to be set.
+            tracking_length: Desired tracking length of reference line.
         """
-        self.reference_line = reference_line
+        self.reference_line = ReferenceLine()
+        self.reference_line.CopyFrom(reference_line)
+
+        if tracking_length <= 0:
+            tracking_length = len(self.reference_line.waypoints)
+
+        # padding
+        # (tracking_length + n_observation_steps) is required as the last observation need to be returned at waypoints[tracking_length]
+        if self.pad_mode == 'none':
+            pass
+        elif self.pad_mode == 'repeat':
+            del self.reference_line.waypoints[tracking_length:]  # remove last `n_observation_steps` padded elements
+            n_repeat = self.n_observation_steps
+            last_waypoint = self.reference_line.waypoints[-1]
+            for _ in range(n_repeat):
+                repeated_waypoint = ReferenceLineWaypoint()
+                repeated_waypoint.CopyFrom(last_waypoint)
+                self.reference_line.waypoints.append(last_waypoint)
+        else:
+            raise ValueError(f'Unknown `pad_mode`: {self.pad_mode}')
 
     def get_reference_line(self) -> ReferenceLine:
         """Return the underlying reference line.
@@ -94,7 +129,6 @@ class ReferenceLineManager:
                 f' error. The length of reference line is {len(self.reference_line.waypoints)}'
             )
 
-        # TODO: move to `duplication` method for waypoints near the tail
         waypoint_list = list()
         for observed_waypoint in self.reference_line.waypoints[index : index + self.n_observation_steps]:
             waypoint = np.array(

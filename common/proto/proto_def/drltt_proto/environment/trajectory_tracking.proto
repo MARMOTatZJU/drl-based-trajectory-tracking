@@ -16,6 +16,7 @@ message TrajectoryTrackingHyperParameter {
     repeated HyperParameter dynamics_model_hyper_parameter = 5;
     optional int32 tracking_length_lb = 6;
     optional int32 tracking_length_ub = 7;
+    optional string reference_line_pad_mode = 8;
 }
 
 message DynamicsModelData {
