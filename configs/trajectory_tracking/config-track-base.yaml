@@ -50,7 +50,7 @@ algorithm:
   verbose: 1
   learning_starts: 4096
   batch_size: 4096
-  tau: 0.001
+  tau: 0.0003
 
 learning:
     total_timesteps: 3_000_000
