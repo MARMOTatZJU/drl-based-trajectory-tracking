@@ -54,6 +54,24 @@ python scripts/main.py \
 
 The checkpoint (trained model/log/evaluation results/etc.) will be output at `$work_dir/checkpoint/`.
 
+### Checkpoint Structure
+
+```text
+├── 00-config-....yaml  # base config
+├── 01-config-....yaml  # overriding config
+├── ...
+├── config.yaml         # overridden configuration
+├── checkpoint.zip      # checkpoint of SB3
+├── env_data.bin        # environment data serialized in proto binary stream
+├── log.txt             # python logger's output
+├── metrics.json        metrics
+├── sb3-train           # SB3 log during training phase
+│   └── ...
+└── sb3-eval            # SB3 log during evaluation phase
+    └── ...
+```
+
+
 ## Development
 
 ### System Design
