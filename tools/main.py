@@ -11,7 +11,7 @@ from gym import Env
 from stable_baselines3.common.base_class import BaseAlgorithm
 
 from common import build_object_within_registry_from_config
-from common.io import load_config_from_yaml, convert_list_to_tuple_within_dict, override_config
+from common.io import load_and_override_configs, override_config, save_config_to_yaml
 from simulator.rl_learning.sb3_learner import train_with_sb3, eval_with_sb3, build_sb3_algorithm_from_config
 from simulator.environments import ENVIRONMENTS, ExtendedGymEnv
 from simulator.rl_learning.sb3_learner import SB3_MODULES
@@ -66,18 +66,6 @@ def configure_root_logger(log_dir: str):
     logging.info(f'Logging directory configured at: {log_dir}')
 
 
-def load_and_override_configs(config_paths : List[str]):
-    config = load_config_from_yaml(config_paths[0])
-
-    for overriding_cfg_file in config_paths[1:]:
-        overriding_config = load_config_from_yaml(overriding_cfg_file)
-        override_config(config, overriding_config, allow_new_key=True)
-
-    config = convert_list_to_tuple_within_dict(config)
-
-    return config
-
-
 def main(args):
     configure_root_logger(args.checkpoint_dir)
 
@@ -86,6 +74,7 @@ def main(args):
 
     # backup config
     os.makedirs(args.checkpoint_dir, exist_ok=True)
+    save_config_to_yaml(config, f'{args.checkpoint_dir}/config.yaml')
     for i_config, config_p in enumerate(args.config_files):
         config_basename = os.path.basename(config_p)
         config_save_path = f'{i_config:02}-{config_basename}'
