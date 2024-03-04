@@ -1,6 +1,6 @@
 #!/bin/bash
 source setup.sh
-work_dir=work_dirs/track
+work_dir=work_dir/track
 if [[ -d $work_dir ]];then
     bak_work_dir=${work_dir}-bak
     if [[ -d ${bak_work_dir} ]];then rm -rf ${bak_work_dir};fi
