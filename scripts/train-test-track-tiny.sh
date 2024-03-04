@@ -2,7 +2,9 @@
 source setup.sh
 work_dir=work_dirs/tiny-track
 if [[ -d $work_dir ]];then
-    mv $work_dir $work_dir-bak
+    bak_work_dir=${work_dir}-bak
+    if [[ -d ${bak_work_dir} ]];then rm -rf ${bak_work_dir};fi
+    mv ${work_dir} ${bak_work_dir}
 fi
 mkdir -p $work_dir
 
