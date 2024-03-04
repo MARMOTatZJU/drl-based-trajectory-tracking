@@ -1,0 +1,8 @@
+# override for debugging
+learning:
+    total_timesteps: 3_000
+    log_interval: 10
+
+evaluation:
+  eval_config:
+    n_episodes: 20

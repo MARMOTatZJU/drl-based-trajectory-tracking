@@ -2,5 +2,5 @@
 algorithm:
   policy_kwargs:
     net_arch:
-      pi: [256, 256, 128, 128, 64, 64]
+      pi: [128, 32]
       qf: [1024, 512, 256, 128]

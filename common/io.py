@@ -96,7 +96,7 @@ def override_config(
             base_config[k] = override_config(
                 base_config[k],
                 update_config[k],
-                insert_new_key=allow_new_key,
+                allow_new_key=allow_new_key,
             )
         else:
             base_config[k] = update_config[k]
