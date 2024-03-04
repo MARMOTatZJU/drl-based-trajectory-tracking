@@ -4,10 +4,31 @@ This repo hosts code and script for training and deploying the *DRL-Based Trajec
 
 Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for details.
 
+The [Documentation](https://drl-based-trajectory-tracking.readthedocs.io/) hosted by [Read the Docs](https://readthedocs.org/) would also be helpful for our readers.
+
 ## Installation
 
-- Python>=3.12
-- `requirements/pypi.txt`
+
+### Python Requirements
+
+DRLTT requires Python>=3.12. If you are using [Conda](https://www.anaconda.com/) for Python environment management, you may create an environment for DRLTT through following command:
+
+```bash
+conda create --name drltt python=3.12
+```
+
+Install Python requirement through `pip`:
+
+```bash
+pip install -r requirements/pypi.txt
+```
+
+For network environments within Mainland China, you may consider using a domestic pip source to accelerate this process:
+
+```bash
+# Example using TUNA PyPI source
+pip install -r requirements/pypi.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
 ### Protobuf Compiler
 

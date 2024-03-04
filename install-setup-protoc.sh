@@ -8,21 +8,23 @@
 #   - https://google.github.io/proto-lens/installing-protoc.html
 
 protobuf_release_version=21.12
-home_bin_dir=$HOME/.local/bin
-protoc_binary=${home_bin_dir}/protoc
-tmp_dir=/tmp/drltt-$(openssl rand -hex 6)
-
 proto_release_filename=protoc-${protobuf_release_version}-linux-x86_64.zip
 
+home_bin_dir=$HOME/.local/bin
+export PATH=${home_bin_dir}:$PATH
+
 if [[ ! -x $(command -v protoc) ]];then
+  mkdir -p ${home_bin_dir}
+  protoc_binary=${home_bin_dir}/protoc
   if [[ ! -f ${protoc_binary} ]];then
+    tmp_dir=/tmp/drltt-$(openssl rand -hex 6)
     pushd ${tmp_dir}
       mkdir ${tmp_dir}
       curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v${protobuf_release_version}/${proto_release_filename}
       unzip ${proto_release_filename} -d protobuf-release/
       mv protobuf-release/bin/protoc ${home_bin_dir}
-      rm -rf ${tmp_dir}
     popd
+    rm -rf ${tmp_dir}
   fi
   export PATH=${home_bin_dir}:$PATH
 fi
