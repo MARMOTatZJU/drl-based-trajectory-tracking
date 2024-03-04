@@ -9,6 +9,7 @@ environment:
   #   to deal with variance of cumulative reward w.r.t. different trajectory length
   tracking_length_lb: 50
   tracking_length_ub: 50
+  reference_line_pad_mode: 'none'
   init_state_lb: [-1.e-8, -1.e-8, -3.1415926536, 0.1]
   init_state_ub: [+1.e-8, +1.e-8, +3.1415926536, 40.0]
   n_observation_steps: 15
