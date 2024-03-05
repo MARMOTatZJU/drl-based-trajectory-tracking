@@ -9,6 +9,7 @@ target_link_libraries(
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PROTOBUF_LIBRARY}
+    ${TORCH_LIBRARIES}
     proto
 )
 
