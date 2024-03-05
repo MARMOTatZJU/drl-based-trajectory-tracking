@@ -65,6 +65,7 @@ The checkpoint (trained model/log/evaluation results/etc.) will be output at `$w
 ├── config.yaml         # overridden configuration
 ├── checkpoint.zip      # checkpoint of SB3
 ├── env_data.bin        # environment data serialized in proto binary stream
+├── traced_policy.pt    # traced policy, ready for SDK inference
 ├── log.txt             # python logger's output
 ├── metrics.json        metrics
 ├── sb3-train           # SB3 log during training phase

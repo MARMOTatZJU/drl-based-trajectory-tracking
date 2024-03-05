@@ -3,7 +3,7 @@ syntax = "proto3";
 import "drltt_proto/dynamics_model/state.proto";
 import "drltt_proto/dynamics_model/action.proto";
 
-package drltt_proto;;
+package drltt_proto;
 
 message ReferenceLineWaypoint {
     optional float x = 1;

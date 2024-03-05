@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package drltt_proto;;
+package drltt_proto;
 
 // TODO: create a subpacakge for dynamics model
 

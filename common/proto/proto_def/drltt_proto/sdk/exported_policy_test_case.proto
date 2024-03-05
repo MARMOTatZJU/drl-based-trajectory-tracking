@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package drltt_proto;
+
+message TensorFP{
+    repeated int32 shape = 1;
+    repeated float data = 2;
+}
+
+message ExportedPolicyTestCases{
+    optional TensorFP observations = 1;
+    optional TensorFP actions = 2;
+}

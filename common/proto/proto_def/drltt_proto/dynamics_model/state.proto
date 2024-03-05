@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package drltt_proto;;
+package drltt_proto;
 
 import "drltt_proto/dynamics_model/basics.proto";
 
