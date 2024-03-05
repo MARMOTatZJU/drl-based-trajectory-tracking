@@ -135,6 +135,7 @@ def load_and_override_configs(config_paths: List[str]) -> Dict:
 
     return config
 
+
 def convert_numpy_to_TensorFP(arr: np.ndarray) -> TensorFP:
     """
     TODO: docstring
