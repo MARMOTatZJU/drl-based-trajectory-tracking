@@ -14,13 +14,20 @@ Firstly, build an image named `drltt-sdk` for compilation with the provided Dock
 docker image build --tag drltt-sdk:dev - < ./Dockerfile
 ```
 
-Tips: to remove unused images/cached, run:
+Tip: To remove unused images/cached, run:
 
 ```bash
 docker system prune
 ```
 
-Tips 2: For network environments within Mainland China, you may consider using a domestic apt source to accelerate this process by appending the following part to the `./Dockerfile`:
+Tip 2: To save docker image for transferring and save time:
+
+```
+docker image save drltt-sdk:dev -o ./drltt-sdk.image
+```
+
+
+Tip 3: For network environments within Mainland China, you may consider using a domestic apt source to accelerate this process by appending the following part to the `./Dockerfile`:
 
 
 ```dockerfile

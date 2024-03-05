@@ -59,18 +59,19 @@ The checkpoint (trained model/log/evaluation results/etc.) will be output at `$w
 ### Checkpoint Structure
 
 ```text
-├── 00-config-....yaml  # base config
-├── 01-config-....yaml  # overriding config
+├── 00-config-....yaml              # base config
+├── 01-config-....yaml              # overriding config
 ├── ...
-├── config.yaml         # overridden configuration
-├── checkpoint.zip      # checkpoint of SB3
-├── env_data.bin        # environment data serialized in proto binary stream
-├── traced_policy.pt    # traced policy, ready for SDK inference
-├── log.txt             # python logger's output
-├── metrics.json        metrics
-├── sb3-train           # SB3 log during training phase
+├── config.yaml                     # overridden configuration
+├── checkpoint.zip                  # checkpoint of SB3
+├── env_data.bin                    # environment data serialized in proto binary stream
+├── traced_policy.pt                # traced policy, ready for SDK inference
+├── traced_policy_test_cases.bin    # data of test cases for testing traced policy during deployment phase
+├── log.txt                         # python logger's output
+├── metrics.json                    # metrics
+├── sb3-train                       # SB3 log during training phase
 │   └── ...
-└── sb3-eval            # SB3 log during evaluation phase
+└── sb3-eval                        # SB3 log during evaluation phase
     └── ...
 ```
 
@@ -113,7 +114,7 @@ This project uses `black` for Python code formatting and `clang-format` for CXX 
 This project utilizes *pytest* for Python testing. To launch testing, run in command line:
 
 ```bash
-pytest
+(source setup.sh ; pytest)
 ```
 
 CPP testing is performed through *gtest* immediately after building. Please refer to [./sdk/README.md](SDK-README for detail).

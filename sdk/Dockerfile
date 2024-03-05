@@ -11,7 +11,7 @@ ARG USER_BASHRC=/work_dir/.bashrc
 SHELL [ "/bin/bash", "-c" ]
 ENV SHELL=/bin/bash
 
-RUN apt update
+RUN apt update --fix-missing
 
 RUN \
     echo "Installing compiling tools" && \

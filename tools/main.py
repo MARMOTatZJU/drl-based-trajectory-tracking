@@ -99,7 +99,9 @@ def main(args):
     if args.eval:
         eval_config = config['evaluation']
         eval_env_config = override_config(deepcopy(env_config), deepcopy(eval_config['overriden_environment']))
-        eval_environment: ExtendedGymEnv = build_object_within_registry_from_config(ENVIRONMENTS, deepcopy(eval_env_config))
+        eval_environment: ExtendedGymEnv = build_object_within_registry_from_config(
+            ENVIRONMENTS, deepcopy(eval_env_config)
+        )
 
         eval_algorithm: BaseAlgorithm = SB3_MODULES[config['algorithm']['type']].load(checkpoint_file_prefix)
 
