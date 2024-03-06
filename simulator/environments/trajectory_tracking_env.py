@@ -70,6 +70,8 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             self.dynamics_model_manager,
         )
 
+        self.parse_dynamics_model_hyper_parameter(self.env_info.hyper_parameter, self.dynamics_model_manager)
+
         # build spaces
         self._build_spaces()
 
@@ -104,6 +106,17 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         hyper_parameter.init_state_lb.extend(init_state_lb)
         hyper_parameter.init_state_ub.extend(init_state_ub)
         hyper_parameter.n_observation_steps = n_observation_steps
+
+    @classmethod
+    def parse_dynamics_model_hyper_parameter(
+        cls,
+        hyper_parameter: TrajectoryTrackingHyperParameter,
+        dynamics_model_manager: DynamicsModelManager,
+    ):
+        """TODO: docstring"""
+        for dynamics_model_hyper_parameger in dynamics_model_manager.get_all_hyper_parameters():
+            dm_hparam = hyper_parameter.dynamics_models_hyper_parameters.add()
+            dm_hparam.CopyFrom(dynamics_model_hyper_parameger)
 
     @override
     def reset(

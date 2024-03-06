@@ -64,6 +64,7 @@ class BicycleModel(BaseDynamicsModel):
             action_space_lb: lower bound of action space.
             action_space_ub: upper bound of action space.
         """
+        hyper_parameter.type = cls.__name__
         hyper_parameter.bicycle_model.front_overhang = front_overhang
         hyper_parameter.bicycle_model.wheelbase = wheelbase
         hyper_parameter.bicycle_model.rear_overhang = rear_overhang

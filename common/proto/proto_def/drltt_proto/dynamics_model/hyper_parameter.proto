@@ -2,8 +2,11 @@ syntax = "proto3";
 
 package drltt_proto;;
 
+// TODO: create a subpacakge for dynamics model
+
 message HyperParameter {
-    optional BicycleModelHyperParameter bicycle_model = 1;
+    optional string type= 1;
+    optional BicycleModelHyperParameter bicycle_model = 2;
 }
 
 message BicycleModelHyperParameter {
