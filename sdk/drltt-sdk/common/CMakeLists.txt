@@ -1,5 +1,6 @@
 project(drltt_sdk)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# TODO: reorg include paths, simplify them
 
 file(GLOB_RECURSE _SRCS "*.[hc]pp")
 list(FILTER _SRCS EXCLUDE REGEX "_test.[hc]pp$")

@@ -5,8 +5,10 @@ image_name=drltt-sdk:dev
 
 if [[ -z ${HOST_LIBTORCH_PATH} ]];then
     mount_host_libtorch_in_docker=""
+    echo "Using libtorch preinstalled in docker image"
 else
     mount_host_libtorch_in_docker="-v ${HOST_LIBTORCH_PATH}:/libtorch-host:ro"
+    echo "Using libtorch mounted from host: ${HOST_LIBTORCH_PATH}"
 fi
 
 # TODO: reorganize mouted path

@@ -18,4 +18,14 @@ torch::Tensor parse_tensor_proto_to_torch_tensor(
   // TODO: remove copy by using RVO and std::move
   return parsed_tensor.clone();
 }
+
+bool convert_tensor_to_vector(const torch::Tensor& tensor,
+                              std::vector<float>* vector) {
+  auto flattened_tensor = tensor.view({tensor.numel()});
+  vector->reserve(flattened_tensor.numel());
+  vector->assign(flattened_tensor.data_ptr<float>(),
+                 flattened_tensor.data_ptr<float>() + flattened_tensor.numel());
+  return true;
+}
+
 }  // namespace drltt

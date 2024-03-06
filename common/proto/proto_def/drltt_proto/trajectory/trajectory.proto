@@ -5,6 +5,7 @@ import "drltt_proto/dynamics_model/action.proto";
 
 package drltt_proto;
 
+// TODO: move to body state
 message ReferenceLineWaypoint {
     optional float x = 1;
     optional float y = 2;

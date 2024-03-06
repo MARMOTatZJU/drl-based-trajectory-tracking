@@ -1,8 +1,5 @@
 #include "policy_inference.h"
 #include <gtest/gtest.h>
-#include <fstream>
-#include <iostream>
-#include <vector>
 #include "common/io.h"
 #include "drltt_proto/sdk/exported_policy_test_case.pb.h"
 
@@ -10,25 +7,13 @@ using namespace drltt;
 
 TEST(PolicyInferenceTest, ForwardTest) {
   const std::string module_path =
-      "/drltt-work_dir/track-tiny/checkpoint/traced_policy.pt";
+      "/drltt-work_dir/track-test/checkpoint/traced_policy.pt";
   const std::string test_cases_path =
-      "/drltt-work_dir/track-tiny/checkpoint/traced_policy_test_cases.bin";
+      "/drltt-work_dir/track-test/checkpoint/traced_policy_test_cases.bin";
 
   // load test case data
   drltt_proto::ExportedPolicyTestCases test_cases_proto;
-  {
-    std::fstream input(test_cases_path, std::ios::in | std::ios::binary);
-    if (!input) {
-      std::cout << test_cases_path << "not found!!!" << std::endl;
-      FAIL();
-    } else if (!test_cases_proto.ParseFromIstream(&input)) {
-      std::string err_msg =
-          "drltt_proto::ExportedPolicyTestCases parsing error.";
-      std::cout << err_msg << std::endl;
-      FAIL();
-    }
-    input.close();
-  }
+  parse_proto_from_file(test_cases_proto, test_cases_path);
   torch::Tensor gt_observations_tensor =
       parse_tensor_proto_to_torch_tensor(test_cases_proto.observations());
   torch::Tensor gt_actions_tensor =

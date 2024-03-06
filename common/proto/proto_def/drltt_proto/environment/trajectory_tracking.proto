@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "drltt_proto/dynamics_model/state.proto";
 import "drltt_proto/dynamics_model/action.proto";
+import "drltt_proto/dynamics_model/observation.proto";
 import "drltt_proto/dynamics_model/hyper_parameter.proto";
 import "drltt_proto/trajectory/trajectory.proto";
 
@@ -21,9 +22,10 @@ message TrajectoryTrackingHyperParameter {
 
 message DynamicsModelData {
     optional string type = 1;
-    repeated State states = 2;
-    repeated Action actions = 3;
-    optional HyperParameter hyper_parameter = 4;
+    optional HyperParameter hyper_parameter = 2;
+    repeated State states = 3;
+    repeated Action actions = 4;
+    repeated Observation observations = 5;
 }
 
 message TrajectoryTrackingEpisode {

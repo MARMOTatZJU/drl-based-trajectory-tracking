@@ -165,7 +165,8 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             walk_length=random_walk_length,
         )
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
-        self.env_info.episode.reference_line.CopyFrom(reference_line)
+        # TODO: reorganize this part, flow of `reference_line`
+        self.env_info.episode.reference_line.CopyFrom(self.reference_line_manager.reference_line)
 
         # TODO: use closest waypoint assignment
 
@@ -175,6 +176,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         )
         # TODO: verify interface: gym==0.21 or gym==0.26
         # reference: https://gymnasium.farama.org/content/migration-guide/
+
+        self.env_info.episode.dynamics_model.observations.append(
+            deepcopy(sampled_dynamics_model.serialize_observation(observation))
+        )
 
         # return observation, extra_info
         return observation
@@ -248,6 +253,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         terminated: bool = self.env_info.episode.step_index >= self.env_info.episode.tracking_length
         truncated: bool = False
 
+        if not terminated:
+            self.env_info.episode.dynamics_model.observations.append(
+                deepcopy(current_dynamics_model.serialize_observation(observation))
+            )
         # TODO: verify interface: gym==0.21 or gym==0.26
         # reference: https://gymnasium.farama.org/content/migration-guide/
 

@@ -11,6 +11,24 @@ void BicycleModel::step(const drltt_proto::Action& action, float delta_t) {
           delta_t);  // TODO move to canonical implementation `+=`
 }
 
+bool BicycleModel::get_state_observation(
+    std::vector<float>* observation) const {
+  observation->push_back(_state.bicycle_model().v());
+
+  return true;
+}
+
+bool BicycleModel::get_dynamics_model_observation(
+    std::vector<float>* observation) const {
+  observation->push_back(_hyper_parameter.bicycle_model().front_overhang());
+  observation->push_back(_hyper_parameter.bicycle_model().wheelbase());
+  observation->push_back(_hyper_parameter.bicycle_model().rear_overhang());
+  observation->push_back(_hyper_parameter.bicycle_model().width());
+  observation->push_back(_hyper_parameter.bicycle_model().length());
+
+  return true;
+}
+
 void BicycleModel::parse_hyper_parameter() {
   float front_overhang = _hyper_parameter.bicycle_model().front_overhang();
   float wheelbase = _hyper_parameter.bicycle_model().wheelbase();

@@ -11,6 +11,7 @@ from simulator import DTYPE
 from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter
 from drltt_proto.dynamics_model.state_pb2 import State
 from drltt_proto.dynamics_model.action_pb2 import Action
+from drltt_proto.dynamics_model.observation_pb2 import Observation
 
 
 class BaseDynamicsModel(ABC):
@@ -114,6 +115,11 @@ class BaseDynamicsModel(ABC):
         Returns:
             np.ndarray: Vectorized action.
         """
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def serialize_observation(cls, observation: np.ndarray) -> Observation:
         raise NotImplementedError
 
     def step(self, action: np.ndarray, delta_t: float):

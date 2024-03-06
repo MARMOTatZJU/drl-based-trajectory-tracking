@@ -13,6 +13,7 @@ from common.geometry import normalize_angle
 from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter, BicycleModelHyperParameter
 from drltt_proto.dynamics_model.state_pb2 import State
 from drltt_proto.dynamics_model.action_pb2 import Action
+from drltt_proto.dynamics_model.observation_pb2 import Observation
 
 
 @DYNAMICS_MODELS.register
@@ -119,6 +120,14 @@ class BicycleModel(BaseDynamicsModel):
         deserialized_action[1] = action.bicycle_model.s
 
         return deserialized_action
+
+    @classmethod
+    @override
+    def serialize_observation(cls, observation: np.ndarray) -> Observation:
+        serialized_observation = Observation()
+        serialized_observation.bicycle_model.feature.extend(observation)
+
+        return serialized_observation
 
     def _compute_derivative(self, state: State, action: Action) -> State:
         hyper_parameter = self.hyper_parameter.bicycle_model
