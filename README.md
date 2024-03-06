@@ -2,7 +2,7 @@
 
 This repo hosts code and script for training and deploying the *DRL-Based Trajectory Tracking (DRLTT)*  algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task. Benefiting from its methodological simplicity, DRLTT is able to process 32 trajectories (each contains 50 steps) within several milliseconds on edge computing devices.
 
-Please refer to the [*Technical Report*](https://arxiv.org/abs/2308.15991) for details.
+Please refer to the [*Code Repository*](https://github.com/MARMOTatZJU/drl-based-trajectory-tracking/) and the [*Technical Report*](https://arxiv.org/abs/2308.15991) for details.
 
 The [Documentation](https://drl-based-trajectory-tracking.readthedocs.io/) hosted by [Read the Docs](https://readthedocs.org/) would also be helpful for our readers.
 
@@ -51,6 +51,8 @@ python scripts/main.py \
     --train --eval \
     #
 ```
+
+Or feel free to run the all-in-one scripts under `scripts` folder (e.g. `scripts/train-eval-track-tiny.sh`).
 
 The checkpoint (trained model/log/evaluation results/etc.) will be output at `$work_dir/checkpoint/`.
 
