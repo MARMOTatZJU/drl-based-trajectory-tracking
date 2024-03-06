@@ -4,6 +4,7 @@ import numpy as np
 from gym.spaces import Space
 
 from common import build_object_within_registry_from_config
+from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter
 from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 
@@ -66,3 +67,13 @@ class DynamicsModelManager:
             BaseDynamicsModel: Sampled dynamics model.
         """
         return self.sampled_dynamics_model
+
+    def get_all_hyper_parameters(self) -> List[HyperParameter]:
+        """TODO: docstring"""
+        all_hyper_parameters = list()
+        for dynamics_model in self.dynamics_models:
+            hyper_parameter = HyperParameter()
+            hyper_parameter.CopyFrom(dynamics_model.hyper_parameter)
+            all_hyper_parameters.append(hyper_parameter)
+
+        return all_hyper_parameters
