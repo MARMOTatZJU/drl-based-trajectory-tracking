@@ -13,6 +13,7 @@ from stable_baselines3.common.base_class import BaseAlgorithm
 from common import build_object_within_registry_from_config
 from common.io import load_and_override_configs, override_config, save_config_to_yaml
 from simulator.rl_learning.sb3_learner import train_with_sb3, eval_with_sb3, build_sb3_algorithm_from_config
+from simulator.rl_learning.sb3_export import export_sb3_jit_module
 from simulator.environments import ENVIRONMENTS, ExtendedGymEnv
 from simulator.rl_learning.sb3_learner import SB3_MODULES
 
@@ -32,6 +33,9 @@ def parse_args():
     parser.add_argument('--checkpoint-dir', type=str)
     parser.add_argument('--train', action='store_true', default=False)
     parser.add_argument('--eval', action='store_true', default=False)
+    parser.add_argument('--trace', action='store_true', default=False)
+    parser.add_argument('--test-case-save-format', type=str, default='protobuf')
+    parser.add_argument('--num-test-cases', type=int, default=1)
 
     args = parser.parse_args()
 
@@ -95,7 +99,9 @@ def main(args):
     if args.eval:
         eval_config = config['evaluation']
         eval_env_config = override_config(deepcopy(env_config), deepcopy(eval_config['overriden_environment']))
-        eval_environment: ExtendedGymEnv = build_object_within_registry_from_config(ENVIRONMENTS, deepcopy(eval_env_config))
+        eval_environment: ExtendedGymEnv = build_object_within_registry_from_config(
+            ENVIRONMENTS, deepcopy(eval_env_config)
+        )
 
         eval_algorithm: BaseAlgorithm = SB3_MODULES[config['algorithm']['type']].load(checkpoint_file_prefix)
 
@@ -104,6 +110,18 @@ def main(args):
             eval_algorithm,
             report_dir=args.checkpoint_dir,
             **eval_config['eval_config'],
+        )
+
+    if args.trace:
+        trace_algorithm: BaseAlgorithm = SB3_MODULES[config['algorithm']['type']].load(checkpoint_file_prefix)
+        trace_environment: ExtendedGymEnv = build_object_within_registry_from_config(ENVIRONMENTS, deepcopy(env_config))
+        export_sb3_jit_module(
+            trace_algorithm,
+            trace_environment,
+            device='cpu',
+            export_dir=args.checkpoint_dir,
+            n_test_cases=args.num_test_cases,
+            test_case_save_format=args.test_case_save_format,
         )
 
 

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package drltt_proto;
+
+
+message Observation {
+    optional BicycleModelObservation bicycle_model = 1;
+}
+
+
+message BicycleModelObservation {
+    repeated float feature = 1;
+}

@@ -1,28 +1,26 @@
-project(drltt_sdk)
+project(drltt-sdk)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-# TODO: reorg include paths, simplify them
+
 
 file(GLOB_RECURSE _SRCS "*.[hc]pp")
 list(FILTER _SRCS EXCLUDE REGEX "_test.[hc]pp$")
-add_library(common STATIC ${_SRCS})
-target_link_libraries(
-    common
+add_library(inference STATIC ${_SRCS})
+target_link_libraries(inference
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
-    ${PROTOBUF_LIBRARY}
     ${TORCH_LIBRARIES}
-    proto
+    common
 )
 
 # gtest
 file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
 add_executable(
-  common_test
+  inference_test
   ${_TEST_SRCS}
 )
 target_link_libraries(
-  common_test
+  inference_test
   GTest::gtest_main
-  common
+  inference
   )
-gtest_discover_tests(common_test)
+gtest_discover_tests(inference_test)

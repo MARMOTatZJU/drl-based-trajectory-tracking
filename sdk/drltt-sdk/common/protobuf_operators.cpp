@@ -25,7 +25,7 @@ drltt_proto::BicycleModelState operator+(
     drltt_proto::BicycleModelState lhs,
     const drltt_proto::BicycleModelState& rhs) {
   lhs.mutable_body_state()->CopyFrom(lhs.body_state() + rhs.body_state());
-  lhs.set_v(normalize_angle(lhs.v() + rhs.v()));
+  lhs.set_v(lhs.v() + rhs.v());
 
   return lhs;
 }

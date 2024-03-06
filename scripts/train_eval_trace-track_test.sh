@@ -14,4 +14,4 @@ python tools/main.py \
         configs/trajectory_tracking/config-track-tiny.yaml \
         configs/trajectory_tracking/utils/config-track-test.yaml \
     --checkpoint-dir $work_dir/checkpoint \
-    --train --eval
+    --train --eval --trace

@@ -143,9 +143,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         self.env_info.episode.step_index = 0
         self.env_info.episode.hyper_parameter.CopyFrom(self.env_info.hyper_parameter)
 
-        # TODO: decide whether keep a handler to the sampled dynamics model in env object
-        sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
+        sampled_dynamics_model_index, sampled_dynamics_model = self.dynamics_model_manager.sample_dynamics_model()
         self.env_info.episode.dynamics_model.type = type(sampled_dynamics_model).__name__
+        self.env_info.episode.dynamics_model.hyper_parameter.CopyFrom(sampled_dynamics_model.hyper_parameter)
+        self.env_info.episode.selected_dynamics_model_index = sampled_dynamics_model_index
 
         tracking_length = random.randint(
             self.env_info.hyper_parameter.tracking_length_lb,
@@ -164,7 +165,8 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             walk_length=random_walk_length,
         )
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
-        self.env_info.episode.reference_line.CopyFrom(reference_line)
+        # TODO: reorganize this part, flow of `reference_line`
+        self.env_info.episode.reference_line.CopyFrom(self.reference_line_manager.reference_line)
 
         # TODO: use closest waypoint assignment
 
@@ -174,6 +176,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         )
         # TODO: verify interface: gym==0.21 or gym==0.26
         # reference: https://gymnasium.farama.org/content/migration-guide/
+
+        self.env_info.episode.dynamics_model.observations.append(
+            deepcopy(sampled_dynamics_model.serialize_observation(observation))
+        )
 
         # return observation, extra_info
         return observation
@@ -247,6 +253,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         terminated: bool = self.env_info.episode.step_index >= self.env_info.episode.tracking_length
         truncated: bool = False
 
+        if not terminated:
+            self.env_info.episode.dynamics_model.observations.append(
+                deepcopy(current_dynamics_model.serialize_observation(observation))
+            )
         # TODO: verify interface: gym==0.21 or gym==0.26
         # reference: https://gymnasium.farama.org/content/migration-guide/
 

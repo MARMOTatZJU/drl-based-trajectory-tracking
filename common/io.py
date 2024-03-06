@@ -5,6 +5,9 @@ import random
 import string
 
 import yaml
+import numpy as np
+
+from drltt_proto.sdk.exported_policy_test_case_pb2 import TensorFP
 
 
 def load_config_from_yaml(config_file: str) -> Dict:
@@ -131,3 +134,23 @@ def load_and_override_configs(config_paths: List[str]) -> Dict:
     config = convert_list_to_tuple_within_dict(config)
 
     return config
+
+
+def convert_numpy_to_TensorFP(arr: np.ndarray) -> TensorFP:
+    """
+    TODO: docstring
+    """
+    tensor_proto = TensorFP()
+    tensor_proto.shape.extend(arr.shape)
+    tensor_proto.data.extend(arr.reshape(-1))
+
+    return tensor_proto
+
+
+def convert_TensorFP_to_numpy(tensor_proto: TensorFP) -> np.ndarray:
+    """
+    TODO: docstring
+    """
+    arr = np.array(tensor_proto.data).reshape(*tensor_proto.shape)
+
+    return arr
