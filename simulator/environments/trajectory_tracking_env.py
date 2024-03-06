@@ -143,9 +143,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         self.env_info.episode.step_index = 0
         self.env_info.episode.hyper_parameter.CopyFrom(self.env_info.hyper_parameter)
 
-        # TODO: decide whether keep a handler to the sampled dynamics model in env object
-        sampled_dynamics_model: BaseDynamicsModel = self.dynamics_model_manager.sample_dynamics_model()
+        sampled_dynamics_model_index, sampled_dynamics_model = self.dynamics_model_manager.sample_dynamics_model()
         self.env_info.episode.dynamics_model.type = type(sampled_dynamics_model).__name__
+        self.env_info.episode.dynamics_model.hyper_parameter.CopyFrom(sampled_dynamics_model.hyper_parameter)
+        self.env_info.episode.selected_dynamics_model_index = sampled_dynamics_model_index
 
         tracking_length = random.randint(
             self.env_info.hyper_parameter.tracking_length_lb,

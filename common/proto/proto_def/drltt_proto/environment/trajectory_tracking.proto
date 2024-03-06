@@ -32,7 +32,8 @@ message TrajectoryTrackingEpisode {
     optional ReferenceLine reference_line = 3;
     optional int32 tracking_length = 4;
     DynamicsModelData dynamics_model = 5;
-    repeated float rewards = 6;
+    optional int32 selected_dynamics_model_index = 6;
+    repeated float rewards = 7;
 }
 
 // TODO use composition to achieve inheritance, e.g. env.trajectory_tracking.env_data...

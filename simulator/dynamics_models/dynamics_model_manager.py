@@ -1,4 +1,4 @@
-from typing import List, Union, Iterable
+from typing import List, Tuple, Union, Iterable
 
 import numpy as np
 from gym.spaces import Space
@@ -18,6 +18,7 @@ class DynamicsModelManager:
 
     dynamics_models: List[BaseDynamicsModel]
     sampled_dynamics_model: Union[BaseDynamicsModel, None] = None
+    sampled_dynamics_model_index: int = -1
 
     def __init__(self, dynamics_model_configs: Iterable = tuple()):
         """
@@ -51,14 +52,15 @@ class DynamicsModelManager:
         """
         return self.dynamics_models[0].get_state_observation_space()
 
-    def sample_dynamics_model(self) -> BaseDynamicsModel:
+    def sample_dynamics_model(self) -> Tuple[int, BaseDynamicsModel]:
         """Randomly sample a dynamics model.
 
         Returns:
             BaseDynamicsModel: sampled dynamics model
         """
-        self.sampled_dynamics_model = np.random.choice(self.dynamics_models, p=self.probabilities)
-        return self.get_sampled_dynamics_model()
+        self.sampled_dynamics_model_index = np.random.choice(range(len(self.dynamics_models)), p=self.probabilities)
+        self.sampled_dynamics_model = self.dynamics_models[self.sampled_dynamics_model_index]
+        return self.sampled_dynamics_model_index, self.get_sampled_dynamics_model()
 
     def get_sampled_dynamics_model(self) -> BaseDynamicsModel:
         """Return the sampled dynamics model.

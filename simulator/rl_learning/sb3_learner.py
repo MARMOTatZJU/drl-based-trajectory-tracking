@@ -44,6 +44,14 @@ def build_sb3_algorithm_from_config(
     return algorithm
 
 
+def roll_out_one_episode(environment: gym.Env, algorithm: BaseAlgorithm):
+    obs = environment.reset()
+    done = False
+    while not done:
+        action, _states = algorithm.predict(obs)
+        obs, reward, done, info = environment.step(action)
+
+
 def train_with_sb3(
     environment: ExtendedGymEnv,
     algorithm_config: Dict,
@@ -76,7 +84,9 @@ def train_with_sb3(
         os.makedirs(checkpoint_dir, exist_ok=True)
         algorithm.save(checkpoint_file_prefix)
         logging.info(f'SB3 Algorithm Policy saved at: {checkpoint_file}')
-        # save environment
+
+        # save environment data
+        roll_out_one_episode(environment, algorithm)
         env_data = environment.export_environment_data()
         env_data_save_path = f'{checkpoint_dir}/env_data.bin'
         with open(env_data_save_path, 'wb') as f:
@@ -106,11 +116,7 @@ def eval_with_sb3(
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
-        obs = environment.reset()
-        done = False
-        while not done:
-            action, _states = algorithm.predict(obs)
-            obs, reward, done, info = environment.step(action)
+        roll_out_one_episode(environment, algorithm)
 
         compute_metrics = METRICS[compute_metrics_name]
         episode: TrajectoryTrackingEpisode = environment.export_environment_data().episode
