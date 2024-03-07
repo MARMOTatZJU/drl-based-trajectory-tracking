@@ -55,7 +55,7 @@ Inside the container, it will first compile the Protobuf (this is important for 
 .. literalinclude:: ../../../sdk/compile-source.sh
   :language: bash
 
-#### Use host
+#### Use libtorch on host
 
 To use libtorch on host, please pass a environment variable `HOST_LIBTORCH_PATH` to `./compile-in-docker.sh`:
 
@@ -78,6 +78,9 @@ HOST_LIBTORCH_PATH=/path/to/libtorch/on/host ./compile-in-docker.sh
 ```
 
 #### `build` folder structure
+
+Building results are exported to the `build` folder which has the following structure:
+
 
 ```text
 /build
