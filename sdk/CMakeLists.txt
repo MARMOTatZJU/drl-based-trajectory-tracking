@@ -3,7 +3,10 @@ project(drltt-sdk)
 set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS "-fpic -Werror -O2 -std=c++20 -march=native -ftree-vectorize")
+option(BUILD_TESTS "Build tests." OFF)
+
+set(CMAKE_CXX_FLAGS "-O2 -Werror -fPIC -std=c++20 -march=native -ftree-vectorize")
+
 
 # TODO resolve it in more formal way
 # https://github.com/protocolbuffers/protobuf/issues/14500
@@ -23,10 +26,12 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # gtest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIR})
-include(GoogleTest)
-enable_testing()
+if(BUILD_TESTS)
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIR})
+    include(GoogleTest)
+    enable_testing()
+endif(BUILD_TESTS)
 
 # protobuf
 add_subdirectory(/proto/proto_def proto_def)

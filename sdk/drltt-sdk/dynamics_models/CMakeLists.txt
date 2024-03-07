@@ -14,14 +14,16 @@ target_link_libraries(dynamics_models
 )
 
 # gtest
-file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
-add_executable(
-  dynamics_models_test
-  ${_TEST_SRCS}
-)
-target_link_libraries(
-  dynamics_models_test
-  GTest::gtest_main
-  dynamics_models
+if(BUILD_TESTS)
+  file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
+  add_executable(
+    dynamics_models_test
+    ${_TEST_SRCS}
   )
-gtest_discover_tests(dynamics_models_test)
+  target_link_libraries(
+    dynamics_models_test
+    GTest::gtest_main
+    dynamics_models
+    )
+  gtest_discover_tests(dynamics_models_test)
+endif(BUILD_TESTS)
