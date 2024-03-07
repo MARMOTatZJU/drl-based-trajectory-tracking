@@ -37,6 +37,13 @@ endif(BUILD_TESTS)
 add_subdirectory(/proto/proto_def proto_def)
 include_directories(/drltt-sdk/proto_gen)  # TODO resolve it in more formal way, try to find a nother place in sdk folder
 
+# setup pybind11
+execute_process(COMMAND "which python" OUTPUT_VARIABLE PYTHON_PATH)
+set(PYTHON_EXECUTABLE ${PYTHON_PATH})
+set(PYBIND11_FINDPYTHON ON)
+find_package(pybind11 REQUIRED)
+include_directories(${PYBIND11_INCLUDE_DIRS})
+
 
 add_subdirectory(drltt-sdk)
 
