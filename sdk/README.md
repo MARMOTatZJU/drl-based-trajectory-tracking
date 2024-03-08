@@ -63,9 +63,9 @@ Inside the container, it will first compile the Protobuf (this is important for 
 .. literalinclude:: ../../../sdk/compile-source.sh
   :language: bash
 
-Secondly, an optional exporting step will export a standalone Python library based on the compiled C++ SDK, along with all shared dependent libraries.
+Secondly, an optional exporting step will export a standalone Python SDK library backed with the compiled C++ SDK, along with all shared dependent libraries.
 
-.. literalinclude:: ../../../sdk/export-standalone.sh
+.. literalinclude:: ../../../sdk/export-py-sdk.sh
   :language: bash
 
 The standalone library is under `./sdk/build/drltt_sdk_py.tar.gz`. Currently, the library is for **Python 3.8** (version-specific as ABI changes across versions). TOOD: Support for multiple Python versions is coming soon.

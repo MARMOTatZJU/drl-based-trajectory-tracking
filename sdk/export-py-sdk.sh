@@ -19,7 +19,7 @@ popd
 checkpoint_dir=/drltt-work_dir/track-test/checkpoint
 cp -r $checkpoint_dir $export_dir/
 
-cp -r assets/standalone/* $export_dir/
+cp -r assets/exported-python-sdk/* $export_dir/
 cp -r /proto/proto_gen_py $export_dir/
 
 # TODO: move to a more formal packaging way
