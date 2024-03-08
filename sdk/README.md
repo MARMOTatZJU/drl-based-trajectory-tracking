@@ -2,6 +2,12 @@
 
 Software Development Kit (SDK) for deploying DRLTT into real-time system, CPU-only and runtime efficient.
 
+## Interfaces
+
+Interface of C++ SDK: `sdk/drltt-sdk/trajectory_tracker/trajectory_tracker.h`
+
+Interface of Python SDK: `sdk/assets/exported-python-sdk/trajectory_tracker.py`
+
 ## Compilation
 
 This project employs `cmake` as build system.. The compilation is recommended to be done within a Docker container.
@@ -119,6 +125,8 @@ Unpackage the exported tarball and set `LD_LIBRARY_PATH` manually (effectively m
 tar xvzf drltt_sdk_py.tar.gz -C ./
 LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:./drltt_sdk_py/lib
 ```
+
+Reference: https://man7.org/linux/man-pages/man8/ld.so.8.html
 
 Import `drltt_sdk_py`. As no depedency required except for `Python=3.8`, you can run the trajectory tracking directly:
 

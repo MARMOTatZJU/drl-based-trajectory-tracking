@@ -1,7 +1,13 @@
 #!/bin/bash
 
-source_dir=/drltt-sdk
-image_name=drltt-sdk:dev
+build_dir=./build
+project_name=drltt-sdk
+image_name=${project_name}:dev
+
+docker_source_dir=/${project_name}
+docker_repo_work_dir=/drltt-work_dir
+docker_checkpoint_dir=${docker_repo_work_dir}/track-test/checkpoint
+
 
 if [[ -z ${HOST_LIBTORCH_PATH} ]];then
     mount_host_libtorch_in_docker=""
@@ -15,10 +21,14 @@ fi
 
 docker run --name drltt-sdk --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=host \
     -e "PRIVACY_CONSENT=Y" \
-    -v $PWD:/${source_dir}:rw \
+    -e "SOURCE_DIR=${docker_source_dir}" \
+    -e "REPO_WORK_DIR=${docker_repo_work_dir}" \
+    -e "CHECKPOINT_DIR=${docker_checkpoint_dir}" \
+    -e "PROJECT_NAME=${project_name}" \
+    -v $PWD:/${docker_source_dir}:rw \
     -v $PWD/../common/proto:/proto:rw \
-    -v $PWD/../work_dir:/drltt-work_dir:ro \
+    -v $PWD/../work_dir:${docker_repo_work_dir}:ro \
     ${mount_host_libtorch_in_docker} \
     --user "$(id -u):$(id -g)" \
     ${image_name} \
-    -c "cd ${source_dir} && bash ./compile-source.sh && bash ./export-py-sdk.sh"
+    -c "cd ${docker_source_dir} && bash ./compile-source.sh && bash ./export-py-sdk.sh"

@@ -5,6 +5,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 option(BUILD_TESTS "Build tests." OFF)
 
+add_definitions(-DMACRO_CHECKPOINT_DIR="/drltt-work_dir/track-test/checkpoint")
+
 set(CMAKE_CXX_FLAGS "-O2 -Werror -fPIC -std=c++20 -march=native -ftree-vectorize")
 
 
