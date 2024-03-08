@@ -15,14 +15,17 @@ export LDFLAGS="-Wl,--copy-dt-needed-entries"
 echo "Using protoc $(protoc --version) at $(which protoc)"
 
 # Clear exisiting compiled files
-rm -rf ./build
-mkdir -p ./build
+rm -rf ${BUILD_DIR}
+mkdir -p ${BUILD_DIR}
 rm -rf ./proto_gen
 mkdir -p ./proto_gen
 
 # Configure and build
 pushd build
-    cmake .. -DBUILD_TESTS=ON && make -j$(nproc --all) 2>&1 | tee ./build.log
+    cmake .. \
+        -DBUILD_TESTS=ON \
+        -DMACRO_CHECKPOINT_DIR ${CHECKPOINT_DIR} \
+        && make -j$(nproc --all) 2>&1 | tee ./build.log
 
     # export shared library.
     # TODO: consider a more elegant way, like packaging

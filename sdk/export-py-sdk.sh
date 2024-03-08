@@ -2,7 +2,7 @@
 
 # NOTE: current directory is `./sdk/build`
 
-project_name=drltt-sdk
+project_name=${PROJECT_NAME}
 package_name=$(echo ${project_name}-py | sed -r 's/-/_/g')
 export_dir=./build/${package_name}
 mkdir -p $export_dir
@@ -16,7 +16,7 @@ pushd $export_dir/
   ln -sf $(basename $sdk_so) export_symbols.so
 popd
 
-checkpoint_dir=/drltt-work_dir/track-test/checkpoint
+checkpoint_dir=${CHECKPOINT_DIR}
 cp -r $checkpoint_dir $export_dir/
 
 cp -r assets/exported-python-sdk/* $export_dir/

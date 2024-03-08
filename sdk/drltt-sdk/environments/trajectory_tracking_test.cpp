@@ -111,11 +111,9 @@ std::string print_data(const drltt_proto::Observation& observation) {
 }
 
 TEST(EnvironmentsTest, TrajectoryTrackingTest) {
-  // TODO: resolve hardcoded paths
-  const std::string module_path =
-      "/drltt-work_dir/track-test/checkpoint/traced_policy.pt";
-  const std::string env_data_path =
-      "/drltt-work_dir/track-test/checkpoint/env_data.bin";
+  const std::string checkpoint_dir = MACRO_CHECKPOINT_DIR;
+  const std::string module_path = checkpoint_dir + "/traced_policy.pt";
+  const std::string env_data_path = checkpoint_dir + "/env_data.bin";
 
   drltt_proto::TrajectoryTrackingEnvironment env_data;
   parse_proto_from_file(env_data, env_data_path);
