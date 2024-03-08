@@ -15,14 +15,16 @@ target_link_libraries(
 )
 
 # gtest
-file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
-add_executable(
-  common_test
-  ${_TEST_SRCS}
-)
-target_link_libraries(
-  common_test
-  GTest::gtest_main
-  common
-  )
-gtest_discover_tests(common_test)
+if(BUILD_TESTS)
+  file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
+  add_executable(
+    common_test
+    ${_TEST_SRCS}
+    )
+    target_link_libraries(
+      common_test
+      GTest::gtest_main
+      common
+      )
+    gtest_discover_tests(common_test)
+endif(BUILD_TESTS)

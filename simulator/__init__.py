@@ -9,5 +9,5 @@ DTYPE = np.float32
 TEST_CONFIG_PATHS = (
     'configs/trajectory_tracking/config-track-base.yaml',
     'configs/trajectory_tracking/config-track-tiny.yaml',
-    'configs/trajectory_tracking/utils/config-track-test.yaml',
+    'configs/trajectory_tracking/utils/config-track-test-sample.yaml',
 )

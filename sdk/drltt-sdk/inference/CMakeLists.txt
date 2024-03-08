@@ -13,14 +13,16 @@ target_link_libraries(inference
 )
 
 # gtest
-file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
-add_executable(
-  inference_test
-  ${_TEST_SRCS}
-)
-target_link_libraries(
-  inference_test
-  GTest::gtest_main
-  inference
+if(BUILD_TESTS)
+  file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
+  add_executable(
+    inference_test
+    ${_TEST_SRCS}
   )
-gtest_discover_tests(inference_test)
+  target_link_libraries(
+    inference_test
+    GTest::gtest_main
+    inference
+    )
+  gtest_discover_tests(inference_test)
+endif(BUILD_TESTS)

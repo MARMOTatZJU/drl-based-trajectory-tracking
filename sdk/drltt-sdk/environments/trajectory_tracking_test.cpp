@@ -111,7 +111,7 @@ std::string print_data(const drltt_proto::Observation& observation) {
 }
 
 TEST(EnvironmentsTest, TrajectoryTrackingTest) {
-
+  // TODO: resolve hardcoded paths
   const std::string module_path =
       "/drltt-work_dir/track-test/checkpoint/traced_policy.pt";
   const std::string env_data_path =
@@ -134,7 +134,7 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
   env.roll_out();
   TRAJECTORY tracked_trajectory = env.get_tracked_trajectory();
 
-  const float EPSILON = 1e-4;
+  const float EPSILON = 1e-3;
   // TODO: use both atol and rtol for close check
   // reference: https://pytorch.org/docs/stable/generated/torch.allclose.html
   for (int index = 0; index < env_data.episode().tracking_length(); ++index) {

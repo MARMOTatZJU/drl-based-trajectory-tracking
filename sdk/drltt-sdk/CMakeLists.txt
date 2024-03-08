@@ -6,15 +6,6 @@ add_subdirectory(dynamics_models)
 add_subdirectory(inference)
 add_subdirectory(managers)
 add_subdirectory(environments)
+add_subdirectory(trajectory_tracker)
 
-add_executable(main main.cpp)
-# TODO remove redundant linked libraries
-target_link_libraries(main PRIVATE 
-    ${Protobuf_LIBRARIES}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${PROTOBUF_LIBRARY}
-    proto
-    common
-)
-
+# TODO: add another sample program

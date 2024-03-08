@@ -13,6 +13,7 @@
 #include "drltt_proto/trajectory/trajectory.pb.h"
 
 typedef std::tuple<float, float> REFERENCE_WAYPOINT;
+typedef std::vector<REFERENCE_WAYPOINT> REFERENCE_LINE;
 typedef std::tuple<float, float, float, float> STATE;
 typedef std::tuple<float, float> ACTION;
 typedef std::vector<float> OBSERVATION;

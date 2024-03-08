@@ -1,6 +1,10 @@
 # override for testing/debugging
+algorithm:
+  learning_starts: 1024
+  batch_size: 1024
+
 learning:
-    total_timesteps: 3_000
+    total_timesteps: 2048
     log_interval: 10
 
 evaluation:

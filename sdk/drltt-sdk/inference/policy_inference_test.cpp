@@ -6,6 +6,7 @@
 using namespace drltt;
 
 TEST(PolicyInferenceTest, ForwardTest) {
+  // TODO: resolve hardcoded paths
   const std::string module_path =
       "/drltt-work_dir/track-test/checkpoint/traced_policy.pt";
   const std::string test_cases_path =

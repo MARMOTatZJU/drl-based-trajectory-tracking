@@ -46,6 +46,7 @@ bool TrajectoryTracking::set_reference_line(
   return true;
 }
 
+// TODO: implement test
 bool TrajectoryTracking::estimate_initial_state(
     const drltt_proto::ReferenceLine& reference_line, drltt_proto::State& state,
     float delta_t) {
@@ -66,20 +67,22 @@ bool TrajectoryTracking::estimate_initial_state(
   const drltt_proto::ReferenceLineWaypoint init_waypoint =
       reference_line.waypoints().at(0);
   for (int index = 0; index < real_window_size - 1; ++index) {
-    const drltt_proto::ReferenceLineWaypoint current_waypoint =
+    const drltt_proto::ReferenceLineWaypoint& current_waypoint =
         reference_line.waypoints().at(index);
-    const drltt_proto::ReferenceLineWaypoint next_waypoint =
-        reference_line.waypoints().at(index);
-    total_displacement += std::hypot(next_waypoint.x() - current_waypoint.x(),
-                                     next_waypoint.y() - current_waypoint.y());
+    const drltt_proto::ReferenceLineWaypoint& next_waypoint =
+        reference_line.waypoints().at(index + 1);
     const float coef = std::pow(discount_factor, index);
-    total_displacement_x += (next_waypoint.x() - current_waypoint.x()) * coef;
-    total_displacement_y += (next_waypoint.y() - current_waypoint.y()) * coef;
+    total_displacement +=
+        (std::hypot(next_waypoint.x() - current_waypoint.x(),
+                    next_waypoint.y() - current_waypoint.y()) *
+         coef);
+    total_displacement_x += ((next_waypoint.x() - current_waypoint.x()) * coef);
+    total_displacement_y += ((next_waypoint.y() - current_waypoint.y()) * coef);
     total_coefficient += coef;
   }
 
   const float init_r = std::atan2(total_displacement_y, total_displacement_x);
-  const float init_v = total_displacement / (total_coefficient * delta_t);
+  const float init_v = total_displacement / total_coefficient / delta_t;
 
   state.mutable_bicycle_model()->mutable_body_state()->set_x(init_waypoint.x());
   state.mutable_bicycle_model()->mutable_body_state()->set_y(init_waypoint.y());

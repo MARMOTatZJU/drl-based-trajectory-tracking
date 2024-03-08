@@ -12,14 +12,16 @@ target_link_libraries(environments
     )
 
 # gtest
-file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
-add_executable(
-  environments_test
-  ${_TEST_SRCS}
-)
-target_link_libraries(
-  environments_test
-  environments
-  GTest::gtest_main
+if(BUILD_TESTS)
+  file(GLOB_RECURSE _TEST_SRCS "*test.[hc]pp")
+  add_executable(
+    environments_test
+    ${_TEST_SRCS}
   )
-gtest_discover_tests(environments_test)
+  target_link_libraries(
+    environments_test
+    environments
+    GTest::gtest_main
+    )
+  gtest_discover_tests(environments_test)
+endif(BUILD_TESTS)
