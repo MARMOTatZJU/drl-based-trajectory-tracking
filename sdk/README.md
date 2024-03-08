@@ -92,12 +92,9 @@ Building results are exported to the `build` folder which has the following stru
 └── ...
 ```
 
-### Run compiled binaries
+### Run sample program
 
-To run sample script, launch `bash run-main.sh`:
-
-.. literalinclude:: ../../../sdk/run-main.sh
-  :language: bash
+TODO:
 
 If you prefer to use shared libraries on your host machine, please *prepend* your shared libraries' path to `LD_LIBRARY_PATH`.
 
