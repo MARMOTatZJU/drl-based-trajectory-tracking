@@ -8,6 +8,9 @@ if [[ -d $work_dir ]];then
 fi
 mkdir -p $work_dir
 
+script_path=$0
+cp $script_path $work_dir/
+
 python tools/main.py \
     --config-files \
         configs/trajectory_tracking/config-track-base.yaml \
