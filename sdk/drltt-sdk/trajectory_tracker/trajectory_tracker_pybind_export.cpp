@@ -3,6 +3,9 @@
 
 #include "trajectory_tracker.h"
 
+// TODO: export class directly
+//    reference: https://pybind11.readthedocs.io/en/stable/classes.html
+// TODO: add unit test for exported library
 namespace py = pybind11;
 using namespace drltt;
 
