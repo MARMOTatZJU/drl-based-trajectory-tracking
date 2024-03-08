@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# NOTE: current directory is `./sdk/build`
+
 project_name=drltt-sdk
 package_name=$(echo ${project_name}-py | sed -r 's/-/_/g')
 export_dir=./build/${package_name}

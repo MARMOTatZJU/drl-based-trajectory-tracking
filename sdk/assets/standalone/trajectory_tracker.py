@@ -30,7 +30,6 @@ class TrajectoryTracker:
 
     def __init__(self, vehicle_type: int = DynamicsModelType.SHORT_VEHICLE.value):
         """
-
         Args:
             vehicle_type: Vehicle type. Default is short vehicle.
         """
@@ -42,9 +41,17 @@ class TrajectoryTracker:
         init_state: Union[Tuple[float, float, float, float], None] = None,
     ) -> Tuple[List[Tuple[float, float, float, float]], List[Tuple[float, float]]]:
         """Track a reference line with the underlying policy model.
+
+        Nomenclature:
+
+        - x: X-coordinate in [m] within (-inf, +inf)
+        - y: Y-coordinate in [m] within (-inf, +inf)
+        - r: heading in [rad] within [-pi, pi), following convention of math lib like `std::atan2`
+        - v: scalar speed in [m/s] within [0, +inf)
+
         Args:
             reference_line: Reference line, format=List[<x, y>].
-            init_state: Initial state, format=<x, y, heading, speed>.
+            init_state: Initial state, format=<x, y, r, v>.
 
         Return:
             Tuple[states, action]: The tracked trajectory. All elements have the same length

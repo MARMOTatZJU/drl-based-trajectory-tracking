@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# NOTE: current directory is `./sdk/build`
+
 # shared libraries
 usr_lib_dir=/usr/local/lib
 libtorch_lib_dir=/libtorch/lib

@@ -6,7 +6,7 @@ Software Development Kit (SDK) for deploying DRLTT into real-time system, CPU-on
 
 This project employs `cmake` as build system.. The compilation is recommended to be done within a Docker container.
 
-### Build Docker image
+### Build Docker Image
 
 Firstly, build an image named `drltt-sdk` for compilation with the provided Dockerfile.
 
@@ -43,25 +43,33 @@ RUN \
     cat ${APT_SOURCE_LIST}
 ```
 
-### Compile source within Docker container
+### Compile Source and Export SDK Shared Library within Docker Container
 
-Secondly, launch compilation by running `bash ./compile-in-docker.sh`.
+Secondly, launch compilation and exporting by running `bash ./compile-in-docker.sh`.
 
 .. literalinclude:: ../../../sdk/compile-in-docker.sh
   :language: bash
+
+To use libtorch on host during compilation phase, please pass a environment variable `HOST_LIBTORCH_PATH` to `./compile-in-docker.sh`:
+
+```bash
+HOST_LIBTORCH_PATH=/path/to/libtorch/on/host ./compile-in-docker.sh
+```
+
+#### Compiling and exporting inside the Docker container under `./sdk/build`
 
 Inside the container, it will first compile the Protobuf (this is important for Protobuf to be included successfully) and then compile source files.
 
 .. literalinclude:: ../../../sdk/compile-source.sh
   :language: bash
 
-#### Use libtorch on host
+Secondly, an optional exporting step will export a standalone Python library based on the compiled C++ SDK, along with all shared dependent libraries.
 
-To use libtorch on host, please pass a environment variable `HOST_LIBTORCH_PATH` to `./compile-in-docker.sh`:
+.. literalinclude:: ../../../sdk/export-standalone.sh
+  :language: bash
 
-```
-HOST_LIBTORCH_PATH=/path/to/libtorch/on/host ./compile-in-docker.sh
-```
+The standalone library is under `./sdk/build/drltt_sdk_py.tar.gz`. Currently, the library is for **Python 3.8** (version-specific as ABI changes across versions). TOOD: Support for multiple Python versions is coming soon.
+
 
 #### Tree structure within docker container
 
@@ -86,17 +94,48 @@ Building results are exported to the `build` folder which has the following stru
 /build
 ├── ...
 ├── proto_def
-├── drltt-sdk   # compiled libraries and executables
-│   └── main
-├── lib         # exported shared library for running
+├── drltt-sdk             # compiled libraries and executables
+│   ├── common
+│   ├── inference
+│   ├── trajectory_tracker
+│   └── trajectory_tracker
+├── lib                   # exported shared library for running
+├── drltt_sdk_py          # exported standalone python sdk library
+├── drltt_sdk_py.tar.gz   # packed standalone python sdk library
 └── ...
 ```
 
 ### Run sample program
 
-TODO:
+TODO: An executable sample program is coming soon.
 
 If you prefer to use shared libraries on your host machine, please *prepend* your shared libraries' path to `LD_LIBRARY_PATH`.
+
+## Deployment
+
+Unpackage the exported tarball and set `LD_LIBRARY_PATH` manually (effectively modifying it during runtime is not possible):
+
+```bash
+tar xvzf drltt_sdk_py.tar.gz -C ./
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:./drltt_sdk_py/lib
+```
+
+Import `drltt_sdk_py`. As no depedency required except for `Python=3.8`, you can run the trajectory tracking directly:
+
+```python
+from drltt_sdk_py import TrajectoryTracker
+
+tracker = TrajectoryTracker()
+reference_line = [(0.1 * 5.0 * step_index, 0.1 * 4.0 * step_index) for step_index in range(60)]
+tracked_states, tracked_actions = tracker.track_traference_line(reference_line)
+```
+
+To check the numeric precision, run the following test:
+
+```bash
+cd drltt_sdk_py && ./test.sh
+```
+
 
 ## Development
 
@@ -114,7 +153,6 @@ To customize your own `clang-format` config file, run:
 ```bash
 clang-format -style=llvm -dump-config > .clang-format
 ```
-
 
 References:
 
