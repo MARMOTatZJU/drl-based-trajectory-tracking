@@ -24,7 +24,7 @@ ACTOR_CRITIC_ALGORITHMS = (TD3, SAC, DDPG)
 
 
 class OnnxableActorCriticPolicy(th.nn.Module):
-    """
+    """Wrapper class for JIT tracing of an RL policy trained with Stabline Baselines 3.
     TODO: docstring
 
     Reference:
@@ -38,9 +38,10 @@ class OnnxableActorCriticPolicy(th.nn.Module):
     box_action_space: bool
     squash_output: bool
 
-    def __init__(self, actor_critic_algorithm: BasePolicy):
+    def __init__(self, actor_critic_algorithm: BaseAlgorithm):
         """
-        TODO: docstring
+        Args:
+            actor_critic_algorithm: Algorithm to be traced.
         """
         super().__init__()
         policy: BasePolicy = actor_critic_algorithm.policy
@@ -56,10 +57,15 @@ class OnnxableActorCriticPolicy(th.nn.Module):
         self.eval()
 
     def forward(self, observation: th.Tensor) -> th.Tensor:
-        """
+        """Onnxable forward of the policy. Mapping: observation -> action
+
         Reference: https://github.com/DLR-RM/stable-baselines3/tree/v2.2.1/stable_baselines3/common/policies.py#L329
 
-        TODO: docstring
+        Args:
+            observation: Observation, shape=(batch_size, observation_dim).
+
+        Returns:
+            th.Tensor: Action, shape=(batch_size, action_dim).
         """
         # https://github.com/DLR-RM/stable-baselines3/tree/v2.2.1/stable_baselines3/common/policies.py#L366
         scaled_action: th.Tensor = self.actor(observation)
@@ -101,19 +107,17 @@ def export_sb3_jit_module(
     device: Union[th.device, str] = 'cpu',
     n_test_cases: int = 1,
 ) -> th.jit.ScriptModule:
-    """Export jit module for stable-baselines3.
+    """Export jit module from Stable Baselines 3 algorithm.
 
     Reference: https://stable-baselines3.readthedocs.io/en/master/guide/export.html#trace-export-to-c
-
-    TODO: docstring
 
     Args:
         algorithm: SB3 algorithm to be traced.
         input_size: Input tensor size.
-        device: Desired device where the tranced module is to be inferenced.
+        device: Desired device where the tranced module is to be inferred.
         export_dir: Directory to export traced module.
         test_case_save_format: ('protobuf'|'numpy')
-        n_test_cases:
+        n_test_cases: Number of test cases.
     """
     is_actor_critic_algorithm = any([isinstance(algorithm, ac_algo) for ac_algo in ACTOR_CRITIC_ALGORITHMS])
     assert (
@@ -164,6 +168,8 @@ def export_sb3_jit_module(
         raise ValueError(f'Invalid `test_case_save_format`: {test_case_save_format}')
     logging.info(f'Traced JIT module test cases saved at: {test_cases_path}')
 
+    # Test traced module.
+    #   TODO: move to unit test.
     test_sb3_jit_module(export_jit_path, test_cases_path, test_case_save_format=test_case_save_format, device=device)
 
     return frozen_module
@@ -174,11 +180,21 @@ def test_sb3_jit_module(
     test_cases_path: str,
     test_case_save_format: str = 'protobuf',
     device: Union[th.device, str] = 'cpu',
-    rtol=1e-4,
-    atol=1e-5,
-) -> float:
-    """
-    TODO: docstring
+    rtol: float = 1e-3,
+    atol: float = 1e-4,
+) -> bool:
+    """Test numeric accuracy of JIT module exported from Stable Baselines 3.
+
+    Args:
+        jit_module_path: Path to the JIT module.
+        test_cases_path: Path to protobuf file of test cases.
+        test_case_save_format: Save format (protobuf|numpy)
+        device: Device to test module.
+        rtol: Relative tolerance, same definition as `numpy.allclose` and `torch.allclose`.
+        atol: Absolute tolerance, same definition as `numpy.allclose` and `torch.allclose`.
+
+    Returns:
+        bool: Flag of `allclose` between original module and traced module.
     """
     logging.info(f'Testing jit module...')
     loaded_module = th.jit.load(jit_module_path)
@@ -199,8 +215,7 @@ def test_sb3_jit_module(
     logging.info(f'Loaded jit module test cases from: {test_cases_path}')
 
     jit_actions = loaded_module(th.from_numpy(gt_observations).to(device)).numpy()
-    isclose = np.isclose(gt_actions, jit_actions, rtol=rtol, atol=atol)
-    isclose_ratio = isclose.sum() / isclose.size
-    logging.info(f'np.isclose(gt_actions, jit_actions) ratio={isclose_ratio}, rtol={rtol}, atol={atol}')
+    allclose = np.allclose(gt_actions, jit_actions, rtol=rtol, atol=atol)
+    logging.info(f'np.allclose(gt_actions, jit_actions)={allclose}, rtol={rtol}, atol={atol}')
 
-    return isclose_ratio
+    return allclose

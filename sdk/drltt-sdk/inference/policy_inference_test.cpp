@@ -7,8 +7,7 @@ using namespace drltt;
 
 TEST(PolicyInferenceTest, ForwardTest) {
   const std::string checkpoint_dir = MACRO_CHECKPOINT_DIR;
-  const std::string module_path =
-      checkpoint_dir + "/traced_policy.pt";
+  const std::string module_path = checkpoint_dir + "/traced_policy.pt";
   const std::string test_cases_path =
       checkpoint_dir + "/traced_policy_test_cases.bin";
 
