@@ -1,8 +1,8 @@
 # DRL-Based Trajectory Tracking (DRLTT)
 
-This repo hosts code and script for training and deploying the *DRL-Based Trajectory Tracking (DRLTT)* algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task in the context of Autonomous Driving. Benefiting from its methodological simplicity, DRLTT is able to process 32 trajectories (each contains 50 steps) within several milliseconds on edge computing devices.
+This repo hosts code and script for training and deploying the *DRL-Based Trajectory Tracking (DRLTT)* algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task in the context of Autonomous Driving. Benefiting from its methodological simplicity, DRLTT can process 32 trajectories (each contains 50 steps) within several milliseconds on edge computing devices.
 
-Currently DRLTT support the following features:
+Currently, DRLTT supports the following features:
 
 * A Python framework
   * Training-Evaluation-Tracing of an RL policy for the task of Trajectory Tracking in Autonomous Driving.
@@ -26,7 +26,7 @@ The [Documentation](https://drl-based-trajectory-tracking.readthedocs.io/) hoste
 
 ### Python Requirements
 
-DRLTT requires Python>=3.12. If you are using [Conda](https://www.anaconda.com/) for Python environment management, you may create an environment for DRLTT through following command:
+DRLTT requires Python>=3.12. If you are using [Conda](https://www.anaconda.com/) for Python environment management, you may create an environment for DRLTT through the following command:
 
 ```bash
 conda create --name drltt python=3.12
@@ -114,7 +114,7 @@ See *DRTLL SDK* for details.
 
 ### Testing
 
-Run `./test.sh` to tes all code:
+Run `./test.sh` to test all code:
 
 .. literalinclude:: ../../../test.sh
   :language: bash
@@ -125,7 +125,7 @@ Python testing is done with *pytest*. To launch the testing, run in command line
 (source setup.sh ; pytest)
 ```
 
-CPP testing is performed through *gtest* immediately after building. Please refer to *DRTLL SDK* for detail.
+CPP testing is performed through *gtest* immediately after building. Please refer to *DRTLL SDK* for details.
 
 ### Code Formatting
 

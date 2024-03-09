@@ -1,12 +1,12 @@
 # DRLTT SDK
 
-Software Development Kit (SDK) for deploying DRLTT into real-time system, CPU-only and runtime efficient.
+Software Development Kit (SDK) for deploying *DRLTT* into a real-time system, CPU-only and runtime efficient.
 
 ## Interfaces
 
-Interface of C++ SDK: `sdk/drltt-sdk/trajectory_tracker/trajectory_tracker.h`
+The Interface of C++ SDK: `sdk/drltt-sdk/trajectory_tracker/trajectory_tracker.h`
 
-Interface of Python SDK: `sdk/assets/exported-python-sdk/trajectory_tracker.py`
+The Interface of Python SDK: `sdk/assets/exported-python-sdk/trajectory_tracker.py`
 
 ## Compilation
 
@@ -26,7 +26,7 @@ Tip: To remove unused images/cached, run:
 docker system prune
 ```
 
-Tip 2: To save docker image for transferring and save time:
+Tip 2: To save the Docker image for transferring and save time:
 
 ```
 docker image save drltt-sdk:dev -o ./drltt-sdk.image
@@ -56,7 +56,7 @@ Secondly, launch compilation and exporting by running `bash ./compile-in-docker.
 .. literalinclude:: ../../../sdk/compile-in-docker.sh
   :language: bash
 
-To use libtorch on host during compilation phase, please pass a environment variable `HOST_LIBTORCH_PATH` to `./compile-in-docker.sh`:
+To use [LibTorch](https://pytorch.org/cppdocs/installing.html) on the host during the compilation phase, please pass an environment variable `HOST_LIBTORCH_PATH` to `./compile-in-docker.sh`:
 
 ```bash
 HOST_LIBTORCH_PATH=/path/to/libtorch/on/host ./compile-in-docker.sh
