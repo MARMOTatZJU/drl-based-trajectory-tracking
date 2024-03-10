@@ -35,6 +35,7 @@ extensions = [
     'sphinx.ext.napoleon',
     # 'myst_parser',  # substitute of `recommonmark`
     'm2r2',  # TODO: figure out why myst_parser does not work.
+   'breathe',
 ]
 
 source_suffix = {
@@ -42,6 +43,15 @@ source_suffix = {
     '.txt': 'markdown',
     '.md': 'markdown',
 }
+
+# Integrate Doxygen into Sphinx
+# Reference: https://leimao.github.io/blog/CPP-Documentation-Using-Sphinx/
+import subprocess
+# subprocess.call('make clean', shell=True)
+subprocess.call('cd ../../sdk ; doxygen Doxyfile-cpp ', shell=True)
+sdk_name = "drltt-sdk"
+breathe_projects = { sdk_name: "../../sdk/doxygen_output/xml/" }
+breathe_default_project = sdk_name
 
 templates_path = ['_templates']
 exclude_patterns = []
