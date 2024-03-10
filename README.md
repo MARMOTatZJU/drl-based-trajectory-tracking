@@ -154,6 +154,6 @@ This project uses `black` for Python code formatting and `clang-format` for CXX 
 
 If you wish to cite this work, you may consider using the following reference form:
 
-```
+```text
 Xu, Yinda, and Lidong Yu. "DRL-Based Trajectory Tracking for Motion-Related Modules in Autonomous Driving." arXiv preprint arXiv:2308.15991 (2023).
 ```
