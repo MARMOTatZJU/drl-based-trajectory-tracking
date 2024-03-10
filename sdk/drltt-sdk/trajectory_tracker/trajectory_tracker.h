@@ -1,6 +1,7 @@
 /**
  * @file trajectory_tracker.h
- * Trajectory tracker exported SDK.
+ * @brief Trajectory tracker exported SDK.
+ *
  */
 #pragma once
 
@@ -57,10 +58,11 @@ class TrajectoryTracker {
    */
   bool SetReferenceLine(const REFERENCE_LINE& reference_line);
   /**
-   * @brief Set initial state manually for the dynamics model,
+   * @brief Set the Dynamics Model Initial State object
    *
    * @param init_state Initial state.
-   * @return Success flag.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
    */
   bool SetDynamicsModelInitialState(const STATE& init_state);
   /**

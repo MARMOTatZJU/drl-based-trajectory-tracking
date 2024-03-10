@@ -1,3 +1,8 @@
+/**
+ * @file trajectory_tracking.h
+ * @brief Trajectory tracking environment.
+ *
+ */
 #pragma once
 
 #include <cassert>
@@ -25,11 +30,32 @@ namespace drltt {
 
 // TODO: use factory to make it configurable
 // TODO: verify if proto can be passed to python through pybind
+/**
+ * @brief Trajectory tracking environment.
+ *
+ * Class for managing dynamics models/reference lines/policy model/etc. and
+ * performing rollouts.
+ *
+ */
 class TrajectoryTracking {
  public:
   TrajectoryTracking() = default;
   ~TrajectoryTracking() {}
+  /**
+   * @brief Load the underlying policy.
+   *
+   * @param policy_path Path to the policy.
+   * @return true Loading succeeded.
+   * @return false Loading failed.
+   */
   bool load_policy(const std::string& policy_path);
+  /**
+   * @brief Load the environment data.
+   *
+   * @param env_data_path Path to the protobuf binary file of environment data.
+   * @return true Loading succeeded.
+   * @return false Loading failed.
+   */
   bool load_env_data(const std::string& env_data_path);
   bool set_dynamics_model_hyper_parameter(int index);
   bool set_reference_line(
