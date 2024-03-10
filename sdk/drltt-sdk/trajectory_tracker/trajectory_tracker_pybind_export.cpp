@@ -11,12 +11,12 @@ using namespace drltt;
 
 bool TrajectoryTrackerSetReferenceLine(TrajectoryTracker& trajectory_tracker,
                                        const REFERENCE_LINE& reference_line) {
-  return trajectory_tracker.SetReferenceLine(reference_line);
+  return trajectory_tracker.set_reference_line(reference_line);
 }
 
 bool TrajectoryTrackerSetDynamicsModelInitialState(
     TrajectoryTracker& trajectory_tracker, const STATE& init_state) {
-  return trajectory_tracker.SetDynamicsModelInitialState(init_state);
+  return trajectory_tracker.set_dynamics_model_initial_state(init_state);
 }
 TRAJECTORY TrajectoryTrackerTrackReferenceLine(
     TrajectoryTracker& trajectory_tracker) {

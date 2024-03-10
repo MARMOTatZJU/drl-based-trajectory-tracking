@@ -12,5 +12,5 @@ TEST(DynamicsModelTest, BicycleModelTest) {
   BicycleModel dynamics_model(hyper_parameter);
   drltt_proto::Action action;
   float delta_t = 0.1;
-  dynamics_model.step(action, delta_t);
+  dynamics_model.Step(action, delta_t);
 }

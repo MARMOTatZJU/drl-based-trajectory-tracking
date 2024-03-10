@@ -48,7 +48,7 @@ class TrajectoryTracking {
    * @return true Loading succeeded.
    * @return false Loading failed.
    */
-  bool load_policy(const std::string& policy_path);
+  bool LoadPolicy(const std::string& policy_path);
   /**
    * @brief Load the environment data.
    *
@@ -56,23 +56,20 @@ class TrajectoryTracking {
    * @return true Loading succeeded.
    * @return false Loading failed.
    */
-  bool load_env_data(const std::string& env_data_path);
+  bool LoadEnvData(const std::string& env_data_path);
   bool set_dynamics_model_hyper_parameter(int index);
   bool set_reference_line(
       const std::vector<REFERENCE_WAYPOINT>& reference_line);
   bool set_reference_line(const drltt_proto::ReferenceLine& reference_line);
-  static bool estimate_initial_state(
+  static bool EstimateInitialState(
       const drltt_proto::ReferenceLine& reference_line,
       drltt_proto::State& state, float delta_t);
   bool set_dynamics_model_initial_state(STATE state);
   bool set_dynamics_model_initial_state(drltt_proto::State state);
-  bool roll_out();
+  bool RollOut();
   TRAJECTORY get_tracked_trajectory();
 
  private:
-  drltt_proto::State _estimate_init_state_from_reference_line(
-      const drltt_proto::ReferenceLine&
-          reference_line);  // avoid copy through RVO and std::move
   TorchJITModulePolicy _policy_model;
   drltt_proto::ReferenceLine _reference_line;
   drltt_proto::TrajectoryTrackingEnvironment _env_data;

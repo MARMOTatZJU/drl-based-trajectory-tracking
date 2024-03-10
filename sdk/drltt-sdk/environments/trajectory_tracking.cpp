@@ -2,11 +2,11 @@
 
 namespace drltt {
 
-bool TrajectoryTracking::load_policy(const std::string& policy_path) {
-  return _policy_model.load(policy_path);
+bool TrajectoryTracking::LoadPolicy(const std::string& policy_path) {
+  return _policy_model.Load(policy_path);
 }
 
-bool TrajectoryTracking::load_env_data(const std::string& env_data_path) {
+bool TrajectoryTracking::LoadEnvData(const std::string& env_data_path) {
   return parse_proto_from_file(_env_data, env_data_path);
 }
 
@@ -39,7 +39,7 @@ bool TrajectoryTracking::set_reference_line(
   _reference_line.CopyFrom(reference_line);
 
   drltt_proto::State init_state;
-  estimate_initial_state(_reference_line, init_state,
+  EstimateInitialState(_reference_line, init_state,
                          _env_data.hyper_parameter().step_interval());
   _dynamics_model.set_state(init_state);
 
@@ -47,7 +47,7 @@ bool TrajectoryTracking::set_reference_line(
 }
 
 // TODO: implement test
-bool TrajectoryTracking::estimate_initial_state(
+bool TrajectoryTracking::EstimateInitialState(
     const drltt_proto::ReferenceLine& reference_line, drltt_proto::State& state,
     float delta_t) {
   const int length = reference_line.waypoints().size();
@@ -110,10 +110,10 @@ bool TrajectoryTracking::set_dynamics_model_initial_state(
   return true;
 }
 
-bool TrajectoryTracking::roll_out() {
+bool TrajectoryTracking::RollOut() {
   _states.clear();
   _actions.clear();
-  _observation_manager.reset(&_reference_line, &_dynamics_model);
+  _observation_manager.Reset(&_reference_line, &_dynamics_model);
 
   const int tracking_length = _reference_line.waypoints().size();
   const float step_interval = _env_data.hyper_parameter().step_interval();
@@ -133,7 +133,7 @@ bool TrajectoryTracking::roll_out() {
       observation.mutable_bicycle_model()->add_feature(scalar);
     }
     // action
-    std::vector<float> action_vec = _policy_model.infer(observation_vec);
+    std::vector<float> action_vec = _policy_model.Infer(observation_vec);
     drltt_proto::Action action;
     action.mutable_bicycle_model()->set_a(action_vec.at(0));
     action.mutable_bicycle_model()->set_s(action_vec.at(1));
@@ -142,7 +142,7 @@ bool TrajectoryTracking::roll_out() {
     _actions.push_back(action);
     _observations.push_back(observation);
     // step
-    _dynamics_model.step(action, step_interval);
+    _dynamics_model.Step(action, step_interval);
   }
   return true;
 }

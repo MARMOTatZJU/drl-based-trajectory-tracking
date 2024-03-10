@@ -27,7 +27,7 @@ class TorchJITModulePolicy {
    * @return true Module loading succeeded.
    * @return false Module loading failed.
    */
-  bool load(const std::string& jit_module_path);
+  bool Load(const std::string& jit_module_path);
   /**
    * @brief Perform inference.
    *
@@ -36,7 +36,7 @@ class TorchJITModulePolicy {
    * @return torch::Tensor The torch tensor of actions. Shape={batch_size,
    * action_dim}
    */
-  torch::Tensor infer(const torch::Tensor& observations_tensor);
+  torch::Tensor Infer(const torch::Tensor& observations_tensor);
   /**
    * @brief Perform inference.
    *
@@ -44,7 +44,7 @@ class TorchJITModulePolicy {
    * @param shape_vec Vector of the shape of observation tensor.
    * @return std::vector<float> , size=batch_size*action_dim
    */
-  std::vector<float> infer(const std::vector<float>& observations_vec,
+  std::vector<float> Infer(const std::vector<float>& observations_vec,
                            const std::initializer_list<int64_t>& shape_vec);
   /**
    * @brief Perform inference.
@@ -53,7 +53,7 @@ class TorchJITModulePolicy {
    * i.e. original shape={1, observation_dim}
    * @return std::vector<float> , size=batch_size*action_dim.
    */
-  std::vector<float> infer(const std::vector<float>& observations_vec);
+  std::vector<float> Infer(const std::vector<float>& observations_vec);
 
  protected:
   torch::jit::script::Module _module;

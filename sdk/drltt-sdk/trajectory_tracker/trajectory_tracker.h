@@ -56,7 +56,7 @@ class TrajectoryTracker {
    * @param reference_line Reference line to be tracked.
    * @return Success flag.
    */
-  bool SetReferenceLine(const REFERENCE_LINE& reference_line);
+  bool set_reference_line(const REFERENCE_LINE& reference_line);
   /**
    * @brief Set the Dynamics Model Initial State object
    *
@@ -64,7 +64,7 @@ class TrajectoryTracker {
    * @return true Setting succeeded.
    * @return false Setting failed.
    */
-  bool SetDynamicsModelInitialState(const STATE& init_state);
+  bool set_dynamics_model_initial_state(const STATE& init_state);
   /**
    * @brief Perform trajectory tracking.
    *

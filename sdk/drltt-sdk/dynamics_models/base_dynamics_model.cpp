@@ -12,10 +12,10 @@ BaseDynamicsModel::BaseDynamicsModel(
     const drltt_proto::HyperParameter& hyper_parameter,
     const drltt_proto::State& init_state)
     : BaseDynamicsModel(hyper_parameter) {
-  reset(init_state);
+  Reset(init_state);
 }
 
-void BaseDynamicsModel::reset(const drltt_proto::State& state) {
+void BaseDynamicsModel::Reset(const drltt_proto::State& state) {
   _state.CopyFrom(state);
 }
 

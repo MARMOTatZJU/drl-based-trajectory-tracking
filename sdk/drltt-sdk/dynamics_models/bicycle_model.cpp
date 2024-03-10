@@ -2,7 +2,7 @@
 
 namespace drltt {
 
-void BicycleModel::step(const drltt_proto::Action& action, float delta_t) {
+void BicycleModel::Step(const drltt_proto::Action& action, float delta_t) {
   drltt_proto::State derivative =
       _compute_derivative(_state, action, _hyper_parameter);
   _state.mutable_bicycle_model()->CopyFrom(

@@ -12,7 +12,7 @@ class ObservationManager {
  public:
   ObservationManager() = default;
   ~ObservationManager() {};
-  bool reset(drltt_proto::ReferenceLine* reference_line_ptr,
+  bool Reset(drltt_proto::ReferenceLine* reference_line_ptr,
              BaseDynamicsModel* dynamics_model_ptr);
   // TODO: remove index and window
   bool get_observation(const drltt_proto::BodyState& body_state,

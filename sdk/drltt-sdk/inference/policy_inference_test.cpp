@@ -21,8 +21,8 @@ TEST(PolicyInferenceTest, ForwardTest) {
 
   // perform inference
   TorchJITModulePolicy policy;
-  policy.load(module_path);
-  torch::Tensor jit_actions_tensor = policy.infer(gt_observations_tensor);
+  policy.Load(module_path);
+  torch::Tensor jit_actions_tensor = policy.Infer(gt_observations_tensor);
 
   // check result
   const float atol = 1e-5;
