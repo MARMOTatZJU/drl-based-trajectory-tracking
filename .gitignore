@@ -173,3 +173,6 @@ work_dirs/
 
 # protobuf generated code
 **/*proto_gen*/**/*
+
+# doxygen output
+sdk/doxygen_output/

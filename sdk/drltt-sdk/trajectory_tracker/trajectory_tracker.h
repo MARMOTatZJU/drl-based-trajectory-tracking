@@ -1,11 +1,18 @@
+/**
+ * @file trajectory_tracker.h
+ * Trajectory tracker exported SDK.
+ */
 #pragma once
 
 #include "drltt-sdk/environments/trajectory_tracking.h"
 
+/**
+ * drltt
+ */
 namespace drltt {
 // clang-format off
 /**
- * DRLTT Trajectory Tracking C++ SDK
+ * @brief DRLTT Trajectory Tracking C++ SDK.
  *
  * Nomenclature for documentation:
  *
@@ -39,22 +46,28 @@ class TrajectoryTracker {
    * checkpoint folder.
    */
   TrajectoryTracker(const std::string& load_path, int dynamics_model_index);
-  /***
-   * Set a reference line. It will estimate an initial state of the dynamics
+  /**
+   * @brief Set a reference line.
+   *
+   * It will estimate an initial state of the dynamics
    * model, which may be overwritten by other function later if necessary.
+   *
    * @param reference_line Reference line to be tracked.
    * @return Success flag.
    */
   bool SetReferenceLine(const REFERENCE_LINE& reference_line);
   /**
-   * Set initial state manually for the dynamics model,
+   * @brief Set initial state manually for the dynamics model,
+   *
    * @param init_state Initial state.
    * @return Success flag.
    */
   bool SetDynamicsModelInitialState(const STATE& init_state);
   /**
-   * Perform trajectory tracking by rolling out a trajectory and return the
-   * tracked trajectory..
+   * @brief Perform trajectory tracking.
+   *
+   * Roll out a trajectory and return the tracked trajectory.
+   *
    * @return Trajectory containing states, actions, and observations of the
    * roll-out. Format=<vector<STATE>, vector<ACTION>, vector<OBSERVATION>>.
    */
