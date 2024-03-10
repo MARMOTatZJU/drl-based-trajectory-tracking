@@ -15,7 +15,7 @@ class BicycleModel : public BaseDynamicsModel {
   BicycleModel(const drltt_proto::HyperParameter& hyper_parameter,
                const drltt_proto::State& state)
       : BaseDynamicsModel(hyper_parameter, state) {}
-  void step(const drltt_proto::Action& action, float delta_t) override;
+  void Step(const drltt_proto::Action& action, float delta_t) override;
   ~BicycleModel() = default;
 
   bool get_state_observation(std::vector<float>* observation) const override;

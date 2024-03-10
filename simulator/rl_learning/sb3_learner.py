@@ -1,4 +1,4 @@
-from typing import Dict, Union, Any
+from typing import List, Tuple, Dict, Union, Any
 import os
 import logging
 from copy import deepcopy
@@ -27,6 +27,15 @@ def build_sb3_algorithm_from_config(
     environment: gym.Env,
     algorithm_config: Dict,
 ) -> BaseAlgorithm:
+    """Build an algorithm from Stable Baselines 3.
+
+    Args:
+        environment: The associated environment.
+        algorithm_config: The algorihm config.
+
+    Returns:
+        BaseAlgorithm: Built algorithm.
+    """
     # add action noise object
     # TODO: check existence of `scaled_action_noise`
     action_noise_config = algorithm_config.pop('scaled_action_noise')
@@ -44,12 +53,32 @@ def build_sb3_algorithm_from_config(
     return algorithm
 
 
-def roll_out_one_episode(environment: gym.Env, algorithm: BaseAlgorithm):
+def roll_out_one_episode(
+    environment: gym.Env,
+    algorithm: BaseAlgorithm,
+) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+    """Roll out one episode and return a trajectory.
+
+    Args:
+        environment: The associated environment.
+        algorithm_config: The algorihm config.
+    Returns:
+        List[np.ndarray]: Observations.
+        List[np.ndarray]: Actions.
+    """
+    observations = list()
+    actions = list()
+
     obs = environment.reset()
+    observations.append(deepcopy(obs))
     done = False
     while not done:
         action, _states = algorithm.predict(obs)
+        actions.append(deepcopy(action))
         obs, reward, done, info = environment.step(action)
+        observations.append(deepcopy(obs))
+
+    return observations, actions
 
 
 def train_with_sb3(
@@ -140,6 +169,20 @@ def compute_bicycle_model_metrics(
     episode: TrajectoryTrackingEpisode,
     environment: ExtendedGymEnv,
 ) -> Dict[str, Any]:
+    """Compute metrics for the bicycle model for an episode.
+
+    Args:
+        episode: Data of the episode.
+        environment: Associated environment.
+
+    Returns:
+        Dict[str, Any]: Computed metrics.
+
+        - l2_distance_median: median L2 distance
+        - scaled_action_norm_median
+        - reward_median
+
+    """
     dists = list()
     scaled_action_norms = list()
     rewards = list()

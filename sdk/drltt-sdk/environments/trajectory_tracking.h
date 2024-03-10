@@ -1,3 +1,8 @@
+/**
+ * @file trajectory_tracking.h
+ * @brief Trajectory tracking environment.
+ *
+ */
 #pragma once
 
 #include <cassert>
@@ -25,28 +30,68 @@ namespace drltt {
 
 // TODO: use factory to make it configurable
 // TODO: verify if proto can be passed to python through pybind
+/**
+ * @brief Trajectory tracking environment.
+ *
+ * Class for managing dynamics models/reference lines/policy model/etc. and
+ * performing rollouts.
+ *
+ */
 class TrajectoryTracking {
  public:
   TrajectoryTracking() = default;
   ~TrajectoryTracking() {}
-  bool load_policy(const std::string& policy_path);
-  bool load_env_data(const std::string& env_data_path);
+  /**
+   * @brief Load the underlying policy.
+   *
+   * @param policy_path Path to the policy.
+   * @return true Loading succeeded.
+   * @return false Loading failed.
+   */
+  bool LoadPolicy(const std::string& policy_path);
+  /**
+   * @brief Load the environment data.
+   *
+   * @param env_data_path Path to the protobuf binary file of environment data.
+   * @return true Loading succeeded.
+   * @return false Loading failed.
+   */
+  bool LoadEnvData(const std::string& env_data_path);
   bool set_dynamics_model_hyper_parameter(int index);
   bool set_reference_line(
       const std::vector<REFERENCE_WAYPOINT>& reference_line);
   bool set_reference_line(const drltt_proto::ReferenceLine& reference_line);
-  static bool estimate_initial_state(
+  /**
+   * @brief Estimate the initial state.
+   *
+   * @param reference_line Reference line.
+   * @param state The returned initial state.
+   * @param delta_t Step interval.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
+  static bool EstimateInitialState(
       const drltt_proto::ReferenceLine& reference_line,
       drltt_proto::State& state, float delta_t);
   bool set_dynamics_model_initial_state(STATE state);
   bool set_dynamics_model_initial_state(drltt_proto::State state);
-  bool roll_out();
+  /**
+   * @brief Roll out a trajectory based on underlying policy model and
+   * environment.
+   *
+   * @return true Roll-out succeeded.
+   * @return false Roll-out failed.
+   */
+  bool RollOut();
+  /**
+   * @brief Get the tracked trajectory object
+   *
+   * @return TRAJECTORY Tracked trajectory, format=<vector<STATE>,,
+   * vector<ACTION>, vector<OBSERVATION>>
+   */
   TRAJECTORY get_tracked_trajectory();
 
  private:
-  drltt_proto::State _estimate_init_state_from_reference_line(
-      const drltt_proto::ReferenceLine&
-          reference_line);  // avoid copy through RVO and std::move
   TorchJITModulePolicy _policy_model;
   drltt_proto::ReferenceLine _reference_line;
   drltt_proto::TrajectoryTrackingEnvironment _env_data;

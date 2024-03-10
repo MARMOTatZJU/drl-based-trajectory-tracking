@@ -32,6 +32,10 @@ Tip 2: To save the Docker image for transferring and save time:
 docker image save drltt-sdk:dev -o ./drltt-sdk.image
 ```
 
+```
+docker image load --name drltt-sdk:dev -i ./drltt-sdk.image
+```
+
 
 Tip 3: For network environments within Mainland China, you may consider using a domestic apt source to accelerate this process by appending the following part to the `./Dockerfile`:
 

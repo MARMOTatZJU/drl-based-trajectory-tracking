@@ -2,3 +2,4 @@ sphinx
 sphinx-rtd-theme
 myst-parser  # markdown, substitute of `recommonmark`
 m2r2
+breathe  # doxygen within sphinx

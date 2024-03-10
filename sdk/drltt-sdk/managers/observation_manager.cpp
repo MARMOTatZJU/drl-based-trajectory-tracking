@@ -1,7 +1,7 @@
 #include "observation_manager.h"
 
 namespace drltt {
-bool ObservationManager::reset(drltt_proto::ReferenceLine* reference_line_ptr,
+bool ObservationManager::Reset(drltt_proto::ReferenceLine* reference_line_ptr,
                                BaseDynamicsModel* dynamics_model_ptr) {
   if (reference_line_ptr == nullptr || dynamics_model_ptr == nullptr) {
     std::cerr << "nullptr found." << std::endl;

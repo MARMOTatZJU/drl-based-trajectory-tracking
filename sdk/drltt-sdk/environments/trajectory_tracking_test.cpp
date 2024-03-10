@@ -122,14 +122,14 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
   const drltt_proto::TrajectoryTrackingEpisode test_episode_data =
       env_data.episode();
   TrajectoryTracking env;
-  env.load_policy(module_path);
-  env.load_env_data(env_data_path);
+  env.LoadPolicy(module_path);
+  env.LoadEnvData(env_data_path);
   env.set_dynamics_model_hyper_parameter(
       test_episode_data.selected_dynamics_model_index());
   env.set_reference_line(test_episode_data.reference_line());
   env.set_dynamics_model_initial_state(
       test_episode_data.dynamics_model().states().at(0));
-  env.roll_out();
+  env.RollOut();
   TRAJECTORY tracked_trajectory = env.get_tracked_trajectory();
 
   const float EPSILON = 1e-3;

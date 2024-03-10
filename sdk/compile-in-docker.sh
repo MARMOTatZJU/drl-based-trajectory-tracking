@@ -22,6 +22,7 @@ fi
 docker run --name drltt-sdk --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=host \
     -e "PRIVACY_CONSENT=Y" \
     -e "SOURCE_DIR=${docker_source_dir}" \
+    -e "BUILD_DIR=${build_dir}" \
     -e "REPO_WORK_DIR=${docker_repo_work_dir}" \
     -e "CHECKPOINT_DIR=${docker_checkpoint_dir}" \
     -e "PROJECT_NAME=${project_name}" \

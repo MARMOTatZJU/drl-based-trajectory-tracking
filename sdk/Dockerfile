@@ -136,3 +136,19 @@ RUN \
     echo "  Installing pybind11" && \
     pip install pybind11[global] && \
     echo "pybind installed."
+
+
+RUN \
+    echo "Installing Doxygen..." && \
+    DOXYGEN_VERSION=1.10.0 && \
+    DOXYGEN_TARBALL_NAME=doxygen-${DOXYGEN_VERSION} && \
+    DOXYGEN_TARBALL_FILENAME=${DOXYGEN_TARBALL_NAME}.linux.bin.tar.gz && \
+    DOXYGEN_RELEASE_NAME=Release_$(echo $DOXYGEN_VERSION | sed -r 's/\./_/g') && \
+    DOXYGEN_URL="https://github.com/doxygen/doxygen/releases/download/${DOXYGEN_RELEASE_NAME}/${DOXYGEN_TARBALL_FILENAME}" && \
+    wget ${DOXYGEN_URL} && \
+    tar -xzvf ${DOXYGEN_TARBALL_FILENAME} && \
+        ( \
+            cd ${DOXYGEN_TARBALL_NAME}; \
+            cp -r ./bin/* /usr/local/bin/ ; \
+        ) && \
+    echo "Doxygen installed."
