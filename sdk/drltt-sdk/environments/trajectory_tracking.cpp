@@ -40,7 +40,7 @@ bool TrajectoryTracking::set_reference_line(
 
   drltt_proto::State init_state;
   EstimateInitialState(_reference_line, init_state,
-                         _env_data.hyper_parameter().step_interval());
+                       _env_data.hyper_parameter().step_interval());
   _dynamics_model.set_state(init_state);
 
   return true;

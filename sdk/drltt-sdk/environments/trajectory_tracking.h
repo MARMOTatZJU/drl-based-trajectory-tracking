@@ -61,12 +61,34 @@ class TrajectoryTracking {
   bool set_reference_line(
       const std::vector<REFERENCE_WAYPOINT>& reference_line);
   bool set_reference_line(const drltt_proto::ReferenceLine& reference_line);
+  /**
+   * @brief Estimate the initial state.
+   *
+   * @param reference_line Reference line.
+   * @param state The returned initial state.
+   * @param delta_t Step interval.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
   static bool EstimateInitialState(
       const drltt_proto::ReferenceLine& reference_line,
       drltt_proto::State& state, float delta_t);
   bool set_dynamics_model_initial_state(STATE state);
   bool set_dynamics_model_initial_state(drltt_proto::State state);
+  /**
+   * @brief Roll out a trajectory based on underlying policy model and
+   * environment.
+   *
+   * @return true Roll-out succeeded.
+   * @return false Roll-out failed.
+   */
   bool RollOut();
+  /**
+   * @brief Get the tracked trajectory object
+   *
+   * @return TRAJECTORY Tracked trajectory, format=<vector<STATE>,,
+   * vector<ACTION>, vector<OBSERVATION>>
+   */
   TRAJECTORY get_tracked_trajectory();
 
  private:

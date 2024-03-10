@@ -8,11 +8,13 @@ TrajectoryTracker::TrajectoryTracker(const std::string& load_path,
   _env.set_dynamics_model_hyper_parameter(dynamics_model_index);
 }
 
-bool TrajectoryTracker::set_reference_line(const REFERENCE_LINE& reference_line) {
+bool TrajectoryTracker::set_reference_line(
+    const REFERENCE_LINE& reference_line) {
   return _env.set_reference_line(reference_line);
 }
 
-bool TrajectoryTracker::set_dynamics_model_initial_state(const STATE& init_state) {
+bool TrajectoryTracker::set_dynamics_model_initial_state(
+    const STATE& init_state) {
   return _env.set_dynamics_model_initial_state(init_state);
 }
 
