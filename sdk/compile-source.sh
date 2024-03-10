@@ -24,7 +24,7 @@ mkdir -p ./proto_gen
 pushd build
     cmake .. \
         -DBUILD_TESTS=ON \
-        -DMACRO_CHECKPOINT_DIR ${CHECKPOINT_DIR} \
+        -DMACRO_CHECKPOINT_DIR=${CHECKPOINT_DIR} \
         && make -j$(nproc --all) 2>&1 | tee ./build.log
 
     # export shared library.
