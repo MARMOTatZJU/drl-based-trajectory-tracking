@@ -3,6 +3,7 @@
 set -exo pipefail
 
 source ./install-setup-protoc.sh
+source ./install-setup-doxygen.sh
 
 repo_dir=${PWD}
 proto_dir=$(realpath common/proto)
