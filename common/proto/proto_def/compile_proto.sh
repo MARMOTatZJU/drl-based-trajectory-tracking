@@ -9,6 +9,9 @@ mkdir -p ${python_output_dir}
 cpp_output_dir=${src_dir}/../proto_gen_cpp/
 rm -rf ${cpp_output_dir}
 mkdir -p ${cpp_output_dir}
+doc_output_dir=${src_dir}/../proto_doc_gen/
+rm -rf ${doc_output_dir}
+mkdir -p ${doc_output_dir}
 
 # NOTE: if build cpp target within docker, protobuf also need to be compiled within docker.
 #       otherwise, cpp compiler will not find protobuf include file.
@@ -16,6 +19,7 @@ mkdir -p ${cpp_output_dir}
 protoc -I ${src_dir} \
     --python_out ${python_output_dir} \
     --cpp_out ${cpp_output_dir} \
+    --doc_out ${doc_output_dir} \
     --experimental_allow_proto3_optional \
     $(find ${src_dir} -name *.proto)
 

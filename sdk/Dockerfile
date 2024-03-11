@@ -137,7 +137,6 @@ RUN \
     pip install pybind11[global] && \
     echo "pybind installed."
 
-
 RUN \
     echo "Installing Doxygen..." && \
     DOXYGEN_VERSION=1.10.0 && \
@@ -152,3 +151,11 @@ RUN \
             cp -r ./bin/* /usr/local/bin/ ; \
         ) && \
     echo "Doxygen installed."
+
+RUN \
+    echo "Installing proto-gen-doc..." && \
+    PROTO_GEN_DOC_VERSION=1.5.1 && \
+    PROTO_GEN_DOC_FILENAME=protoc-gen-doc_${PROTO_GEN_DOC_VERSION}_linux_amd64.tar.gz && \
+    wget https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTO_GEN_DOC_VERSION}/${PROTO_GEN_DOC_FILENAME} && \
+    tar -xvf ${PROTO_GEN_DOC_FILENAME} -C /usr/local/bin/ protoc-gen-doc && \
+    echo "proto-gen-doc installed."
