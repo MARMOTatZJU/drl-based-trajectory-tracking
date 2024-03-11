@@ -9,8 +9,8 @@ message Action {
 
 
 message BicycleModelAction {
-    // acceleration in [m/s^2]
+    // Acceleration in [m/s/s].
     optional float a = 1;
-    // steering angle in [rad]
+    // Steering angle in [rad].
     optional float s = 2;
 }

@@ -2,12 +2,12 @@ syntax = "proto3";
 
 package drltt_proto;
 
-// State coordinates in fixed space frame
+// State coordinates in fixed space frame.
 message BodyState {
-    // x-coordinate in [m]
+    // X-coordinate in [m].
     optional float x = 1;
-    // y-coordinate in [m]
+    // Y-coordinate in [m].
     optional float y = 2;
-    // heading in [rad]
+    // Orientation/heading in [rad].
     optional float r = 3;
 }

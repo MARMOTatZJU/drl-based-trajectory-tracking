@@ -9,6 +9,7 @@
 
 import os
 import sys
+import subprocess
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -44,17 +45,31 @@ source_suffix = {
     '.md': 'markdown',
 }
 
-# Integrate Doxygen into Sphinx
-# Reference: https://leimao.github.io/blog/CPP-Documentation-Using-Sphinx/
-import subprocess
-# subprocess.call('make clean', shell=True)
-subprocess.call('cd ../../sdk ; doxygen Doxyfile-cpp ', shell=True)
 sdk_name = "drltt-sdk"
 breathe_projects = { sdk_name: "../../sdk/doxygen_output/xml/" }
 breathe_default_project = sdk_name
 
 templates_path = ['_templates']
 exclude_patterns = []
+
+
+
+# -- Processing scripts ---------------------------------------------------
+
+# Integrate Doxygen into Sphinx
+# Reference: https://leimao.github.io/blog/CPP-Documentation-Using-Sphinx/
+# subprocess.call('make clean', shell=True)
+# logging.info('Compiling CPP documentation with Doxygen...')
+# subprocess.call('cd ../../sdk ; doxygen Doxyfile-cpp ', shell=True)
+# logging.info('CPP documentation compiled.')
+
+# protoc-gen-doc
+# logging.info('Compiling Protobuf documentation with Doxygen...')
+# home_bin_dir = '/home/docs/.local/bin/'
+# sys.path.append(home_bin_dir)  # TOOD: use $HOME instead
+# append_path_prefix = (f'PATH=${{PATH}}:{home_bin_dir}')
+# subprocess.call(f'cd ../../common/proto/proto_def ; {append_path_prefix}  bash compile_proto.sh ', shell=True)
+# logging.info('Protobuf documentation compiled.')
 
 
 

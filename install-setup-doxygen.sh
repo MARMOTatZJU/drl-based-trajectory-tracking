@@ -26,3 +26,5 @@ if [[ ! -x $(command -v doxygen) ]];then
     rm -rf ${tmp_dir}
   fi
 fi
+
+echo "doxygen installed and setup at $(which doxygen)"

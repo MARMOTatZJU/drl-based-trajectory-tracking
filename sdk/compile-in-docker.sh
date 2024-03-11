@@ -19,6 +19,21 @@ fi
 
 # TODO: reorganize mouted path
 
+nonsudo_user_arg=" --user $(id -u):$(id -g) "
+nonsudo_user_source_cmd=" source /work_dir/.bashrc "
+
+if [[ $1 == "interactive" ]]; then
+    docker_arg_suffix=" -it ${image_name} "
+    docker_container_cmd=" bash "
+    if [[ $2 == "nonsudo" ]]; then
+        docker_arg_suffix="${nonsudo_user_arg} ${docker_arg_suffix}"
+        docker_container_cmd=" ${nonsudo_user_source_cmd} && bash "
+    fi
+else
+    docker_arg_suffix="${nonsudo_user_arg} ${image_name} "
+    docker_container_cmd=" ${nonsudo_user_source_cmd} && cd ${docker_source_dir} && bash ./compile-source.sh && bash ./export-py-sdk.sh"
+fi
+
 docker run --name drltt-sdk --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=host \
     -e "PRIVACY_CONSENT=Y" \
     -e "SOURCE_DIR=${docker_source_dir}" \
@@ -30,6 +45,5 @@ docker run --name drltt-sdk --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=
     -v $PWD/../common/proto:/proto:rw \
     -v $PWD/../work_dir:${docker_repo_work_dir}:ro \
     ${mount_host_libtorch_in_docker} \
-    --user "$(id -u):$(id -g)" \
-    ${image_name} \
-    -c "cd ${docker_source_dir} && bash ./compile-source.sh && bash ./export-py-sdk.sh"
+    ${docker_arg_suffix} \
+    -c "${docker_container_cmd}"

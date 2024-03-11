@@ -5,11 +5,13 @@ package drltt_proto;
 import "drltt_proto/dynamics_model/basics.proto";
 
 message State {
+    // State of bicycle model.
     optional BicycleModelState bicycle_model = 1;
 }
 
 message BicycleModelState {
+    // Sody state.
     BodyState body_state = 1;
-    // velocity in [m/s]
+    // Velocity in [m/s].
     optional float v = 2;
 }
