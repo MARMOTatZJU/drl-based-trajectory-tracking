@@ -148,7 +148,7 @@ def eval_with_sb3(
         roll_out_one_episode(environment, algorithm)
 
         compute_metrics = METRICS[compute_metrics_name]
-        episode: TrajectoryTrackingEpisode = environment.export_environment_data().episode
+        episode: TrajectoryTrackingEpisode = environment.export_environment_data().trajectory_tracking.episode
         metrics = compute_metrics(episode, environment)  # metric[metric_name][reduce_method]
         all_episodes_metrics.append(metrics)
 

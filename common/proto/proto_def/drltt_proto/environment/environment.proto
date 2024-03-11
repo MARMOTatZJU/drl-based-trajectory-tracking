@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "drltt_proto/environment/trajectory_tracking.proto";
+
+package drltt_proto;
+
+// Environment
+message Environment {
+    // Trajectory tracking.
+    optional TrajectoryTrackingEnvironment trajectory_tracking = 1;
+}

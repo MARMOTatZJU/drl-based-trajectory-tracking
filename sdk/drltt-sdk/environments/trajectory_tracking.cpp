@@ -12,8 +12,9 @@ bool TrajectoryTracking::LoadEnvData(const std::string& env_data_path) {
 
 bool TrajectoryTracking::set_dynamics_model_hyper_parameter(int index) {
   const google::protobuf::RepeatedPtrField<drltt_proto::HyperParameter>&
-      all_hparams =
-          _env_data.hyper_parameter().dynamics_models_hyper_parameters();
+      all_hparams = _env_data.trajectory_tracking()
+                        .hyper_parameter()
+                        .dynamics_models_hyper_parameters();
   if (index >= 0 && index <= all_hparams.size()) {
     _dynamics_model.set_hyper_parameter(all_hparams.at(index));
     return true;
@@ -39,8 +40,9 @@ bool TrajectoryTracking::set_reference_line(
   _reference_line.CopyFrom(reference_line);
 
   drltt_proto::State init_state;
-  EstimateInitialState(_reference_line, init_state,
-                       _env_data.hyper_parameter().step_interval());
+  EstimateInitialState(
+      _reference_line, init_state,
+      _env_data.trajectory_tracking().hyper_parameter().step_interval());
   _dynamics_model.set_state(init_state);
 
   return true;
@@ -116,9 +118,10 @@ bool TrajectoryTracking::RollOut() {
   _observation_manager.Reset(&_reference_line, &_dynamics_model);
 
   const int tracking_length = _reference_line.waypoints().size();
-  const float step_interval = _env_data.hyper_parameter().step_interval();
+  const float step_interval =
+      _env_data.trajectory_tracking().hyper_parameter().step_interval();
   const float n_observation_steps =
-      _env_data.hyper_parameter().n_observation_steps();
+      _env_data.trajectory_tracking().hyper_parameter().n_observation_steps();
   for (int step_index = 0; step_index < tracking_length; ++step_index) {
     // state
     drltt_proto::State state = _dynamics_model.get_state();
