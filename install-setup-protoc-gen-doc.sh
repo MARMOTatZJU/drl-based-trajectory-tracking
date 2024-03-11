@@ -19,3 +19,5 @@ if [[ ! -x $(command -v protoc-gen-doc) ]];then
     rm -rf ${tmp_dir}
   fi
 fi
+
+echo "protoc-gen-doc installed and setup at $(which protoc-gen-doc)"

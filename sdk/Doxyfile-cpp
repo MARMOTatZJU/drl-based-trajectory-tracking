@@ -2,7 +2,7 @@
 DOXYFILE_ENCODING           = UTF-8
 PROJECT_NAME                = "DRLTT C++ SDK"
 OUTPUT_DIRECTORY            = ./doxygen_output
-INPUT                       = ./drltt-sdk/trajectory_tracker/trajectory_tracker.h
+INPUT                       = ./drltt-sdk/
 RECURSIVE                   = YES
 INPUT                       += ./docs/DRLTT-SDK-mainpage.md
 USE_MDFILE_AS_MAINPAGE      = ./docs/DRLTT-SDK-mainpage.md

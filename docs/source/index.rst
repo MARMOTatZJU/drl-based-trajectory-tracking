@@ -47,3 +47,9 @@ API
    :caption: APIs: SDK
 
    rst_files/api-sdk
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Protobuf Definition
+
+   rst_files/protobuf
