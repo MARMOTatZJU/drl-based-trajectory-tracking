@@ -59,7 +59,6 @@ message TrajectoryTrackingEpisode {
 }
 
 // Trajectory tracking environment.
-//      TODO: use composition to achieve inheritance, e.g. env.trajectory_tracking.env_data...
 message TrajectoryTrackingEnvironment {
     // Hyper-parameter of the environment.
     optional TrajectoryTrackingHyperParameter hyper_parameter = 1;

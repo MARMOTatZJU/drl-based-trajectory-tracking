@@ -15,12 +15,12 @@ from simulator import DTYPE
 from simulator.dynamics_models import (
     BaseDynamicsModel,
     DynamicsModelManager,
-)  # TODO (yinda): resolve this hard-code
+)
 from simulator.trajectory.random_walk import random_walk
 from simulator.trajectory.reference_line import ReferenceLineManager
 from simulator.observation.observation_manager import ObservationManager
+from drltt_proto.environment.environment_pb2 import Environment
 from drltt_proto.environment.trajectory_tracking_pb2 import (
-    TrajectoryTrackingEnvironment,
     TrajectoryTrackingHyperParameter,
     TrajectoryTrackingEpisode,
 )
@@ -42,7 +42,6 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
     init_state_space: Space = None
     action_space: Space = None
     observation_space: Space = None
-    env_info: TrajectoryTrackingEnvironment
 
     def __init__(
         self,
@@ -54,13 +53,13 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             dynamics_model_configs: Configurations of all dynamics models.
         """
         # parse hyper-parameters
-        self.env_info = TrajectoryTrackingEnvironment()
-        self.parse_hyper_parameter(self.env_info.hyper_parameter, **kwargs)
+        self.env_info = Environment()
+        self.parse_hyper_parameter(self.env_info.trajectory_tracking.hyper_parameter, **kwargs)
 
         # build manager classes
         self.reference_line_manager = ReferenceLineManager(
-            n_observation_steps=self.env_info.hyper_parameter.n_observation_steps,
-            pad_mode=self.env_info.hyper_parameter.reference_line_pad_mode,
+            n_observation_steps=self.env_info.trajectory_tracking.hyper_parameter.n_observation_steps,
+            pad_mode=self.env_info.trajectory_tracking.hyper_parameter.reference_line_pad_mode,
         )
         self.dynamics_model_manager = DynamicsModelManager(
             dynamics_model_configs=dynamics_model_configs,
@@ -70,7 +69,9 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             self.dynamics_model_manager,
         )
 
-        self.parse_dynamics_model_hyper_parameter(self.env_info.hyper_parameter, self.dynamics_model_manager)
+        self.parse_dynamics_model_hyper_parameter(
+            self.env_info.trajectory_tracking.hyper_parameter, self.dynamics_model_manager
+        )
 
         # build spaces
         self._build_spaces()
@@ -138,46 +139,50 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         extra_info = dict()
 
         # clearn data in old episode
-        self.env_info.episode.Clear()
+        self.env_info.trajectory_tracking.episode.Clear()
         # reset data in old episode
-        self.env_info.episode.step_index = 0
-        self.env_info.episode.hyper_parameter.CopyFrom(self.env_info.hyper_parameter)
+        self.env_info.trajectory_tracking.episode.step_index = 0
+        self.env_info.trajectory_tracking.episode.hyper_parameter.CopyFrom(
+            self.env_info.trajectory_tracking.hyper_parameter
+        )
 
         sampled_dynamics_model_index, sampled_dynamics_model = self.dynamics_model_manager.sample_dynamics_model()
-        self.env_info.episode.dynamics_model.type = type(sampled_dynamics_model).__name__
-        self.env_info.episode.dynamics_model.hyper_parameter.CopyFrom(sampled_dynamics_model.hyper_parameter)
-        self.env_info.episode.selected_dynamics_model_index = sampled_dynamics_model_index
+        self.env_info.trajectory_tracking.episode.dynamics_model.type = type(sampled_dynamics_model).__name__
+        self.env_info.trajectory_tracking.episode.dynamics_model.hyper_parameter.CopyFrom(
+            sampled_dynamics_model.hyper_parameter
+        )
+        self.env_info.trajectory_tracking.episode.selected_dynamics_model_index = sampled_dynamics_model_index
 
         tracking_length = random.randint(
-            self.env_info.hyper_parameter.tracking_length_lb,
-            self.env_info.hyper_parameter.tracking_length_ub,
+            self.env_info.trajectory_tracking.hyper_parameter.tracking_length_lb,
+            self.env_info.trajectory_tracking.hyper_parameter.tracking_length_ub,
         )
-        self.env_info.episode.tracking_length = tracking_length
+        self.env_info.trajectory_tracking.episode.tracking_length = tracking_length
 
         if init_state is None:
             init_state = self.init_state_space.sample()
         sampled_dynamics_model.set_state(init_state)
         reference_dynamics_model = deepcopy(sampled_dynamics_model)
-        random_walk_length = tracking_length + self.env_info.hyper_parameter.n_observation_steps
+        random_walk_length = tracking_length + self.env_info.trajectory_tracking.hyper_parameter.n_observation_steps
         reference_line, trajectory = random_walk(
             dynamics_model=reference_dynamics_model,
-            step_interval=self.env_info.hyper_parameter.step_interval,
+            step_interval=self.env_info.trajectory_tracking.hyper_parameter.step_interval,
             walk_length=random_walk_length,
         )
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
         # TODO: reorganize this part, flow of `reference_line`
-        self.env_info.episode.reference_line.CopyFrom(self.reference_line_manager.reference_line)
+        self.env_info.trajectory_tracking.episode.reference_line.CopyFrom(self.reference_line_manager.reference_line)
 
         # TODO: use closest waypoint assignment
 
         observation = self.observation_manager.get_observation(
-            index=self.env_info.episode.step_index,
+            index=self.env_info.trajectory_tracking.episode.step_index,
             body_state=sampled_dynamics_model.get_body_state_proto(),
         )
         # TODO: verify interface: gym==0.21 or gym==0.26
         # reference: https://gymnasium.farama.org/content/migration-guide/
 
-        self.env_info.episode.dynamics_model.observations.append(
+        self.env_info.trajectory_tracking.episode.dynamics_model.observations.append(
             deepcopy(sampled_dynamics_model.serialize_observation(observation))
         )
 
@@ -201,8 +206,8 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             self.state_space = self.dynamics_model_manager.get_sampled_dynamics_model().get_state_space()
         if self.init_state_space is None:
             self.init_state_space = gym.spaces.Box(
-                low=np.array((self.env_info.hyper_parameter.init_state_lb), dtype=DTYPE),
-                high=np.array((self.env_info.hyper_parameter.init_state_ub), dtype=DTYPE),
+                low=np.array((self.env_info.trajectory_tracking.hyper_parameter.init_state_lb), dtype=DTYPE),
+                high=np.array((self.env_info.trajectory_tracking.hyper_parameter.init_state_ub), dtype=DTYPE),
                 dtype=DTYPE,
             )
 
@@ -223,7 +228,9 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         all_rewards = dict()
         # tracking
         state_vec: np.ndarray = current_dynamics_model.get_state()
-        waypoint_vec = self.reference_line_manager.get_reference_line_waypoint(self.env_info.episode.step_index)
+        waypoint_vec = self.reference_line_manager.get_reference_line_waypoint(
+            self.env_info.trajectory_tracking.episode.step_index
+        )
         dist = np.linalg.norm(state_vec[:2] - waypoint_vec)
         all_rewards['tracking'] = -dist
         # TODO: add heading error
@@ -235,26 +242,33 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         scalar_reward = sum(all_rewards.values())
         extra_info['all_rewards'] = all_rewards
 
-        self.env_info.episode.dynamics_model.states.append(deepcopy(current_dynamics_model.get_state_proto()))
-        self.env_info.episode.dynamics_model.actions.append(deepcopy(current_dynamics_model.serialize_action(action)))
-        self.env_info.episode.rewards.append(deepcopy(scalar_reward))
+        self.env_info.trajectory_tracking.episode.dynamics_model.states.append(
+            deepcopy(current_dynamics_model.get_state_proto())
+        )
+        self.env_info.trajectory_tracking.episode.dynamics_model.actions.append(
+            deepcopy(current_dynamics_model.serialize_action(action))
+        )
+        self.env_info.trajectory_tracking.episode.rewards.append(deepcopy(scalar_reward))
 
         # ABOVE: step t
         # BELLOW: step t+1
 
         # update state
-        current_dynamics_model.step(action, delta_t=self.env_info.hyper_parameter.step_interval)
-        self.env_info.episode.step_index += 1
+        current_dynamics_model.step(action, delta_t=self.env_info.trajectory_tracking.hyper_parameter.step_interval)
+        self.env_info.trajectory_tracking.episode.step_index += 1
         observation = self.observation_manager.get_observation(
-            index=self.env_info.episode.step_index,
+            index=self.env_info.trajectory_tracking.episode.step_index,
             body_state=current_dynamics_model.get_body_state_proto(),
         )
 
-        terminated: bool = self.env_info.episode.step_index >= self.env_info.episode.tracking_length
+        terminated: bool = (
+            self.env_info.trajectory_tracking.episode.step_index
+            >= self.env_info.trajectory_tracking.episode.tracking_length
+        )
         truncated: bool = False
 
         if not terminated:
-            self.env_info.episode.dynamics_model.observations.append(
+            self.env_info.trajectory_tracking.episode.dynamics_model.observations.append(
                 deepcopy(current_dynamics_model.serialize_observation(observation))
             )
         # TODO: verify interface: gym==0.21 or gym==0.26
@@ -266,13 +280,13 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
     @override
     def export_environment_data(
         self,
-    ) -> TrajectoryTrackingEnvironment:
+    ) -> Environment:
         """Export environment data.
 
         Return:
-            TrajectoryTrackingEnvironment: Environment data in proto structure.
+            Environment: Environment data in proto structure.
         """
-        env_data = TrajectoryTrackingEnvironment()
+        env_data = Environment()
         env_data.CopyFrom(self.env_info)
 
         return env_data

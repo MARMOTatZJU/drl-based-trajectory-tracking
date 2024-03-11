@@ -115,12 +115,12 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
   const std::string module_path = checkpoint_dir + "/traced_policy.pt";
   const std::string env_data_path = checkpoint_dir + "/env_data.bin";
 
-  drltt_proto::TrajectoryTrackingEnvironment env_data;
+  drltt_proto::Environment env_data;
   parse_proto_from_file(env_data, env_data_path);
 
   // build and setup environment
   const drltt_proto::TrajectoryTrackingEpisode test_episode_data =
-      env_data.episode();
+      env_data.trajectory_tracking().episode();
   TrajectoryTracking env;
   env.LoadPolicy(module_path);
   env.LoadEnvData(env_data_path);
@@ -135,8 +135,12 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
   const float EPSILON = 1e-3;
   // TODO: use both atol and rtol for close check
   // reference: https://pytorch.org/docs/stable/generated/torch.allclose.html
-  for (int index = 0; index < env_data.episode().tracking_length(); ++index) {
-    auto gt_data = env_data.episode().dynamics_model().states().at(index);
+  for (int index = 0;
+       index < env_data.trajectory_tracking().episode().tracking_length();
+       ++index) {
+    auto gt_data =
+        env_data.trajectory_tracking().episode().dynamics_model().states().at(
+            index);
     auto rt_data = std::get<0>(tracked_trajectory).at(index);
     EXPECT_LT((rt_data - gt_data), EPSILON)
         << "============ STATE COMPARISON ============" << std::endl
@@ -144,8 +148,12 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
         << print_data(gt_data) << std::endl
         << print_data(rt_data) << std::endl;
   }
-  for (int index = 0; index < env_data.episode().tracking_length(); ++index) {
-    auto gt_data = env_data.episode().dynamics_model().actions().at(index);
+  for (int index = 0;
+       index < env_data.trajectory_tracking().episode().tracking_length();
+       ++index) {
+    auto gt_data =
+        env_data.trajectory_tracking().episode().dynamics_model().actions().at(
+            index);
     auto rt_data = std::get<1>(tracked_trajectory).at(index);
     EXPECT_LT((rt_data - gt_data), EPSILON)
         << "============ ACTION COMPARISON ============" << std::endl
@@ -153,8 +161,14 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
         << print_data(gt_data) << std::endl
         << print_data(rt_data) << std::endl;
   }
-  for (int index = 0; index < env_data.episode().tracking_length(); ++index) {
-    auto gt_data = env_data.episode().dynamics_model().observations().at(index);
+  for (int index = 0;
+       index < env_data.trajectory_tracking().episode().tracking_length();
+       ++index) {
+    auto gt_data = env_data.trajectory_tracking()
+                       .episode()
+                       .dynamics_model()
+                       .observations()
+                       .at(index);
     auto rt_data = std::get<2>(tracked_trajectory).at(index);
     EXPECT_LT((rt_data - gt_data), EPSILON)
         << "============ OBSERVATION COMPARISON ============" << std::endl

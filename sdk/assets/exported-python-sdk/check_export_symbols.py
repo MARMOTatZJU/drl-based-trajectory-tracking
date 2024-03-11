@@ -6,26 +6,28 @@ from export_symbols import (
     trajectory_tracker_set_dynamics_model_initial_state,
     trajectory_tracker_track_reference_line,
 )
-from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEnvironment
+from drltt_proto.environment.environment_pb2 import Environment
 
 
 def main():
-    env_data = TrajectoryTrackingEnvironment()
+    env_data = Environment()
     with open('./checkpoint/env_data.bin', 'rb') as f:
         env_data.ParseFromString(f.read())
 
     reference_line = [
         (waypoint.x, waypoint.y)
-        for waypoint in env_data.episode.reference_line.waypoints[: env_data.episode.tracking_length]
+        for waypoint in env_data.trajectory_tracking.episode.reference_line.waypoints[
+            : env_data.trajectory_tracking.episode.tracking_length
+        ]
     ]
-    init_state_proto = env_data.episode.dynamics_model.states[0]
+    init_state_proto = env_data.trajectory_tracking.episode.dynamics_model.states[0]
     init_state = (
         init_state_proto.bicycle_model.body_state.x,
         init_state_proto.bicycle_model.body_state.y,
         init_state_proto.bicycle_model.body_state.r,
         init_state_proto.bicycle_model.v,
     )
-    tracker = TrajectoryTracker('./checkpoint/', env_data.episode.selected_dynamics_model_index)
+    tracker = TrajectoryTracker('./checkpoint/', env_data.trajectory_tracking.episode.selected_dynamics_model_index)
     trajectory_tracker_set_reference_line(tracker, reference_line)
     trajectory_tracker_set_dynamics_model_initial_state(tracker, init_state)
     rt_states, rt_actions, rt_observations = trajectory_tracker_track_reference_line(tracker)
@@ -35,7 +37,7 @@ def main():
     print('observation shape: ', np.array(rt_observations).shape)
 
     gt_states = list()
-    for state in env_data.episode.dynamics_model.states:
+    for state in env_data.trajectory_tracking.episode.dynamics_model.states:
         gt_state = (
             state.bicycle_model.body_state.x,
             state.bicycle_model.body_state.y,
@@ -45,7 +47,7 @@ def main():
         gt_states.append(gt_state)
 
     gt_actions = list()
-    for action in env_data.episode.dynamics_model.actions:
+    for action in env_data.trajectory_tracking.episode.dynamics_model.actions:
         gt_action = (
             action.bicycle_model.a,
             action.bicycle_model.s,
@@ -53,7 +55,7 @@ def main():
         gt_actions.append(gt_action)
 
     gt_observations = list()
-    for observation in env_data.episode.dynamics_model.observations:
+    for observation in env_data.trajectory_tracking.episode.dynamics_model.observations:
         gt_observation = tuple(observation.bicycle_model.feature)
         gt_observations.append(gt_observation)
 

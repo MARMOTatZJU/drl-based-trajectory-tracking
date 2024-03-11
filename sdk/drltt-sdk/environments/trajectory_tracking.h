@@ -14,7 +14,7 @@
 #include "drltt-sdk/inference/policy_inference.h"
 #include "drltt-sdk/managers/observation_manager.h"
 #include "drltt_proto/dynamics_model/state.pb.h"
-#include "drltt_proto/environment/trajectory_tracking.pb.h"
+#include "drltt_proto/environment/environment.pb.h"
 #include "drltt_proto/trajectory/trajectory.pb.h"
 
 typedef std::tuple<float, float> REFERENCE_WAYPOINT;
@@ -94,7 +94,7 @@ class TrajectoryTracking {
  private:
   TorchJITModulePolicy _policy_model;
   drltt_proto::ReferenceLine _reference_line;
-  drltt_proto::TrajectoryTrackingEnvironment _env_data;
+  drltt_proto::Environment _env_data;
   BicycleModel _dynamics_model;
   ObservationManager _observation_manager;
   std::vector<drltt_proto::State> _states;
