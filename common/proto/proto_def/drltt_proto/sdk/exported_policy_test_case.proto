@@ -2,12 +2,17 @@ syntax = "proto3";
 
 package drltt_proto;
 
+// Float-point tensor.
 message TensorFP{
+    // Tensor's shape.
     repeated int32 shape = 1;
+    // Tensor's underlying data.
     repeated float data = 2;
 }
 
 message ExportedPolicyTestCases{
+    // Observation tensor, shape=(sample_number, observation_dim)
     optional TensorFP observations = 1;
+    // Action tensor, shape=(sample_number, action_dim)
     optional TensorFP actions = 2;
 }

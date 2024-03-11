@@ -12,13 +12,22 @@ message HyperParameter {
 }
 
 message BicycleModelHyperParameter {
+    // Vehicle length in [m].
     optional float length = 1;
+    // Distance in [m] between vehicle front and fron axle.
     optional float front_overhang = 2;
+    // Distance in [m] between vehicle rear and rear axle.
     optional float rear_overhang = 3;
+    // Distance in [m] between front axle and rear axle.
     optional float wheelbase = 4;
+    // Vehicle width in [m].
     optional float width = 5;
+    // Distance in [m] between front axle and center-of-gravity (CoG).
     optional float frontwheel_to_cog = 6;
+    // Distance in [m] between rear axle and center-of-gravity (CoG).
     optional float rearwheel_to_cog = 7;
+    // Action space's lower bound.
     repeated float action_space_lb = 8;
+    // Action space's upper bound.
     repeated float action_space_ub = 9;
 }

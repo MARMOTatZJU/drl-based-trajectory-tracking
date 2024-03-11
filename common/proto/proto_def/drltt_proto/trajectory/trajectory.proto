@@ -5,21 +5,31 @@ import "drltt_proto/dynamics_model/action.proto";
 
 package drltt_proto;
 
-// TODO: move to body state
+// Reference line's waypoint.
+//      TODO: move to body state
 message ReferenceLineWaypoint {
+    // X-coordinate in [m]
     optional float x = 1;
+    // Y-coordinate in [m]
     optional float y = 2;
 }
 
+// Reference line
 message ReferenceLine {
+    // Sequence of waypoints.
     repeated ReferenceLineWaypoint waypoints = 1;
 }
 
+// Trajectory's waypoint.
 message TrajectoryWaypoint {
+    // Sequence of states.
     optional State state = 1;
+    // Sequence of actions.
     optional Action action = 2;
 }
 
+// Trajectory
 message Trajectory {
+    // Sequence of waypoint
     repeated TrajectoryWaypoint waypoints = 1;
 }

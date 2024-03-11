@@ -9,38 +9,60 @@ import "drltt_proto/trajectory/trajectory.proto";
 package drltt_proto;
 
 message TrajectoryTrackingHyperParameter {
+    // Interval between each time step in [s]
     optional float step_interval = 1;
+    // Initial state space's lower bound.
     repeated float init_state_lb = 2;
+    // Initial state space's upper bound.
     repeated float init_state_ub = 3;
+    // Number of observable forward waypoints on the reference line.
     optional int32 n_observation_steps = 4;
-    // TODO: set it in `TrajectoryTrackingEnv` class
+    // Collectino of hyper-parameters of dynamics models.
     repeated HyperParameter dynamics_models_hyper_parameters = 5;
+    // Tracking lenght' lower bound.
     optional int32 tracking_length_lb = 6;
+    // Tracking lenght' upper bound.
     optional int32 tracking_length_ub = 7;
+    // Reference line pad mode.
     optional string reference_line_pad_mode = 8;
 }
 
 message DynamicsModelData {
+    // Dynamic model's class name
     optional string type = 1;
+    // Hyper-parameter.
     optional HyperParameter hyper_parameter = 2;
+    // Sequence of states.
     repeated State states = 3;
+    // Sequence of actions.
     repeated Action actions = 4;
+    // Sequence of observations.
     repeated Observation observations = 5;
 }
 
+// Data recorded from an episode, i.e. a trajectory.
 message TrajectoryTrackingEpisode {
+    // Last step index.
     optional int32 step_index = 1;
+    // Environment's hyper-parameter.
     optional TrajectoryTrackingHyperParameter hyper_parameter = 2;
+    // Reference line.
     optional ReferenceLine reference_line = 3;
+    // Real tracking length.
     optional int32 tracking_length = 4;
+    // Dynamics model's data, including hyper-parameter and trajectory, i.e. sequence of state-observation-action triplet.
     DynamicsModelData dynamics_model = 5;
+    // Index of selected dynamics model.
     optional int32 selected_dynamics_model_index = 6;
+    // Sequence of rewards.
     repeated float rewards = 7;
 }
 
-// TODO use composition to achieve inheritance, e.g. env.trajectory_tracking.env_data...
+// Trajectory tracking environment.
+//      TODO: use composition to achieve inheritance, e.g. env.trajectory_tracking.env_data...
 message TrajectoryTrackingEnvironment {
+    // Hyper-parameter of the environment.
     optional TrajectoryTrackingHyperParameter hyper_parameter = 1;
+    // Episode data.
     optional TrajectoryTrackingEpisode episode = 2;
-    // index of current step
 }
