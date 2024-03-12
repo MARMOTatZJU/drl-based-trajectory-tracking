@@ -16,12 +16,14 @@ class ObservationManager {
              BaseDynamicsModel* dynamics_model_ptr);
   // TODO: remove index and window
   bool get_observation(const drltt_proto::BodyState& body_state,
-                       int start_index, int n_observation_steps,
+                       int start_index, int tracking_length,
+                       int n_observation_steps,
                        std::vector<float>* observation);
 
  private:
   bool get_reference_line_observation(const drltt_proto::BodyState& body_state,
-                                      int start_index, int n_observation_steps,
+                                      int start_index, int tracking_length,
+                                      int n_observation_steps,
                                       std::vector<float>* observation);
   const drltt_proto::ReferenceLine* _reference_line_ptr;
   const BaseDynamicsModel* _dynamics_model_ptr;

@@ -6,6 +6,8 @@ from drltt_proto.dynamics_model.basics_pb2 import BodyState
 from simulator.dynamics_models import BaseDynamicsModel, DynamicsModelManager
 from simulator.trajectory.reference_line import ReferenceLineManager
 
+from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
+
 
 class ObservationManager:
     """Manager for observation
@@ -52,18 +54,18 @@ class ObservationManager:
 
         return observation_space
 
-    def get_observation(self, index: int, body_state: BodyState) -> np.ndarray:
+    def get_observation(self, episode_data, body_state: BodyState) -> np.ndarray:
         """Return the vectorized observation, which is usually ego-centric
 
         Args:
-            index: Step index of the episode.
+            episode_data: Episode data.
             body_state: (Serialized) body state of agent/dynamics model.
 
         Returns:
             np.ndarray: Vectorized observation.
         """
         reference_line_observation = self.reference_line_manager.get_observation_by_index(
-            index=index, body_state=body_state
+            episode_data=episode_data, body_state=body_state
         )
         state_observation = self.dynamics_model_manager.get_sampled_dynamics_model().get_state_observation()
         dynamics_model_observation = (

@@ -6,6 +6,7 @@ from common.geometry import transform_to_local_from_world
 from simulator import DTYPE
 from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine, ReferenceLineWaypoint
 from drltt_proto.dynamics_model.basics_pb2 import BodyState
+from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
 
 
 class ReferenceLineManager:
@@ -19,6 +20,7 @@ class ReferenceLineManager:
     """
 
     reference_line: ReferenceLine
+    raw_reference_line: ReferenceLine
     pad_mode: str
     dtype: np.dtype
 
@@ -49,6 +51,9 @@ class ReferenceLineManager:
             reference_line: Reference line to be set.
             tracking_length: Desired tracking length of reference line.
         """
+        self.raw_reference_line = ReferenceLine()
+        self.raw_reference_line.CopyFrom(reference_line)
+
         self.reference_line = ReferenceLine()
         self.reference_line.CopyFrom(reference_line)
 
@@ -103,7 +108,7 @@ class ReferenceLineManager:
         Returns:
             Space: Observation space.
         """
-        obs_size = 2 * self.n_observation_steps
+        obs_size = 2 * self.n_observation_steps + 1  # consider an automatic way. e.g. define an default reference line
         observation_space = gym.spaces.Box(
             low=-(np.ones((obs_size,)) * np.inf).astype(dtype=DTYPE),
             high=+(np.ones((obs_size,)) * np.inf).astype(dtype=DTYPE),
@@ -112,17 +117,22 @@ class ReferenceLineManager:
         )
         return observation_space
 
-    def get_observation_by_index(self, index: int, body_state: BodyState) -> np.ndarray:
+    def get_observation_by_index(self, episode_data, body_state: BodyState) -> np.ndarray:
         """Get vectorized observation of reference line given waypoint index.
 
         Args:
-            index: Waypoint index.
+            episode_data: Episode data.
             body_state: Body state for ego-centric observation.
 
         Returns:
             np.ndarray: Vectorized reference line observation. Format: (x, y) x length.
 
         """
+        # TODO: resolve hardcode
+        index = episode_data.step_index
+        tracking_length = episode_data.tracking_length
+        forward_tracking_length = tracking_length - index
+
         if index + self.n_observation_steps >= len(self.reference_line.waypoints) + 1:
             raise ValueError(
                 f'Getting observation from index {index} of length {self.n_observation_steps} will cause out-of-bound'
@@ -135,7 +145,8 @@ class ReferenceLineManager:
                 (
                     observed_waypoint.x,
                     observed_waypoint.y,
-                )
+                ),
+                dtype=DTYPE,
             )
             waypoint_list.append(waypoint)
         all_waypoints = np.stack(waypoint_list, axis=0)  # (n_observation_steps, 2)
@@ -144,6 +155,13 @@ class ReferenceLineManager:
         body_state_vec = np.array((body_state.x, body_state.y, body_state.r))
         all_waypoints_in_body_frame = transform_to_local_from_world(all_waypoints, body_state_vec)
         observation = all_waypoints_in_body_frame.reshape(-1)
+
+        observation = np.concatenate(
+            (
+                observation,
+                np.array((forward_tracking_length,), dtype=DTYPE),
+            )
+        ).reshape(-1)
 
         return observation
 

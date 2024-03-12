@@ -174,20 +174,20 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             init_state = self.init_state_space.sample()
         sampled_dynamics_model.set_state(init_state)
         reference_dynamics_model = deepcopy(sampled_dynamics_model)
-        random_walk_length = tracking_length + self.env_info.trajectory_tracking.hyper_parameter.n_observation_steps
         reference_line, trajectory = random_walk(
             dynamics_model=reference_dynamics_model,
             step_interval=self.env_info.trajectory_tracking.hyper_parameter.step_interval,
-            walk_length=random_walk_length,
+            walk_length=tracking_length,
         )
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
-        # TODO: reorganize this part, flow of `reference_line`
-        self.env_info.trajectory_tracking.episode.reference_line.CopyFrom(self.reference_line_manager.reference_line)
+        self.env_info.trajectory_tracking.episode.reference_line.CopyFrom(
+            self.reference_line_manager.raw_reference_line
+        )
 
         # TODO: use closest waypoint assignment
 
         observation = self.observation_manager.get_observation(
-            index=self.env_info.trajectory_tracking.episode.step_index,
+            episode_data=self.env_info.trajectory_tracking.episode,
             body_state=sampled_dynamics_model.get_body_state_proto(),
         )
         # TODO: verify interface: gym==0.21 or gym==0.26
@@ -271,7 +271,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         current_dynamics_model.step(action, delta_t=self.env_info.trajectory_tracking.hyper_parameter.step_interval)
         self.env_info.trajectory_tracking.episode.step_index += 1
         observation = self.observation_manager.get_observation(
-            index=self.env_info.trajectory_tracking.episode.step_index,
+            episode_data=self.env_info.trajectory_tracking.episode,
             body_state=current_dynamics_model.get_body_state_proto(),
         )
 

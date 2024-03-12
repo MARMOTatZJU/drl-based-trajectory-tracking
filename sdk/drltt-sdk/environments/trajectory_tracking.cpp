@@ -130,7 +130,8 @@ bool TrajectoryTracking::RollOut() {
     // observation
     std::vector<float> observation_vec;
     _observation_manager.get_observation(body_state, step_index,
-                                         n_observation_steps, &observation_vec);
+                                         tracking_length, n_observation_steps,
+                                         &observation_vec);
     drltt_proto::Observation observation;
     for (const auto scalar : observation_vec) {
       observation.mutable_bicycle_model()->add_feature(scalar);
