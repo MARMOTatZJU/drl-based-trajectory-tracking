@@ -1,4 +1,4 @@
-from typing import Dict, Iterable, Union, Any, override
+from typing import Tuple, Iterable, Union, Any, override
 import math
 from copy import deepcopy
 
@@ -130,7 +130,7 @@ class BicycleModel(BaseDynamicsModel):
         return serialized_observation
 
     def _compute_derivative(self, state: State, action: Action) -> State:
-        hyper_parameter = self.hyper_parameter.bicycle_model
+        hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
 
         x = state.bicycle_model.body_state.x
         y = state.bicycle_model.body_state.y
@@ -139,15 +139,11 @@ class BicycleModel(BaseDynamicsModel):
         a = action.bicycle_model.a
         s = action.bicycle_model.s
 
-        gravity_center_relative_position = hyper_parameter.rearwheel_to_cog / (
-            hyper_parameter.rearwheel_to_cog + hyper_parameter.frontwheel_to_cog
-        )
-        omega = np.arctan(gravity_center_relative_position * np.tan(s))
-        omega = normalize_angle(omega)
+        omega, rotation_radius = self._compute_rotation_related_variables(s)
 
         dx_dt = v * np.cos(r + omega)
         dy_dt = v * np.sin(r + omega)
-        dr_dt = v / hyper_parameter.rearwheel_to_cog * np.sin(omega)
+        dr_dt = v / rotation_radius
         dv_dt = a
 
         derivative = State()
@@ -157,6 +153,30 @@ class BicycleModel(BaseDynamicsModel):
         derivative.bicycle_model.v = dv_dt
 
         return derivative
+
+    @property
+    def cog_relative_position_between_axles(self) -> float:
+        """Relative position of Center of Gravity (CoG) between axles"""
+        hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
+        return hyper_parameter.rearwheel_to_cog / (hyper_parameter.rearwheel_to_cog + hyper_parameter.frontwheel_to_cog)
+
+    def _compute_rotation_related_variables(self, steering_angle: float) -> Tuple[float, float]:
+        """Compute variables reated to the rotation of the Center of Gravity (CoG)
+
+        Args:
+            steering_angle: Current steering_angle of the vehicle.
+            hyper_parameter: Vehicle's hyper parameter.
+        Returns:
+            omega: The angle between the heading of vehicle and the speed direction of the CoG.
+            rotation_radius: The radius of the rotation of the CoG.
+
+        """
+        hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
+        omega = np.arctan(self.cog_relative_position_between_axles * np.tan(steering_angle))
+        omega = normalize_angle(omega)
+        rotation_radius = hyper_parameter.rearwheel_to_cog / np.sin(omega)
+
+        return omega, rotation_radius
 
     @override
     def compute_next_state(self, action: np.ndarray, delta_t: float) -> Any:
