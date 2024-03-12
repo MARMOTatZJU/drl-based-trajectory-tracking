@@ -1,4 +1,9 @@
 # override for testing/debugging
+
+environment:
+  tracking_length_lb: 45
+  tracking_length_ub: 55
+
 algorithm:
   learning_starts: 4096
   batch_size: 4096
