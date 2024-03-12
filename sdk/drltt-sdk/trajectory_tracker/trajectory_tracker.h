@@ -23,6 +23,8 @@ namespace drltt {
  * - v: scalar speed in [m/s] within [0, +inf)。
  * - a: acceleration in [m/s/s] within [0, +inf)。
  * - s: steering angle in [rad] within [-max_s, +max_s] where `max_s` is the steering limit.
+ * 
+ * TODO: move this part to the doc. of protobuf.
  *
  * Predefined type for documentation
  *
@@ -58,7 +60,7 @@ class TrajectoryTracker {
    */
   bool set_reference_line(const REFERENCE_LINE& reference_line);
   /**
-   * @brief Set the Dynamics Model Initial State object
+   * @brief Set the Dynamics Model Initial State object.
    *
    * @param init_state Initial state.
    * @return true Setting succeeded.

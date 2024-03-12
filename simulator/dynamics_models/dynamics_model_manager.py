@@ -9,11 +9,12 @@ from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 
 class DynamicsModelManager:
-    """Manager for Dynamics Models, suppporting random sampling/operating on sampled dyanmics model/etc.
+    """Manager for Dynamics Models, supporting random sampling/operating on sampled dynamics model/etc.
 
     Attributes:
         dynamics_models: Collection of dynamics models
         sampled_dynamics_model: The currently sampled dynamics model.
+        sampled_dynamics_model_index: THe index of currently sampled dynamics model.
     """
 
     dynamics_models: List[BaseDynamicsModel]
@@ -25,6 +26,7 @@ class DynamicsModelManager:
     ):
         """
         Args:
+            hyper_parameters: Hyper-parameters of dynamics models to be managed by the manager.
             dynamics_model_configs: configurations of dynamics models.
         """
         self.dynamics_models = list()
@@ -70,6 +72,11 @@ class DynamicsModelManager:
         return self.dynamics_models[0].get_state_observation_space()
 
     def get_dynamics_model_info(self) -> str:
+        """Get the string about of information of dynamics models.
+
+        Returns:
+            str: The string of information of dynamics models.
+        """
         dm_infos = list()
         for dm in self.dynamics_models:
             dm_info = '\n'.join(
@@ -82,6 +89,14 @@ class DynamicsModelManager:
         return '\n'.join(dm_infos)
 
     def select_dynamics_model_by_name(self, name: str) -> Tuple[int, BaseDynamicsModel]:
+        """Select a dynamics model by name.
+
+        Args:
+            name (str): The name of dynamics model.
+
+        Returns:
+            Tuple[int, BaseDynamicsModel]: The index and object of the selected dynamics model.
+        """
         return self.names_to_indexes_and_dynamics_models[name]
 
     def sample_dynamics_model(self) -> Tuple[int, BaseDynamicsModel]:
@@ -103,7 +118,11 @@ class DynamicsModelManager:
         return self.sampled_dynamics_model
 
     def get_all_hyper_parameters(self) -> List[HyperParameter]:
-        """TODO: docstring"""
+        """Get the collection of hyper-parameters of all dynamics models.
+
+        Returns:
+            List[HyperParameter]: The list of dynamics models.
+        """
         all_hyper_parameters = list()
         for dynamics_model in self.dynamics_models:
             hyper_parameter = HyperParameter()

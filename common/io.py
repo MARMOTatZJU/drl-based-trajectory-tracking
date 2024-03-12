@@ -29,6 +29,12 @@ def load_config_from_yaml(config_file: str) -> Dict:
 
 
 def save_config_to_yaml(config: Dict, config_file: str):
+    """Save config to YAML file.
+
+    Args:
+        config: Config object to be saved.
+        config_file: Path to YAML file.
+    """
     with open(config_file, 'w') as f:
         yaml.dump(config, f)
 
@@ -140,8 +146,13 @@ def load_and_override_configs(config_paths: List[str]) -> Dict:
 
 
 def convert_numpy_to_TensorFP(arr: np.ndarray) -> TensorFP:
-    """
-    TODO: docstring
+    """Convert numpy array to tensor proto.
+
+    Args:
+        arr: Numpy array to be converted.
+
+    Returns:
+        TensorFP: Converted tensor proto.
     """
     tensor_proto = TensorFP()
     tensor_proto.shape.extend(arr.shape)
@@ -151,8 +162,13 @@ def convert_numpy_to_TensorFP(arr: np.ndarray) -> TensorFP:
 
 
 def convert_TensorFP_to_numpy(tensor_proto: TensorFP) -> np.ndarray:
-    """
-    TODO: docstring
+    """Convert tensor proto to numpy array.
+
+    Args:
+        tensor_proto: Tensor proto.
+
+    Returns:
+        np.ndarray: Converted numpy array.
     """
     arr = np.array(tensor_proto.data).reshape(*tensor_proto.shape)
 

@@ -155,7 +155,6 @@ def compute_bicycle_model_metrics(
         - l2_distance_median: median L2 distance
         - scaled_action_norm_median
         - reward_median
-
     """
     dists = list()
     scaled_action_norms = list()

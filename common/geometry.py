@@ -36,6 +36,18 @@ def transform_points(points: np.ndarray, transform_matrix: np.ndarray) -> np.nda
 
 
 def transform_between_local_and_world(points: np.ndarray, body_state: np.ndarray, trans_dir: str) -> np.ndarray:
+    """Transform points between the local (body) frame and the world frame.
+
+    Args:
+        points (np.ndarray): Points to be transformed, shape=(N, 2).
+        body_state (np.ndarray): Body state, format=<x, y, r>.
+        trans_dir (str): Transform direction.
+            'world_to_local': from world frame to body frame.
+            'local_to_world': from body frame to world frame.
+
+    Returns:
+        np.ndarray: Transformed points, shape=(N, 2).
+    """
     points, body_state = points.copy(), body_state.copy()
     x, y, r = body_state[:3]
 
@@ -66,6 +78,15 @@ def transform_between_local_and_world(points: np.ndarray, body_state: np.ndarray
 
 
 def transform_to_local_from_world(points: np.ndarray, body_state: np.ndarray) -> np.ndarray:
+    """Transform points from the world frame to the local (body) frame.
+
+    Args:
+        points (np.ndarray): Points in world frame, shape=(N, 2).
+        body_state (np.ndarray): Body state, format=<x, y, r>.
+
+    Returns:
+        np.ndarray: Points in body frame, shape=(N, 2).
+    """
     return transform_between_local_and_world(
         points,
         body_state,
@@ -74,6 +95,15 @@ def transform_to_local_from_world(points: np.ndarray, body_state: np.ndarray) ->
 
 
 def transform_to_world_from_local(points: np.ndarray, body_state: np.ndarray) -> np.ndarray:
+    """Transform points from the local (body) frame to the world frame.
+
+    Args:
+        points (np.ndarray): Points in body frame, shape=(N, 2).
+        body_state (np.ndarray): Body state, format=<x, y, r>.
+
+    Returns:
+        np.ndarray: Points in world frame, shape=(N, 2).
+    """
     return transform_between_local_and_world(
         points,
         body_state,
