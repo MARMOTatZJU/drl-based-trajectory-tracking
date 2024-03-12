@@ -25,6 +25,8 @@ message TrajectoryTrackingHyperParameter {
     optional int32 tracking_length_ub = 7;
     // Reference line pad mode.
     optional string reference_line_pad_mode = 8;
+    // TODO: consider a better place to store this hparam
+    optional int32 max_n_episodes = 9;
 }
 
 message DynamicsModelData {
@@ -64,4 +66,5 @@ message TrajectoryTrackingEnvironment {
     optional TrajectoryTrackingHyperParameter hyper_parameter = 1;
     // Episode data.
     optional TrajectoryTrackingEpisode episode = 2;
+    repeated TrajectoryTrackingEpisode episodes = 3;
 }

@@ -87,6 +87,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         init_state_lb: List[Union[float, None]],
         init_state_ub: List[Union[float, None]],
         n_observation_steps: int,
+        max_n_episodes: int = 1000,
     ):
         """Parse hyper-parameter.
 
@@ -107,6 +108,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         hyper_parameter.init_state_lb.extend(init_state_lb)
         hyper_parameter.init_state_ub.extend(init_state_ub)
         hyper_parameter.n_observation_steps = n_observation_steps
+        hyper_parameter.max_n_episodes = max_n_episodes
 
     @classmethod
     def parse_dynamics_model_hyper_parameter(
@@ -138,9 +140,18 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         """
         extra_info = dict()
 
-        # clearn data in old episode
+        # store previous episode
+        if self.env_info.trajectory_tracking.episode.step_index > 0:
+            self.env_info.trajectory_tracking.episodes.append(self.env_info.trajectory_tracking.episode)
+        while (
+            len(self.env_info.trajectory_tracking.episodes)
+            > self.env_info.trajectory_tracking.hyper_parameter.max_n_episodes
+        ):
+            self.env_info.trajectory_tracking.episodes.pop(0)
+
+        # clear data
         self.env_info.trajectory_tracking.episode.Clear()
-        # reset data in old episode
+        # reset data
         self.env_info.trajectory_tracking.episode.step_index = 0
         self.env_info.trajectory_tracking.episode.hyper_parameter.CopyFrom(
             self.env_info.trajectory_tracking.hyper_parameter
