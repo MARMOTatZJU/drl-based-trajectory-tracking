@@ -53,6 +53,7 @@ class BicycleModel(BaseDynamicsModel):
         width: float = 0.0,
         action_space_lb: Iterable[float] = (-math.inf, -math.inf),
         action_space_ub: Iterable[float] = (+math.inf, +math.inf),
+        max_lat_acc: float = 4.0,
         **kwargs,
     ):
         """
@@ -62,8 +63,9 @@ class BicycleModel(BaseDynamicsModel):
             wheelbase: Distance between front axle and rear axle.
             rear_overhang: Distance from rear axle to vehicle rear.
             width: Width of vehicle.
-            action_space_lb: lower bound of action space.
-            action_space_ub: upper bound of action space.
+            action_space_lb: Lower bound of action space.
+            action_space_ub: Upper bound of action space.
+            max_lat_acc: Maximum lateral acceleration.
         """
         hyper_parameter.type = cls.__name__
         hyper_parameter.bicycle_model.front_overhang = front_overhang
@@ -76,6 +78,7 @@ class BicycleModel(BaseDynamicsModel):
         hyper_parameter.bicycle_model.rearwheel_to_cog = wheelbase + front_overhang - length / 2
         hyper_parameter.bicycle_model.action_space_ub.extend(action_space_ub)
         hyper_parameter.bicycle_model.action_space_lb.extend(action_space_lb)
+        hyper_parameter.bicycle_model.max_lat_acc = max_lat_acc
 
     @classmethod
     @override
@@ -161,7 +164,7 @@ class BicycleModel(BaseDynamicsModel):
         return hyper_parameter.rearwheel_to_cog / (hyper_parameter.rearwheel_to_cog + hyper_parameter.frontwheel_to_cog)
 
     def _compute_rotation_related_variables(self, steering_angle: float) -> Tuple[float, float]:
-        """Compute variables reated to the rotation of the Center of Gravity (CoG)
+        """Compute variables related to the rotation of the Center of Gravity (CoG)
 
         Args:
             steering_angle: Current steering_angle of the vehicle.
@@ -177,6 +180,20 @@ class BicycleModel(BaseDynamicsModel):
         rotation_radius = hyper_parameter.rearwheel_to_cog / np.sin(omega)
 
         return omega, rotation_radius
+
+    @property
+    def max_steer(self) -> float:
+        """Maximum steering angle brought by the limit on lateral acceleration.
+
+        Return:
+            Maximum steering angle.
+        """
+        hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
+        max_lat_acc = hyper_parameter.max_lat_acc
+        v = self.state.bicycle_model.v
+        max_s = np.arctan(np.tan(np.arcsin(hyper_parameter.rearwheel_to_cog * max_lat_acc / (v**2))))
+
+        return max_s
 
     @override
     def compute_next_state(self, action: np.ndarray, delta_t: float) -> Any:
