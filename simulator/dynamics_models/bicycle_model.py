@@ -6,7 +6,7 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from simulator import DTYPE
+from simulator import DTYPE, EPSILON
 from . import BaseDynamicsModel, DYNAMICS_MODELS
 from common.geometry import normalize_angle
 
@@ -133,8 +133,6 @@ class BicycleModel(BaseDynamicsModel):
         return serialized_observation
 
     def _compute_derivative(self, state: State, action: Action) -> State:
-        hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
-
         x = state.bicycle_model.body_state.x
         y = state.bicycle_model.body_state.y
         r = state.bicycle_model.body_state.r
@@ -142,11 +140,14 @@ class BicycleModel(BaseDynamicsModel):
         a = action.bicycle_model.a
         s = action.bicycle_model.s
 
-        omega, rotation_radius = self._compute_rotation_related_variables(s)
+        # clip steering angle due to limit on lateral acceleration.
+        s = np.clip(s, -self.max_steer, +self.max_steer)
+
+        omega, rotation_radius_inv = self._compute_rotation_related_variables(s)
 
         dx_dt = v * np.cos(r + omega)
         dy_dt = v * np.sin(r + omega)
-        dr_dt = v / rotation_radius
+        dr_dt = v * rotation_radius_inv
         dv_dt = a
 
         derivative = State()
@@ -171,15 +172,15 @@ class BicycleModel(BaseDynamicsModel):
             hyper_parameter: Vehicle's hyper parameter.
         Returns:
             omega: The angle between the heading of vehicle and the speed direction of the CoG.
-            rotation_radius: The radius of the rotation of the CoG.
+            rotation_radius_inv: The inverse of the  radius of the rotation of the CoG. Ensuring numerical stability.
 
         """
         hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
         omega = np.arctan(self.cog_relative_position_between_axles * np.tan(steering_angle))
         omega = normalize_angle(omega)
-        rotation_radius = hyper_parameter.rearwheel_to_cog / np.sin(omega)
+        rotation_radius_inv = np.sin(omega) / hyper_parameter.rearwheel_to_cog
 
-        return omega, rotation_radius
+        return omega, rotation_radius_inv
 
     @property
     def max_steer(self) -> float:
@@ -191,7 +192,13 @@ class BicycleModel(BaseDynamicsModel):
         hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
         max_lat_acc = hyper_parameter.max_lat_acc
         v = self.state.bicycle_model.v
-        max_s = np.arctan(np.tan(np.arcsin(hyper_parameter.rearwheel_to_cog * max_lat_acc / (v**2))))
+
+        asin_arg = hyper_parameter.rearwheel_to_cog * max_lat_acc / np.maximum((v**2), EPSILON)
+
+        if asin_arg <= 1.0:
+            max_s = np.arctan(np.tan(np.arcsin(asin_arg)) / self.cog_relative_position_between_axles)
+        else:
+            max_s = +np.pi
 
         return max_s
 
@@ -207,7 +214,7 @@ class BicycleModel(BaseDynamicsModel):
 
     @override
     def get_dynamics_model_observation(self) -> np.ndarray:
-        hyper_parameter = self.hyper_parameter.bicycle_model
+        hyper_parameter: BicycleModelHyperParameter = self.hyper_parameter.bicycle_model
         observation = np.array(
             (
                 hyper_parameter.front_overhang,
@@ -215,6 +222,7 @@ class BicycleModel(BaseDynamicsModel):
                 hyper_parameter.rear_overhang,
                 hyper_parameter.width,
                 hyper_parameter.length,
+                hyper_parameter.max_lat_acc,
             ),
             dtype=DTYPE,
         )
@@ -223,19 +231,12 @@ class BicycleModel(BaseDynamicsModel):
 
     @override
     def get_state_observation(self) -> np.ndarray:
-        observation = np.array((self.state.bicycle_model.v,), dtype=DTYPE)
-
-        return observation
-
-    @override
-    def get_state_observation_space(self) -> Space:
-        state_observation_space = gym.spaces.Box(
-            low=np.array((0.0,), dtype=DTYPE),
-            high=np.array((+np.inf,), dtype=DTYPE),
-            shape=(1,),
+        observation = np.array(
+            (self.state.bicycle_model.v, self.max_steer),
             dtype=DTYPE,
         )
-        return state_observation_space
+
+        return observation
 
     @override
     def get_state_space(self) -> Space:

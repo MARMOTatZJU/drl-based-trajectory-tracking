@@ -188,7 +188,16 @@ class BaseDynamicsModel(ABC):
         Returns:
             Space: State obervstion space.
         """
-        return self.get_state_space()
+        observation = self.get_state_observation()
+        obs_size = observation.size
+        space = gym.spaces.Box(
+            low=-np.ones((obs_size,), dtype=DTYPE) * np.inf,
+            high=+np.ones((obs_size,), dtype=DTYPE) * np.inf,
+            shape=observation.shape,
+            dtype=DTYPE,
+        )
+
+        return space
 
     @abstractmethod
     def get_state_space(self) -> Space:

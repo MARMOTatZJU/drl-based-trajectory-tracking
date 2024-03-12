@@ -1,7 +1,12 @@
 #pragma once
 
+// TODO: verify if it is necessary
+#define _USE_MATH_DEFINES
+
+#include <algorithm>
 #include <cmath>
 #include "base_dynamics_model.h"
+#include "common/math.h"
 #include "common/protobuf_operators.h"
 #include "drltt-sdk/common/geometry.h"
 
@@ -24,8 +29,12 @@ class BicycleModel : public BaseDynamicsModel {
 
  protected:
   void parse_hyper_parameter() override;
-  static drltt_proto::State _compute_derivative(
+  drltt_proto::State _compute_derivative(
       const drltt_proto::State& state, const drltt_proto::Action& action,
       const drltt_proto::HyperParameter& hyper_parameter);
+  float GetCogRelativePositionBetweenAxles() const;
+  bool ComputeRotationRelatedVariables(float sterring_angle, float* omega,
+                                       float* rotation_radius_inv) const;
+  float GetMaxSteeringAngle() const;
 };
 }  // namespace drltt
