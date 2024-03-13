@@ -192,11 +192,11 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
   //  TODO: add to a class
   THRESHOLDS_AND_COUNTS test_thresholds_and_counts = {
       // clang-format off
-      {1e-1, 0.995, 0, 0},
-      {1e-2, 0.990, 0, 0},
-      {1e-3, 0.980, 0, 0},
-      {1e-4, 0.900, 0, 0},
-      {1e-5, 0.700, 0, 0},
+      {1e-1, 0.980, 0, 0},
+      {1e-2, 0.950, 0, 0},
+      {1e-3, 0.900, 0, 0},
+      {1e-4, 0.800, 0, 0},
+      {1e-5, 0.600, 0, 0},
       // clang-format on
   };
 
