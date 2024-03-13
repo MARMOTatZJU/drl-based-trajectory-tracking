@@ -119,13 +119,31 @@ Run `./test.sh` to test all code:
 .. literalinclude:: ../../../test.sh
   :language: bash
 
-Python testing is done with *pytest*. To launch the testing, run in command line:
+Python testing is done with *pytest*. To launch the Python testing, run `./test-python.sh`:
+
+.. literalinclude:: ../../../test-python.sh
+  :language: bash
+
+CPP testing is performed through *gtest* immediately after building. To launch the CPP testing, run `./test-cpp.sh`:
+
+.. literalinclude:: ../../../test-cpp.sh
+  :language: bash
+
+Please refer to *DRTLL SDK* for details.
+
+#### Accelerating CPP testing
+
+To skip SDK exporting (e.g. while debugging the test running), run:
 
 ```bash
-(source setup.sh ; pytest)
+./test-cpp.sh test
 ```
 
-CPP testing is performed through *gtest* immediately after building. Please refer to *DRTLL SDK* for details.
+To skip both SDK exporting and checkpoint generation (e.g. while debugging the test building), run:
+
+```bash
+./test-cpp.sh test reuse-checkpoint
+```
 
 ### Code Formatting
 

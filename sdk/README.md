@@ -53,9 +53,24 @@ RUN \
     cat ${APT_SOURCE_LIST}
 ```
 
+#### Debugging the building process
+
+`./compile-in-docker.sh` can be used to debug the building process. Pass `interaction` argument to enter the container instead of launching the building process directly.
+
+```bash
+./compile-in-docker.sh interactive
+```
+
+Furthermore, pass `nonsudo` argument to avoid entering SUDO account.
+
+```bash
+./compile-in-docker.sh interactive nonsudo
+```
+
+
 ### Compile Source and Export SDK Shared Library within Docker Container
 
-Secondly, launch compilation and exporting by running `bash ./compile-in-docker.sh`.
+Secondly, launch compilation and exporting by running `./compile-in-docker.sh`.
 
 .. literalinclude:: ../../../sdk/compile-in-docker.sh
   :language: bash
