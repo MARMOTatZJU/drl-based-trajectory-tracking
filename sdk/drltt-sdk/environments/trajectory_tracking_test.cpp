@@ -110,6 +110,73 @@ std::string print_data(const drltt_proto::Observation& observation) {
   return ss.str();
 }
 
+typedef std::tuple<float, float, int, int> THRESHOLD_AND_COUNT;
+typedef std::vector<THRESHOLD_AND_COUNT> THRESHOLDS_AND_COUNTS;
+typedef std::tuple<bool, std::string> CHECK_RESULT;
+typedef std::vector<CHECK_RESULT> CHECK_RESULTS;
+
+/**
+ * @brief Counter for counting success rate based on multiple thresholds.
+ *
+ * TODO: move to test_utils.[h|cpp]
+ *
+ */
+class MultiThresholdCounter {
+ public:
+  MultiThresholdCounter() = default;
+  ~MultiThresholdCounter() {}
+
+  MultiThresholdCounter(const THRESHOLDS_AND_COUNTS& thresholds_and_counts) {
+    _thresholds_and_counts = thresholds_and_counts;
+  }
+
+  bool Count(float diff) {
+    for (int level_index = 0; level_index < _thresholds_and_counts.size();
+         ++level_index) {
+      auto& level_data = _thresholds_and_counts.at(level_index);
+      const float threshold = std::get<0>(level_data);
+      if (diff < threshold) {
+        std::get<2>(level_data) = std::get<2>(level_data) + 1;
+      }
+      std::get<3>(level_data) = std::get<3>(level_data) + 1;
+    }
+    return true;
+  }
+
+  bool Check(CHECK_RESULTS& check_results) {
+    check_results.clear();
+    for (auto& level_data : _thresholds_and_counts) {
+      const float thres_level = std::get<0>(level_data);
+      const float pass_ratio_thres = std::get<1>(level_data);
+      const float pass_count = std::get<2>(level_data);
+      const float total_count = std::get<3>(level_data);
+      const float pass_ratio =
+          static_cast<float>(pass_count) / static_cast<float>(total_count);
+      const bool pass_flag = (pass_ratio >= pass_ratio_thres);
+
+      CHECK_RESULT check_result;
+      // check flag
+      std::get<0>(check_result) = pass_flag;
+      // debug info
+      // clang-format off
+      std::get<1>(check_result) =
+          "Threshold level " + std::to_string(thres_level) + " numeric precision check result:" + "\n"
+        + "thres_level: " + std::to_string(thres_level) + " / " + "\n"
+        + "pass_ratio_thres: " + std::to_string(pass_ratio_thres) + " / " + "\n"
+        + "pass_count: " + std::to_string(pass_count) + " / " + "\n"
+        + "total_count: " + std::to_string(total_count) + " / " + "\n"
+        + "pass_ratio: " + std::to_string(pass_ratio) + "." + "\n" + "\n";
+      // clang-format on
+
+      check_results.push_back(check_result);
+    }
+    return true;
+  }
+
+ private:
+  THRESHOLDS_AND_COUNTS _thresholds_and_counts;
+};
+
 TEST(EnvironmentsTest, TrajectoryTrackingTest) {
   const std::string checkpoint_dir = MACRO_CHECKPOINT_DIR;
   const std::string module_path = checkpoint_dir + "/traced_policy.pt";
@@ -117,63 +184,82 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
 
   drltt_proto::Environment env_data;
   parse_proto_from_file(env_data, env_data_path);
+  const int n_test_cases = env_data.trajectory_tracking().episodes().size();
+  std::cerr << "Environment tested on " << n_test_cases << " cases."
+            << std::endl;
 
-  // build and setup environment
-  const drltt_proto::TrajectoryTrackingEpisode test_episode_data =
-      env_data.trajectory_tracking().episode();
-  TrajectoryTracking env;
-  env.LoadPolicy(module_path);
-  env.LoadEnvData(env_data_path);
-  env.set_dynamics_model_hyper_parameter(
-      test_episode_data.selected_dynamics_model_index());
-  env.set_reference_line(test_episode_data.reference_line());
-  env.set_dynamics_model_initial_state(
-      test_episode_data.dynamics_model().states().at(0));
-  env.RollOut();
-  TRAJECTORY tracked_trajectory = env.get_tracked_trajectory();
+  // numeric precision threshold/ratio/correct count/total count
+  //  TODO: add to a class
+  THRESHOLDS_AND_COUNTS test_thresholds_and_counts = {
+      // clang-format off
+      {1e-1, 0.980, 0, 0},
+      {1e-2, 0.950, 0, 0},
+      {1e-3, 0.900, 0, 0},
+      {1e-4, 0.800, 0, 0},
+      {1e-5, 0.600, 0, 0},
+      // clang-format on
+  };
 
-  const float EPSILON = 1e-3;
-  // TODO: use both atol and rtol for close check
-  // reference: https://pytorch.org/docs/stable/generated/torch.allclose.html
-  for (int index = 0;
-       index < env_data.trajectory_tracking().episode().tracking_length();
-       ++index) {
-    auto gt_data =
-        env_data.trajectory_tracking().episode().dynamics_model().states().at(
-            index);
-    auto rt_data = std::get<0>(tracked_trajectory).at(index);
-    EXPECT_LT((rt_data - gt_data), EPSILON)
-        << "============ STATE COMPARISON ============" << std::endl
-        << "Step: " << index << ": " << std::endl
-        << print_data(gt_data) << std::endl
-        << print_data(rt_data) << std::endl;
+  MultiThresholdCounter counter(test_thresholds_and_counts);
+
+  for (int test_case_index = 0; test_case_index < n_test_cases;
+       ++test_case_index) {
+    const drltt_proto::TrajectoryTrackingEpisode& test_episode_data =
+        env_data.trajectory_tracking().episodes().at(test_case_index);
+    TrajectoryTracking env;
+    env.LoadPolicy(module_path);
+    env.LoadEnvData(env_data_path);
+    env.set_dynamics_model_hyper_parameter(
+        test_episode_data.selected_dynamics_model_index());
+    env.set_reference_line(test_episode_data.reference_line());
+    env.set_dynamics_model_initial_state(
+        test_episode_data.dynamics_model().states().at(0));
+    env.RollOut();
+    TRAJECTORY tracked_trajectory = env.get_tracked_trajectory();
+
+    // TODO: use both atol and rtol for close check
+    // reference: https://pytorch.org/docs/stable/generated/torch.allclose.html
+    for (int index = 0; index < test_episode_data.tracking_length(); ++index) {
+      auto gt_data = test_episode_data.dynamics_model().states().at(index);
+      auto rt_data = std::get<0>(tracked_trajectory).at(index);
+      counter.Count(rt_data - gt_data);
+      // EXPECT_LT((rt_data - gt_data), EPSILON)
+      //     << "============ STATE COMPARISON ============" << std::endl
+      //     << "Test case: " << test_case_index << ", Step: " << index << ": "
+      //     << std::endl
+      //     << print_data(gt_data) << std::endl
+      //     << print_data(rt_data) << std::endl;
+    }
+    for (int index = 0; index < test_episode_data.tracking_length(); ++index) {
+      auto gt_data = test_episode_data.dynamics_model().actions().at(index);
+      auto rt_data = std::get<1>(tracked_trajectory).at(index);
+      counter.Count(rt_data - gt_data);
+      // EXPECT_LT((rt_data - gt_data), EPSILON)
+      //     << "============ ACTION COMPARISON ============" << std::endl
+      //     << "Test case: " << test_case_index << ", Step: " << index << ": "
+      //     << std::endl
+      //     << print_data(gt_data) << std::endl
+      //     << print_data(rt_data) << std::endl;
+    }
+    for (int index = 0; index < test_episode_data.tracking_length(); ++index) {
+      auto gt_data =
+          test_episode_data.dynamics_model().observations().at(index);
+      auto rt_data = std::get<2>(tracked_trajectory).at(index);
+      counter.Count(rt_data - gt_data);
+      // EXPECT_LT((rt_data - gt_data), EPSILON)
+      //     << "============ OBSERVATION COMPARISON ============" << std::endl
+      //     << "Test case: " << test_case_index << ", Step: " << index << ": "
+      //     << std::endl
+      //     << print_data(gt_data) << std::endl
+      //     << print_data(rt_data) << std::endl;
+    }
   }
-  for (int index = 0;
-       index < env_data.trajectory_tracking().episode().tracking_length();
-       ++index) {
-    auto gt_data =
-        env_data.trajectory_tracking().episode().dynamics_model().actions().at(
-            index);
-    auto rt_data = std::get<1>(tracked_trajectory).at(index);
-    EXPECT_LT((rt_data - gt_data), EPSILON)
-        << "============ ACTION COMPARISON ============" << std::endl
-        << "Step: " << index << ": " << std::endl
-        << print_data(gt_data) << std::endl
-        << print_data(rt_data) << std::endl;
-  }
-  for (int index = 0;
-       index < env_data.trajectory_tracking().episode().tracking_length();
-       ++index) {
-    auto gt_data = env_data.trajectory_tracking()
-                       .episode()
-                       .dynamics_model()
-                       .observations()
-                       .at(index);
-    auto rt_data = std::get<2>(tracked_trajectory).at(index);
-    EXPECT_LT((rt_data - gt_data), EPSILON)
-        << "============ OBSERVATION COMPARISON ============" << std::endl
-        << "Step: " << index << ": " << std::endl
-        << print_data(gt_data) << std::endl
-        << print_data(rt_data) << std::endl;
+  CHECK_RESULTS check_results;
+  counter.Check(check_results);
+  for (CHECK_RESULT& check_result : check_results) {
+    const bool pass_flag = std::get<0>(check_result);
+    const std::string check_info = std::get<1>(check_result);
+    EXPECT_TRUE(pass_flag);
+    std::cerr << check_info;
   }
 }

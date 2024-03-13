@@ -4,11 +4,12 @@ set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 option(BUILD_TESTS "Build tests." OFF)
-
 add_definitions(-DMACRO_CHECKPOINT_DIR="/drltt-work_dir/track-test/checkpoint")
+add_definitions(-DLIBTORCH_DIR="/libtorch")
+
+message("Using checkpoint at ${MACRO_CHECKPOINT_DIR}.")
 
 set(CMAKE_CXX_FLAGS "-O2 -Werror -fPIC -std=c++20 -march=native -ftree-vectorize")
-
 
 # TODO resolve it in more formal way
 # https://github.com/protocolbuffers/protobuf/issues/14500
@@ -17,9 +18,7 @@ set(CMAKE_CXX_FLAGS "-O2 -Werror -fPIC -std=c++20 -march=native -ftree-vectorize
 # set(CMAKE_STATIC_LINKER_FLAGS "-Wl,--copy-dt-needed-entries")
 
 # libtorch
-set(HOST_LIBTORCH_CMAKE_PREFIX_PATH "/libtorch-host/share/cmake/")
-list(APPEND CMAKE_PREFIX_PATH ${HOST_LIBTORCH_CMAKE_PREFIX_PATH})
-set(LIBTORCH_CMAKE_PREFIX_PATH "/libtorch/share/cmake/")
+set(LIBTORCH_CMAKE_PREFIX_PATH "${LIBTORCH_DIR}/share/cmake/")
 list(APPEND CMAKE_PREFIX_PATH ${LIBTORCH_CMAKE_PREFIX_PATH})
 find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")

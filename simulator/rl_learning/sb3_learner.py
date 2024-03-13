@@ -115,12 +115,13 @@ def train_with_sb3(
         logging.info(f'SB3 Algorithm Policy saved at: {checkpoint_file}')
 
         # save environment data
-        roll_out_one_episode(environment, algorithm)
+        for _ in range(environment.env_info.trajectory_tracking.hyper_parameter.max_n_episodes + 1):
+            roll_out_one_episode(environment, algorithm)
         env_data = environment.export_environment_data()
         env_data_save_path = f'{checkpoint_dir}/env_data.bin'
         with open(env_data_save_path, 'wb') as f:
             f.write(env_data.SerializeToString())
-        logging.info('Environment data saved toL {}')
+        logging.info(f'Environment data saved to {env_data_save_path}')
 
     return algorithm
 
