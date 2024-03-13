@@ -260,6 +260,9 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             deepcopy(current_dynamics_model.serialize_action(action))
         )
         self.env_info.trajectory_tracking.episode.rewards.append(deepcopy(scalar_reward))
+        self.env_info.trajectory_tracking.episode.dynamics_model.debug_infos.append(
+            deepcopy(current_dynamics_model.get_debug_info())
+        )
 
         # ABOVE: step t
         # BELLOW: step t+1

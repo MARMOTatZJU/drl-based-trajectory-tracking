@@ -4,6 +4,7 @@ import "drltt_proto/dynamics_model/state.proto";
 import "drltt_proto/dynamics_model/action.proto";
 import "drltt_proto/dynamics_model/observation.proto";
 import "drltt_proto/dynamics_model/hyper_parameter.proto";
+import "drltt_proto/dynamics_model/basics.proto";
 import "drltt_proto/trajectory/trajectory.proto";
 
 package drltt_proto;
@@ -40,6 +41,8 @@ message DynamicsModelData {
     repeated Action actions = 4;
     // Sequence of observations.
     repeated Observation observations = 5;
+    // Debug information.
+    repeated DebugInfo debug_infos = 6;
 }
 
 // Data recorded from an episode, i.e. a trajectory.

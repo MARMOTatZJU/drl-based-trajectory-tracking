@@ -217,13 +217,15 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
     env.RollOut();
     TRAJECTORY tracked_trajectory = env.get_tracked_trajectory();
 
+    // const float _EPSILON = 1e-3;
+
     // TODO: use both atol and rtol for close check
     // reference: https://pytorch.org/docs/stable/generated/torch.allclose.html
     for (int index = 0; index < test_episode_data.tracking_length(); ++index) {
       auto gt_data = test_episode_data.dynamics_model().states().at(index);
       auto rt_data = std::get<0>(tracked_trajectory).at(index);
       counter.Count(rt_data - gt_data);
-      // EXPECT_LT((rt_data - gt_data), EPSILON)
+      // EXPECT_LT((rt_data - gt_data), _EPSILON)
       //     << "============ STATE COMPARISON ============" << std::endl
       //     << "Test case: " << test_case_index << ", Step: " << index << ": "
       //     << std::endl
@@ -234,7 +236,7 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
       auto gt_data = test_episode_data.dynamics_model().actions().at(index);
       auto rt_data = std::get<1>(tracked_trajectory).at(index);
       counter.Count(rt_data - gt_data);
-      // EXPECT_LT((rt_data - gt_data), EPSILON)
+      // EXPECT_LT((rt_data - gt_data), _EPSILON)
       //     << "============ ACTION COMPARISON ============" << std::endl
       //     << "Test case: " << test_case_index << ", Step: " << index << ": "
       //     << std::endl
@@ -246,12 +248,27 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
           test_episode_data.dynamics_model().observations().at(index);
       auto rt_data = std::get<2>(tracked_trajectory).at(index);
       counter.Count(rt_data - gt_data);
-      // EXPECT_LT((rt_data - gt_data), EPSILON)
+      // EXPECT_LT((rt_data - gt_data), _EPSILON)
       //     << "============ OBSERVATION COMPARISON ============" << std::endl
       //     << "Test case: " << test_case_index << ", Step: " << index << ": "
       //     << std::endl
       //     << print_data(gt_data) << std::endl
       //     << print_data(rt_data) << std::endl;
+    }
+    for (int index = 0; index < test_episode_data.tracking_length(); ++index) {
+      auto gt_data =
+          test_episode_data.dynamics_model().debug_infos().at(index).data();
+      auto rt_data = std::get<3>(tracked_trajectory).at(index);
+      int data_len = std::min(static_cast<int>(gt_data.size()),
+                              static_cast<int>(rt_data.size()));
+      if (data_len > 0) {
+        std::cerr << "Test case: " << test_case_index << ", Step: " << index
+                  << std::endl;
+      }
+      for (int data_index = 0; data_index < data_len; ++data_index) {
+        std::cerr << "    gt_data: " << gt_data.at(data_index)
+                  << ", rt_data: " << rt_data.at(data_index) << std::endl;
+      }
     }
   }
   CHECK_RESULTS check_results;

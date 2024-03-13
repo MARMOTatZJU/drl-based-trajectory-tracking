@@ -22,8 +22,9 @@ typedef std::vector<REFERENCE_WAYPOINT> REFERENCE_LINE;
 typedef std::tuple<float, float, float, float> STATE;
 typedef std::tuple<float, float> ACTION;
 typedef std::vector<float> OBSERVATION;
+typedef std::vector<float> DEBUG_DATA;
 typedef std::tuple<std::vector<STATE>, std::vector<ACTION>,
-                   std::vector<OBSERVATION>>
+                   std::vector<OBSERVATION>, std::vector<DEBUG_DATA>>
     TRAJECTORY;
 
 namespace drltt {
@@ -100,6 +101,7 @@ class TrajectoryTracking {
   std::vector<drltt_proto::State> _states;
   std::vector<drltt_proto::Action> _actions;
   std::vector<drltt_proto::Observation> _observations;
+  std::vector<drltt_proto::DebugInfo> _debug_infos;
 };
 
 }  // namespace drltt

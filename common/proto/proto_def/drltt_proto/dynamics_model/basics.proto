@@ -11,3 +11,7 @@ message BodyState {
     // Orientation/heading in [rad].
     optional float r = 3;
 }
+
+message DebugInfo {
+    repeated float data = 1;
+}
