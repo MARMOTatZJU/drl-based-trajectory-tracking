@@ -17,4 +17,5 @@ python tools/main.py \
         configs/trajectory_tracking/config-track-tiny.yaml \
         configs/trajectory_tracking/utils/config-track-test-sample.yaml \
     --checkpoint-dir $work_dir/checkpoint \
+    --num-test-cases 1024 \
     --train --eval --trace
