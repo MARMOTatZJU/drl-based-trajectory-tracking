@@ -33,9 +33,12 @@ class BaseDynamicsModel {
     return false;
   }
 
+  drltt_proto::DebugInfo get_debug_info() { return _debug_info; }
+
  protected:
   virtual void parse_hyper_parameter() {}
   drltt_proto::State _state;
+  drltt_proto::DebugInfo _debug_info;
   drltt_proto::HyperParameter _hyper_parameter;
 };
 

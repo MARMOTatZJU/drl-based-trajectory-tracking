@@ -3,6 +3,8 @@
 namespace drltt {
 
 void BicycleModel::Step(const drltt_proto::Action& action, float delta_t) {
+  _debug_info.mutable_data()->Clear();  // consider a more "automatic" way to clear
+
   drltt_proto::State derivative =
       _compute_derivative(_state, action, _hyper_parameter);
   _state.mutable_bicycle_model()->CopyFrom(

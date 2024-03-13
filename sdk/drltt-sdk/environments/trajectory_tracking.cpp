@@ -140,10 +140,13 @@ bool TrajectoryTracking::RollOut() {
     drltt_proto::Action action;
     action.mutable_bicycle_model()->set_a(action_vec.at(0));
     action.mutable_bicycle_model()->set_s(action_vec.at(1));
+    // debug_info
+    drltt_proto::DebugInfo debug_info = _dynamics_model.get_debug_info();
     // record state, action, observation
     _states.push_back(state);
     _actions.push_back(action);
     _observations.push_back(observation);
+    _debug_infos.push_back(debug_info);
     // step
     _dynamics_model.Step(action, step_interval);
   }
@@ -172,6 +175,10 @@ TRAJECTORY TrajectoryTracking::get_tracked_trajectory() {
     const auto& feature = tracked_observation.bicycle_model().feature();
     OBSERVATION observation(feature.begin(), feature.end());
     std::get<2>(trajectory).push_back(observation);
+  }
+  for (const auto& debug_info : _debug_infos) {
+    DEBUG_DATA debug_data(debug_info.data().begin(), debug_info.data().end());
+    std::get<3>(trajectory).push_back(debug_data);
   }
   return trajectory;
 }

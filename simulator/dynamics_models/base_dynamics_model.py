@@ -12,6 +12,7 @@ from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter
 from drltt_proto.dynamics_model.state_pb2 import State
 from drltt_proto.dynamics_model.action_pb2 import Action
 from drltt_proto.dynamics_model.observation_pb2 import Observation
+from drltt_proto.dynamics_model.basics_pb2 import DebugInfo
 
 
 class BaseDynamicsModel(ABC):
@@ -24,6 +25,7 @@ class BaseDynamicsModel(ABC):
 
     hyper_parameter: HyperParameter
     state: State
+    debug_info: DebugInfo
 
     def __init__(
         self,
@@ -34,6 +36,7 @@ class BaseDynamicsModel(ABC):
         Args:
             init_state: Initial state to be set.
         """
+        self.debug_info = DebugInfo()
         if init_state is not None:
             self.set_state(init_state)
 
@@ -129,6 +132,8 @@ class BaseDynamicsModel(ABC):
             action: Applied action.
             delta_t: Time interval.
         """
+        self.debug_info.Clear()
+
         next_state = self.compute_next_state(action, delta_t)
         self.state = next_state
 
@@ -215,3 +220,9 @@ class BaseDynamicsModel(ABC):
             np.ndarray: Jacobian matrix, shape=(n_dims_state, n_dims_state + n_dims_action).
         """
         raise NotImplementedError
+
+    def get_debug_info(self) -> DebugInfo:
+        debug_info = DebugInfo()
+        debug_info.CopyFrom(self.debug_info)
+
+        return debug_info
