@@ -22,6 +22,7 @@ environment:
       width: 1.8
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
+      max_lat_acc: 8.0
       # long vehicle
   -   type: 'BicycleModel'
       front_overhang: 2.3
@@ -30,6 +31,7 @@ environment:
       width: 2.5
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
+      max_lat_acc: 4.0
       # middle vehicle
   -   type: 'BicycleModel'
       front_overhang: 1.0
@@ -38,6 +40,7 @@ environment:
       width: 2.65
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
+      max_lat_acc: 2.0
 
 algorithm:
   type: TD3

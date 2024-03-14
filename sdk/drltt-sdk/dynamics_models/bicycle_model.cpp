@@ -16,6 +16,7 @@ void BicycleModel::Step(const drltt_proto::Action& action, float delta_t) {
 bool BicycleModel::get_state_observation(
     std::vector<float>* observation) const {
   observation->push_back(_state.bicycle_model().v());
+  observation->push_back(GetMaxSteeringAngle());
 
   return true;
 }
@@ -27,6 +28,7 @@ bool BicycleModel::get_dynamics_model_observation(
   observation->push_back(_hyper_parameter.bicycle_model().rear_overhang());
   observation->push_back(_hyper_parameter.bicycle_model().width());
   observation->push_back(_hyper_parameter.bicycle_model().length());
+  observation->push_back(_hyper_parameter.bicycle_model().max_lat_acc());
 
   return true;
 }
@@ -53,18 +55,17 @@ drltt_proto::State BicycleModel::_compute_derivative(
   float a = action.bicycle_model().a();
   float s = action.bicycle_model().s();
 
-  float frontwheel_to_cog = hyper_parameter.bicycle_model().frontwheel_to_cog();
-  float rearwheel_to_cog = hyper_parameter.bicycle_model().rearwheel_to_cog();
+  // clip s
+  const float max_steer = GetMaxSteeringAngle();
+  s = clip(s, -max_steer, +max_steer);
 
-  float gravity_center_relative_position =
-      rearwheel_to_cog / (rearwheel_to_cog + frontwheel_to_cog);
-
-  float omega = std::atan(gravity_center_relative_position * std::tan(s));
-  omega = normalize_angle(omega);
+  float omega;
+  float rotation_radius_inv;
+  ComputeRotationRelatedVariables(s, &omega, &rotation_radius_inv);
 
   float dx_dt = v * std::cos(r + omega);
   float dy_dt = v * std::sin(r + omega);
-  float dr_dt = v / rearwheel_to_cog * std::sin(omega);
+  float dr_dt = v * rotation_radius_inv;
   float dv_dt = a;
 
   drltt_proto::State derivative;
@@ -74,6 +75,50 @@ drltt_proto::State BicycleModel::_compute_derivative(
   derivative.mutable_bicycle_model()->set_v(dv_dt);
 
   return derivative;
+}
+
+float BicycleModel::GetCogRelativePositionBetweenAxles() const {
+  const float frontwheel_to_cog =
+      _hyper_parameter.bicycle_model().frontwheel_to_cog();
+  const float rearwheel_to_cog =
+      _hyper_parameter.bicycle_model().rearwheel_to_cog();
+
+  return rearwheel_to_cog / (rearwheel_to_cog + frontwheel_to_cog);
+}
+
+bool BicycleModel::ComputeRotationRelatedVariables(
+    float steering_angle, float* omega, float* rotation_radius_inv) const {
+  const float cog_relative_position_between_axles =
+      GetCogRelativePositionBetweenAxles();
+  *omega =
+      std::atan(cog_relative_position_between_axles * std::tan(steering_angle));
+  *omega = normalize_angle(*omega);
+  // Return the inverse of the radius to ensure numerical stability.
+  *rotation_radius_inv =
+      std::sin(*omega) / _hyper_parameter.bicycle_model().rearwheel_to_cog();
+
+  return true;
+}
+
+float BicycleModel::GetMaxSteeringAngle() const {
+  const float max_lat_acc = _hyper_parameter.bicycle_model().max_lat_acc();
+  const float v = _state.bicycle_model().v();
+  const float rearwheel_to_cog =
+      _hyper_parameter.bicycle_model().rearwheel_to_cog();
+
+  float max_s;
+
+  const float asin_arg =
+      rearwheel_to_cog * max_lat_acc / std::max(v * v, EPSILON);
+
+  if (asin_arg <= 1.0) {
+    max_s = std::atan(std::tan(std::asin(asin_arg)) /
+                      GetCogRelativePositionBetweenAxles());
+  } else {
+    max_s = M_PI;
+  }
+
+  return max_s;
 }
 
 }  // namespace drltt

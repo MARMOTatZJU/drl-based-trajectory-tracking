@@ -5,6 +5,7 @@ logging.basicConfig(level=logging.INFO)
 import numpy as np
 
 DTYPE = np.float32
+EPSILON = 1e-6
 
 TEST_CONFIG_PATHS = (
     'configs/trajectory_tracking/config-track-base.yaml',

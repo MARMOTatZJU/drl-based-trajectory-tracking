@@ -30,4 +30,6 @@ message BicycleModelHyperParameter {
     repeated float action_space_lb = 8;
     // Action space's upper bound.
     repeated float action_space_ub = 9;
+    // Maximum lateral acceleration.
+    optional float max_lat_acc = 10;
 }
