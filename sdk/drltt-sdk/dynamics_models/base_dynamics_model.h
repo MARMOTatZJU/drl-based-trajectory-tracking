@@ -38,7 +38,7 @@ class BaseDynamicsModel {
  protected:
   virtual void parse_hyper_parameter() {}
   drltt_proto::State _state;
-  drltt_proto::DebugInfo _debug_info;
+  drltt_proto::DebugInfo _debug_info;  // TODO: move to trajectory tracking env
   drltt_proto::HyperParameter _hyper_parameter;
 };
 

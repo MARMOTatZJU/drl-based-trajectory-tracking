@@ -1,0 +1,7 @@
+# reference line of variable length
+environment:
+  tracking_length_lb: 20
+  tracking_length_ub: 200
+
+learning:
+    total_timesteps: 3_000_000

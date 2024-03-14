@@ -14,9 +14,10 @@ bool ObservationManager::Reset(drltt_proto::ReferenceLine* reference_line_ptr,
 
 bool ObservationManager::get_observation(
     const drltt_proto::BodyState& body_state, int start_index,
-    int n_observation_steps, std::vector<float>* observation) {
-  get_reference_line_observation(body_state, start_index, n_observation_steps,
-                                 observation);
+    int tracking_length, int n_observation_steps,
+    std::vector<float>* observation) {
+  get_reference_line_observation(body_state, start_index, tracking_length,
+                                 n_observation_steps, observation);
   _dynamics_model_ptr->get_state_observation(observation);
   _dynamics_model_ptr->get_dynamics_model_observation(observation);
   return true;
@@ -25,7 +26,8 @@ bool ObservationManager::get_observation(
 // TODO unit test with `env_data.bin`
 bool ObservationManager::get_reference_line_observation(
     const drltt_proto::BodyState& body_state, int start_index,
-    int n_observation_steps, std::vector<float>* observation) {
+    int tracking_length, int n_observation_steps,
+    std::vector<float>* observation) {
   // slice reference line segment
   std::vector<const drltt_proto::ReferenceLineWaypoint*> observed_waypoint_ptrs;
   const int reference_line_length = _reference_line_ptr->waypoints().size();
@@ -53,6 +55,10 @@ bool ObservationManager::get_reference_line_observation(
     observation->push_back(point.x());
     observation->push_back(point.y());
   }
+  // forward number of steps
+  const int forward_tracking_length = tracking_length - start_index;
+  observation->push_back(static_cast<float>(forward_tracking_length));
+
   return true;
 }
 
