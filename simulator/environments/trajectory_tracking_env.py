@@ -9,6 +9,7 @@ import gym
 from gym.spaces import Space
 
 from common.gym_helper import scale_action
+from common import GLOBAL_DEBUG_INFO
 from . import ENVIRONMENTS
 from simulator.environments.env_interface import CustomizedEnvInterface
 from simulator import DTYPE
@@ -261,8 +262,9 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         )
         self.env_info.trajectory_tracking.episode.rewards.append(deepcopy(scalar_reward))
         self.env_info.trajectory_tracking.episode.dynamics_model.debug_infos.append(
-            deepcopy(current_dynamics_model.get_debug_info())
+            deepcopy(GLOBAL_DEBUG_INFO)
         )
+        GLOBAL_DEBUG_INFO.Clear()
 
         # ABOVE: step t
         # BELLOW: step t+1

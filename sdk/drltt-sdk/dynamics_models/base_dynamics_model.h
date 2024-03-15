@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "drltt-sdk/common/common.h"
 #include "drltt_proto/dynamics_model/action.pb.h"
 #include "drltt_proto/dynamics_model/hyper_parameter.pb.h"
 #include "drltt_proto/dynamics_model/state.pb.h"

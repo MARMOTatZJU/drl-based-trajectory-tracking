@@ -1,13 +1,16 @@
 #pragma once
 
 #include "drltt_proto/sdk/exported_policy_test_case.pb.h"
-// #include "google/protobuf/descriptor.pb.h"
+#include "drltt_proto/dynamics_model/basics.pb.h"
 #include <torch/torch.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
 namespace drltt {
+
+extern drltt_proto::DebugInfo global_debug_info;
+
 // TODO: docstring
 // TODO: use RVO and std::move to avoid copy
 torch::Tensor parse_tensor_proto_to_torch_tensor(

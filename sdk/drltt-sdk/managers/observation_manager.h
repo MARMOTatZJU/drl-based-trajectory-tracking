@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "common/geometry.h"
+#include "drltt-sdk/common/common.h"
 #include "drltt-sdk/dynamics_models/base_dynamics_model.h"
 #include "drltt_proto/dynamics_model/state.pb.h"
 #include "drltt_proto/trajectory/trajectory.pb.h"

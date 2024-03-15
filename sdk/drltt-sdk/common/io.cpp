@@ -1,6 +1,9 @@
 #include "io.h"
 
 namespace drltt {
+
+drltt_proto::DebugInfo global_debug_info = drltt_proto::DebugInfo();
+
 torch::Tensor parse_tensor_proto_to_torch_tensor(
     const drltt_proto::TensorFP& tensor_proto) {
   std::vector<int64_t> shape_vec(tensor_proto.shape().begin(),

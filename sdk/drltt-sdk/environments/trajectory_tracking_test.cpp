@@ -261,6 +261,7 @@ TEST(EnvironmentsTest, TrajectoryTrackingTest) {
       auto rt_data = std::get<3>(tracked_trajectory).at(index);
       int data_len = std::min(static_cast<int>(gt_data.size()),
                               static_cast<int>(rt_data.size()));
+      // TODO: use << to only output wrong data.
       if (data_len > 0) {
         std::cerr << "Test case: " << test_case_index << ", Step: " << index
                   << std::endl;

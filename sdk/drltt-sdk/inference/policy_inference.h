@@ -7,7 +7,7 @@
 
 #include <torch/script.h>
 #include <torch/torch.h>
-#include "common/io.h"
+#include "drltt-sdk/common/common.h"
 
 namespace drltt {
 
