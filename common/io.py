@@ -8,6 +8,9 @@ import yaml
 import numpy as np
 
 from drltt_proto.sdk.exported_policy_test_case_pb2 import TensorFP
+from drltt_proto.dynamics_model.basics_pb2 import DebugInfo
+
+GLOBAL_DEBUG_INFO = DebugInfo()
 
 
 def load_config_from_yaml(config_file: str) -> Dict:

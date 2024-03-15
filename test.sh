@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./test-python.sh
+./test-python.sh "$@"
 
-./test-cpp.sh
+./test-cpp.sh "$@"

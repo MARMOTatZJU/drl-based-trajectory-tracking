@@ -6,9 +6,6 @@
 #include <algorithm>
 #include <cmath>
 #include "base_dynamics_model.h"
-#include "common/math.h"
-#include "common/protobuf_operators.h"
-#include "drltt-sdk/common/geometry.h"
 
 namespace drltt {
 

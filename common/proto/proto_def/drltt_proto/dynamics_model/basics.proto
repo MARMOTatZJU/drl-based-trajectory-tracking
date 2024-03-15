@@ -12,6 +12,7 @@ message BodyState {
     optional float r = 3;
 }
 
+// TODO: move to higher level
 message DebugInfo {
     repeated float data = 1;
 }

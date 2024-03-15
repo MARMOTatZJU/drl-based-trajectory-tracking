@@ -141,13 +141,13 @@ bool TrajectoryTracking::RollOut() {
     drltt_proto::Action action;
     action.mutable_bicycle_model()->set_a(action_vec.at(0));
     action.mutable_bicycle_model()->set_s(action_vec.at(1));
-    // debug_info
-    drltt_proto::DebugInfo debug_info = _dynamics_model.get_debug_info();
     // record state, action, observation
     _states.push_back(state);
     _actions.push_back(action);
     _observations.push_back(observation);
-    _debug_infos.push_back(debug_info);
+    // debug_info
+    _debug_infos.push_back(global_debug_info);
+    global_debug_info.mutable_data()->Clear();
     // step
     _dynamics_model.Step(action, step_interval);
   }

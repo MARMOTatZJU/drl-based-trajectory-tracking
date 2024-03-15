@@ -9,7 +9,7 @@
 #include <cmath>
 #include <tuple>
 #include <vector>
-#include "common/io.h"
+#include "drltt-sdk/common/common.h"
 #include "drltt-sdk/dynamics_models/bicycle_model.h"
 #include "drltt-sdk/inference/policy_inference.h"
 #include "drltt-sdk/managers/observation_manager.h"
