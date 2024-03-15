@@ -33,7 +33,7 @@ docker image save drltt-sdk:dev -o ./drltt-sdk.image
 ```
 
 ```
-docker image load --name drltt-sdk:dev -i ./drltt-sdk.image
+docker image load -i ./drltt-sdk.image
 ```
 
 

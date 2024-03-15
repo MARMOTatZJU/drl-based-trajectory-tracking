@@ -10,14 +10,14 @@ docker_checkpoint_dir=${docker_repo_work_dir}/track-test/checkpoint
 docker_usr_lib_dir=/usr/local/lib
 docker_proto_gen_dir=${docker_source_dir}/proto_gen
 
-if [[ -z ${HOST_LIBTORCH_PATH} ]];then
-    docker_libtorch_dir=/libtorch
-    mount_host_libtorch_in_docker=""
-    echo "Using libtorch preinstalled in docker image"
-else
+if [[ -v HOST_LIBTORCH_PATH ]];then
     docker_libtorch_dir=/libtorch-host
     mount_host_libtorch_in_docker="-v ${HOST_LIBTORCH_PATH}:${docker_libtorch_dir}:ro"
     echo "Using libtorch mounted from host: ${HOST_LIBTORCH_PATH}"
+else
+    docker_libtorch_dir=/libtorch
+    mount_host_libtorch_in_docker=""
+    echo "Using libtorch preinstalled in docker image"
 fi
 
 # TODO: reorganize mouted path

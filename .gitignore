@@ -180,4 +180,4 @@ work_dirs/
 sdk/doxygen_output/
 
 # test log
-/test-log
+/test-log*
