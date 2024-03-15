@@ -178,3 +178,6 @@ work_dirs/
 
 # doxygen output
 sdk/doxygen_output/
+
+# test log
+/test-log
