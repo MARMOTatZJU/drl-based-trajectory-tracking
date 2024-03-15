@@ -1,0 +1,19 @@
+# override for testing/debugging
+
+environment:
+  tracking_length_lb: 45
+  tracking_length_ub: 55
+
+algorithm:
+  learning_starts: 4096
+  batch_size: 4096
+  learning_rate: 1.0e-4
+  tau: 0.0001
+
+learning:
+    total_timesteps: 65536
+    log_interval: 10
+
+evaluation:
+  eval_config:
+    n_episodes: 20

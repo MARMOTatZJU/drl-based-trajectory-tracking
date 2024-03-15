@@ -145,6 +145,14 @@ To skip both SDK exporting and checkpoint generation (e.g. while debugging the t
 ./test-cpp.sh test reuse-checkpoint
 ```
 
+To use a sample config with shorter time for test data generation (a dummy training), run:
+
+```bash
+./test-cpp.sh fast test
+```
+
+TODO: refactor argument parsing logic in test scripts.
+
 ### Code Formatting
 
 This project uses `black` for Python code formatting and `clang-format` for CXX code formatting:
