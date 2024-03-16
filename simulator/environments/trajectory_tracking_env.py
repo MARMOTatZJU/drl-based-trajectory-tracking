@@ -338,4 +338,10 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
     def get_dynamics_model_info(self) -> str:
         return self.dynamics_model_manager.get_dynamics_model_info()
 
+    def get_reference_line(self):
+        reference_line = ReferenceLine()
+        reference_line.CopyFrom(self.reference_line_manager.raw_reference_line)
+
+        return reference_line
+
     # TODO: rendering

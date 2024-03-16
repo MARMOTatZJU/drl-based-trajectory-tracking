@@ -22,6 +22,16 @@ def np_array_to_reference_line(arr: np.ndarray) -> ReferenceLine:
     return reference_line
 
 
+def reference_line_to_np_array(reference_line: ReferenceLine) -> np.ndarray:
+    waypoints = list()
+    for waypoint in reference_line.waypoints:
+        waypoints.append(np.array((waypoint.x, waypoint.y)))
+
+    waypoints = np.stack(waypoints, axis=0)
+
+    return waypoints
+
+
 class TrajectoryTracker:
     """Trajectory tracking SDK class"""
     def __init__(self, checkpoint_dir: str):
@@ -89,4 +99,9 @@ class TrajectoryTracker:
         return self.env.env_info.trajectory_tracking.hyper_parameter.step_interval
 
     def get_dynamics_model_info(self) -> str:
-        return self.env.get_dynamics_model_info
+        return self.env.get_dynamics_model_info()
+
+    def get_reference_line(self) -> List[Tuple[float, float]]:
+        arr = reference_line_to_np_array(self.env.get_reference_line())
+
+        return [tuple(waypoint) for waypoint in arr]
