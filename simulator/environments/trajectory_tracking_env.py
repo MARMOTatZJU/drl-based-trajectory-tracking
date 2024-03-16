@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict, Union, Any, Optional, Generator, override
+from typing import List, Dict, Union, Any
 import os
 import math
 from copy import deepcopy
@@ -8,6 +8,7 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
+from common.future import override
 from common.gym_helper import scale_action
 from common import GLOBAL_DEBUG_INFO
 from . import ENVIRONMENTS
