@@ -16,6 +16,7 @@ from common import Registry, build_object_within_registry_from_config
 from common.gym_helper import scale_action
 from simulator.environments import ExtendedGymEnv
 from . import METRICS
+from .sb3_utils import roll_out_one_episode
 
 from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
 
@@ -53,34 +54,6 @@ def build_sb3_algorithm_from_config(
     return algorithm
 
 
-def roll_out_one_episode(
-    environment: gym.Env,
-    algorithm: BaseAlgorithm,
-) -> Tuple[List[np.ndarray], List[np.ndarray]]:
-    """Roll out one episode and return a trajectory.
-
-    Args:
-        environment: The associated environment.
-        algorithm_config: The algorihm config.
-    Returns:
-        List[np.ndarray]: Observations.
-        List[np.ndarray]: Actions.
-    """
-    observations = list()
-    actions = list()
-
-    obs = environment.reset()
-    observations.append(deepcopy(obs))
-    done = False
-    while not done:
-        action, _states = algorithm.predict(obs)
-        actions.append(deepcopy(action))
-        obs, reward, done, info = environment.step(action)
-        observations.append(deepcopy(obs))
-
-    return observations, actions
-
-
 def train_with_sb3(
     environment: ExtendedGymEnv,
     algorithm_config: Dict,
@@ -116,7 +89,7 @@ def train_with_sb3(
 
         # save environment data
         for _ in range(environment.env_info.trajectory_tracking.hyper_parameter.max_n_episodes + 1):
-            roll_out_one_episode(environment, algorithm)
+            roll_out_one_episode(environment, lambda obs: algorithm.predict(obs)[0])
         env_data = environment.export_environment_data()
         env_data_save_path = f'{checkpoint_dir}/env_data.bin'
         with open(env_data_save_path, 'wb') as f:
@@ -146,7 +119,7 @@ def eval_with_sb3(
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
-        roll_out_one_episode(environment, algorithm)
+        roll_out_one_episode(environment,  lambda obs: algorithm.predict(obs)[0])
 
         compute_metrics = METRICS[compute_metrics_name]
         episode: TrajectoryTrackingEpisode = environment.export_environment_data().trajectory_tracking.episode

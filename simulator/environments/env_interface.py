@@ -1,6 +1,7 @@
 from typing import Any
 from abc import abstractmethod
 
+import numpy as np
 from gym import Env
 from gym.spaces import Space
 
@@ -12,6 +13,10 @@ class CustomizedEnvInterface:
 
     @abstractmethod
     def export_environment_data(self) -> Any:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_state(self) -> np.ndarray:
         raise NotImplementedError
 
 

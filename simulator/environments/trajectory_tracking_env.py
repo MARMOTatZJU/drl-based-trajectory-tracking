@@ -26,6 +26,7 @@ from drltt_proto.environment.trajectory_tracking_pb2 import (
     TrajectoryTrackingHyperParameter,
     TrajectoryTrackingEpisode,
 )
+from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine
 
 
 @ENVIRONMENTS.register
@@ -137,6 +138,8 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
     def reset(
         self,
         init_state: Union[np.ndarray, None] = None,
+        dynamics_model_name: str = '',
+        reference_line: Union[ReferenceLine, None] = None,
     ) -> np.ndarray:
         """Reset environment for Trajectory Tracking.
 
@@ -169,45 +172,55 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             self.env_info.trajectory_tracking.hyper_parameter
         )
 
-        sampled_dynamics_model_index, sampled_dynamics_model = self.dynamics_model_manager.sample_dynamics_model()
+        if len(dynamics_model_name) > 0:
+            sampled_dynamics_model_index, sampled_dynamics_model = \
+                self.dynamics_model_manager.select_dynamics_model_by_name(dynamics_model_name)
+        else:
+            sampled_dynamics_model_index, sampled_dynamics_model = self.dynamics_model_manager.sample_dynamics_model()
+
         self.env_info.trajectory_tracking.episode.dynamics_model.type = type(sampled_dynamics_model).__name__
         self.env_info.trajectory_tracking.episode.dynamics_model.hyper_parameter.CopyFrom(
             sampled_dynamics_model.hyper_parameter
         )
         self.env_info.trajectory_tracking.episode.selected_dynamics_model_index = sampled_dynamics_model_index
 
-        tracking_length = random.randint(
-            self.env_info.trajectory_tracking.hyper_parameter.tracking_length_lb,
-            self.env_info.trajectory_tracking.hyper_parameter.tracking_length_ub,
-        )
-        self.env_info.trajectory_tracking.episode.tracking_length = tracking_length
 
-        if init_state is None:
-            init_state = self.init_state_space.sample()
-        sampled_dynamics_model.set_state(init_state)
-        reference_dynamics_model = deepcopy(sampled_dynamics_model)
-        reference_line, trajectory = random_walk(
-            dynamics_model=reference_dynamics_model,
-            step_interval=self.env_info.trajectory_tracking.hyper_parameter.step_interval,
-            walk_length=tracking_length,
-        )
+        if reference_line is None:
+            tracking_length = random.randint(
+                self.env_info.trajectory_tracking.hyper_parameter.tracking_length_lb,
+                self.env_info.trajectory_tracking.hyper_parameter.tracking_length_ub,
+            )
+            if init_state is None:
+                init_state = self.init_state_space.sample()
+            sampled_dynamics_model.set_state(init_state)
+            reference_dynamics_model = deepcopy(sampled_dynamics_model)
+            reference_line, trajectory = random_walk(
+                dynamics_model=reference_dynamics_model,
+                step_interval=self.env_info.trajectory_tracking.hyper_parameter.step_interval,
+                walk_length=tracking_length,
+            )
+        else:
+            tracking_length = len(reference_line.waypoints)
+            sampled_dynamics_model.set_state(init_state)
+            # TODO: optional estimate from init state
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
+        self.env_info.trajectory_tracking.episode.tracking_length = tracking_length
         self.env_info.trajectory_tracking.episode.reference_line.CopyFrom(
             self.reference_line_manager.raw_reference_line
         )
 
-        # TODO: use closest waypoint assignment
 
+        # TODO: use closest waypoint assignment for observation
         observation = self.observation_manager.get_observation(
             episode_data=self.env_info.trajectory_tracking.episode,
             body_state=sampled_dynamics_model.get_body_state_proto(),
         )
-        # TODO: verify interface: gym==0.21 or gym==0.26
-        # reference: https://gymnasium.farama.org/content/migration-guide/
-
         self.env_info.trajectory_tracking.episode.dynamics_model.observations.append(
             deepcopy(sampled_dynamics_model.serialize_observation(observation))
         )
+
+        # TODO: verify interface: gym==0.21 or gym==0.26
+        # reference: https://gymnasium.farama.org/content/migration-guide/
 
         # return observation, extra_info
         return observation
@@ -317,5 +330,12 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         env_data.CopyFrom(self.env_info)
 
         return env_data
+
+    @override
+    def get_state(self) -> np.ndarray:
+        return self.dynamics_model_manager.get_sampled_dynamics_model().get_state()
+
+    def get_dynamics_model_info(self) -> str:
+        return self.dynamics_model_manager.get_dynamics_model_info()
 
     # TODO: rendering

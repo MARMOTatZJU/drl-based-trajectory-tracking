@@ -35,7 +35,7 @@ class TrajectoryTracker:
         """
         self._tracker = ExportedTrajectoryTracker(CHECKPOINT_DIR, vehicle_type)
 
-    def track_traference_line(
+    def track_reference_line(
         self,
         reference_line: List[Tuple[float, float]],
         init_state: Union[Tuple[float, float, float, float], None] = None,

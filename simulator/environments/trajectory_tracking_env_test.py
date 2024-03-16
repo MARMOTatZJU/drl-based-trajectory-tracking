@@ -19,6 +19,7 @@ def test_trajectory_tracking_env():
     # observation, scalar_reward, terminated, truncated, extra_info = env.step(action)
     observation, scalar_reward, terminated, extra_info = env.step(action)
 
+    env.get_dynamics_model_info()
 
 if __name__ == '__main__':
     test_trajectory_tracking_env()
