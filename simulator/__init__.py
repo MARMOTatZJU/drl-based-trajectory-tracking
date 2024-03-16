@@ -10,5 +10,5 @@ EPSILON = 1e-6
 TEST_CONFIG_PATHS = (
     'configs/trajectory_tracking/config-track-base.yaml',
     'configs/trajectory_tracking/config-track-tiny.yaml',
-    'configs/trajectory_tracking/utils/config-track-test-sample.yaml',
+    'configs/trajectory_tracking/test_samples/config-track-test-sample.yaml',
 )

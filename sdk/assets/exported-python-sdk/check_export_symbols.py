@@ -30,7 +30,7 @@ def main():
     tracker = TrajectoryTracker('./checkpoint/', env_data.trajectory_tracking.episode.selected_dynamics_model_index)
     trajectory_tracker_set_reference_line(tracker, reference_line)
     trajectory_tracker_set_dynamics_model_initial_state(tracker, init_state)
-    rt_states, rt_actions, rt_observations = trajectory_tracker_track_reference_line(tracker)
+    rt_states, rt_actions, rt_observations, rt_debug_datas = trajectory_tracker_track_reference_line(tracker)
 
     print('state shape: ', np.array(rt_states).shape)
     print('action shape: ', np.array(rt_actions).shape)

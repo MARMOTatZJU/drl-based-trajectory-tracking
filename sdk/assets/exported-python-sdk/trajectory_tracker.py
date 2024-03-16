@@ -63,6 +63,6 @@ class TrajectoryTracker:
         trajectory_tracker_set_reference_line(self._tracker, reference_line)
         if init_state is not None:
             trajectory_tracker_set_dynamics_model_initial_state(self._tracker, init_state)
-        rt_states, rt_actions, rt_observations = trajectory_tracker_track_reference_line(self._tracker)
+        rt_states, rt_actions, rt_observations, rt_debug_datas= trajectory_tracker_track_reference_line(self._tracker)
 
         return rt_states, rt_actions
