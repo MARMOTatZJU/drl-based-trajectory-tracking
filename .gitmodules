@@ -1,0 +1,3 @@
+[submodule "submodules/drltt-assets"]
+	path = submodules/drltt-assets
+	url = git@github.com:MARMOTatZJU/drltt-assets.git
