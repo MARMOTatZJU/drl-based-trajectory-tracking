@@ -75,7 +75,7 @@ Then, launch a Python interpreter and run following code:
 import numpy as np
 from simulator import TrajectoryTracker
 
-pretrained_checkpoint_dir = './submodules/drltt-assets/checkpoints/track-test/checkpoint'
+pretrained_checkpoint_dir = './submodules/drltt-assets/checkpoints/track/checkpoint'
 trajectory_tracker = TrajectoryTracker(checkpoint_dir=pretrained_checkpoint_dir)
 
 states, actions = trajectory_tracker.track_reference_line()
