@@ -20,16 +20,23 @@ class DynamicsModelManager:
     sampled_dynamics_model: Union[BaseDynamicsModel, None] = None
     sampled_dynamics_model_index: int = -1
 
-    def __init__(self, dynamics_model_configs: Iterable = tuple()):
+    def __init__(self, hyper_parameters: Iterable[HyperParameter]=tuple(), dynamics_model_configs: Iterable = tuple()):
         """
         Args:
             dynamics_model_configs: configurations of dynamics models.
         """
         self.dynamics_models = list()
         self.sampled_dynamics_model = None
-        for dynamics_model_config in dynamics_model_configs:
-            dynamics_model = build_object_within_registry_from_config(DYNAMICS_MODELS, dynamics_model_config)
-            self.dynamics_models.append(dynamics_model)
+
+        if len(hyper_parameters) > 0:
+            # TODO: add test for this branch
+            for dynamics_hyper_parameter in hyper_parameters:
+                dynamics_model_type = dynamics_hyper_parameter.type  # TODO wrap this to function like build_object_within_registry_from_config
+                dynamics_model = DYNAMICS_MODELS[dynamics_model_type](hyper_parameter=dynamics_hyper_parameter)
+        else:
+            for dynamics_model_config in dynamics_model_configs:
+                dynamics_model = build_object_within_registry_from_config(DYNAMICS_MODELS, dynamics_model_config)
+                self.dynamics_models.append(dynamics_model)
 
         # TODO: Check if all spaces are identical within the collection
 

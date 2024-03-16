@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Iterable
 import os
 import math
 from copy import deepcopy
@@ -47,16 +47,23 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
 
     def __init__(
         self,
-        dynamics_model_configs: List[Dict[str, Any]],
+        env_info: Union[Environment, None]=None,
+        dynamics_model_configs: Union[Iterable[Dict[str, Any]], None]=None,
         **kwargs,
     ):
         """
         Args:
             dynamics_model_configs: Configurations of all dynamics models.
         """
-        # parse hyper-parameters
         self.env_info = Environment()
-        self.parse_hyper_parameter(self.env_info.trajectory_tracking.hyper_parameter, **kwargs)
+
+        if env_info is not None:
+            # TODO: add test for this branch
+            self.env_info.CopyFrom(env_info)
+        else:
+            # parse hyper-parameters
+            self.env_info = Environment()
+            self.parse_hyper_parameter(self.env_info.trajectory_tracking.hyper_parameter, **kwargs)
 
         # build manager classes
         self.reference_line_manager = ReferenceLineManager(
@@ -64,16 +71,18 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             pad_mode=self.env_info.trajectory_tracking.hyper_parameter.reference_line_pad_mode,
         )
         self.dynamics_model_manager = DynamicsModelManager(
+            hyper_parameters=self.env_info.trajectory_tracking.hyper_parameter.dynamics_models_hyper_parameters,
             dynamics_model_configs=dynamics_model_configs,
+        )
+        # consider use `self.dynamics_model_manager` to parse
+        self.parse_dynamics_model_hyper_parameter(
+            self.env_info.trajectory_tracking.hyper_parameter, self.dynamics_model_manager
         )
         self.observation_manager = ObservationManager(
             self.reference_line_manager,
             self.dynamics_model_manager,
         )
 
-        self.parse_dynamics_model_hyper_parameter(
-            self.env_info.trajectory_tracking.hyper_parameter, self.dynamics_model_manager
-        )
 
         # build spaces
         self._build_spaces()
@@ -119,6 +128,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         dynamics_model_manager: DynamicsModelManager,
     ):
         """TODO: docstring"""
+        hyper_parameter.dynamics_models_hyper_parameters.clear()
         for dynamics_model_hyper_parameger in dynamics_model_manager.get_all_hyper_parameters():
             dm_hparam = hyper_parameter.dynamics_models_hyper_parameters.add()
             dm_hparam.CopyFrom(dynamics_model_hyper_parameger)
