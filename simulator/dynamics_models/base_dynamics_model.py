@@ -42,7 +42,7 @@ class BaseDynamicsModel(ABC):
         """Get the dynamics model's name.
 
         Returns:
-            str: The dynamics model's name
+            str: The dynamics model's name.
         """
         return self.hyper_parameter.name
 

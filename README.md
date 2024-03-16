@@ -61,7 +61,7 @@ source install-setup-protoc.sh
 
 ## Try out Pre-trained Checkpoints
 
-Pre-trained checkpoints/protobuf-generated code are managed with [drltt-assets](https://github.com/MARMOTatZJU/drltt-assets).
+Pre-trained checkpoints and pre-compiled protobuf-generated code are collected in [drltt-assets](https://github.com/MARMOTatZJU/drltt-assets).
 
 Set up environment variables by running:
 
@@ -81,9 +81,12 @@ trajectory_tracker = TrajectoryTracker(checkpoint_dir=pretrained_checkpoint_dir)
 states, actions = trajectory_tracker.track_reference_line()
 reference_line = trajectory_tracker.get_reference_line()
 
-print(np.array(states).shape)
-print(np.array(actions).shape)
-print(np.array(reference_line) - np.array(states)[:, :2])
+print(f'States shape: {np.array(states).shape}')
+print(f'Actions shape: {np.array(actions).shape}')
+pos_diffs = np.array(reference_line) - np.array(states)[:, :2]
+print('Position diff')
+print(pos_diffs)
+print(f'Position diff max.: {pos_diffs.max()}')
 ```
 
 
