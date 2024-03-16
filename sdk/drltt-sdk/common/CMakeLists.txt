@@ -7,8 +7,6 @@ list(FILTER _SRCS EXCLUDE REGEX "_test.[hc]pp$")
 add_library(common STATIC ${_SRCS})
 target_link_libraries(
     common
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
     ${PROTOBUF_LIBRARY}
     ${TORCH_LIBRARIES}
     proto

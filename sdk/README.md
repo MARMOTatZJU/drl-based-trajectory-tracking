@@ -8,7 +8,7 @@ The Interface of C++ SDK: `sdk/drltt-sdk/trajectory_tracker/trajectory_tracker.h
 
 The Interface of Python SDK: `sdk/assets/exported-python-sdk/trajectory_tracker.py`
 
-## Compilation
+## Compilation and Exporting
 
 This project employs `cmake` as build system.. The compilation is recommended to be done within a Docker container.
 
@@ -75,10 +75,10 @@ Secondly, launch compilation and exporting by running `./compile-in-docker.sh`.
 .. literalinclude:: ../../../sdk/compile-in-docker.sh
   :language: bash
 
-To use [LibTorch](https://pytorch.org/cppdocs/installing.html) on the host during the compilation phase, please pass an environment variable `HOST_LIBTORCH_PATH` to `./compile-in-docker.sh`:
+To use [LibTorch](https://pytorch.org/cppdocs/installing.html) on the host during the compilation phase, please pass an environment variable `HOST_LIBTORCH_DIR` to `./compile-in-docker.sh`:
 
 ```bash
-HOST_LIBTORCH_PATH=/path/to/libtorch/on/host ./compile-in-docker.sh
+HOST_LIBTORCH_DIR=/path/to/libtorch/on/host ./compile-in-docker.sh
 ```
 
 #### Compiling and exporting inside the Docker container under `./sdk/build`
@@ -136,7 +136,26 @@ TODO: An executable sample program is coming soon.
 
 If you prefer to use shared libraries on your host machine, please *prepend* your shared libraries' path to `LD_LIBRARY_PATH`.
 
+
+### Static Linking with LibTorch
+
+To ensure static linking with LibTorch, you may need to clone the PyTorch's source code and compile a static version from the source:
+
+```
+PYTORCH_DIR=path/to/pytorch ./compile-in-docker.sh interactive
+# in docker container
+cd $PYTORCH_DIR && ./scripts/build_mobile.sh
+```
+
+References:
+
+- https://stackoverflow.com/questions/60629537/cmake-linking-static-library-pytorch-cannot-find-its-internal-functions-during
+- https://github.com/pytorch/pytorch/blob/main/scripts/build_mobile.sh
+- https://github.com/szymonmaszke/torchlambda/blob/c70d3ea956972965e2bfe7a33213f9f6ba814972/src/dependencies/torch.sh
+
 ## Deployment
+
+NOTE: Currently, Python SDK may not be compatible with the user's PyTorch installation due to incompatibility of shared library unless the user export it on the host machine. Plan to be resolved in the future.
 
 Unpackage the exported tarball and set `LD_LIBRARY_PATH` manually (effectively modifying it during runtime is not possible):
 
