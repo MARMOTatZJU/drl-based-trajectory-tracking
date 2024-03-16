@@ -1,6 +1,6 @@
 #!/bin/bash
 source setup.sh
-work_dir=work_dir/track-tiny-var-reflen
+work_dir=work_dir/track-test
 if [[ -d $work_dir ]];then
     bak_work_dir=${work_dir}-bak
     if [[ -d ${bak_work_dir} ]];then rm -rf ${bak_work_dir};fi
@@ -15,7 +15,7 @@ python tools/main.py \
     --config-files \
         configs/trajectory_tracking/config-track-base.yaml \
         configs/trajectory_tracking/config-track-tiny.yaml \
-        configs/trajectory_tracking/config-track-var-reflen.yaml \
+        configs/trajectory_tracking/test_samples/config-track-test-sample-dummy.yaml \
     --checkpoint-dir $work_dir/checkpoint \
-    --num-test-cases 1024 \
+    --num-test-cases 1 \
     --train --eval --trace

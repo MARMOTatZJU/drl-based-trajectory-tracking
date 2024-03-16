@@ -1,14 +1,9 @@
-import logging
 
-logging.basicConfig(level=logging.INFO)
+from .common import DTYPE, EPSILON, TEST_CONFIG_PATHS, TEST_CHECKPOINT_DIR
+from .trajectory_tracker.trajectory_tracker import TrajectoryTracker
+from .environments.trajectory_tracking_env import TrajectoryTrackingEnv
 
-import numpy as np
-
-DTYPE = np.float32
-EPSILON = 1e-6
-
-TEST_CONFIG_PATHS = (
-    'configs/trajectory_tracking/config-track-base.yaml',
-    'configs/trajectory_tracking/config-track-tiny.yaml',
-    'configs/trajectory_tracking/test_samples/config-track-test-sample.yaml',
-)
+__all__ = [
+    'TrajectoryTrackingEnv',
+    'TrajectoryTracker',
+]

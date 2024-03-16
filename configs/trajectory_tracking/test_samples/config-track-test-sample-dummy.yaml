@@ -1,0 +1,20 @@
+# Overriding config file for DUMMY TEST.
+#   No consistency ensured. ONLY FOR PYTHON TEST.
+
+environment:
+  tracking_length_lb: 45
+  tracking_length_ub: 55
+
+algorithm:
+  learning_starts: 128
+  batch_size: 128
+  learning_rate: 1.0e-3
+  tau: 0.01
+
+learning:
+    total_timesteps: 256
+    log_interval: 10
+
+evaluation:
+  eval_config:
+    n_episodes: 1

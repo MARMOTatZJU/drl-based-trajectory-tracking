@@ -1,4 +1,5 @@
-from typing import Tuple, Iterable, Union, Any, override
+from typing import Tuple, Iterable, Union, Any
+
 import math
 from copy import deepcopy
 
@@ -6,9 +7,11 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
+from common.future import override
+from common.geometry import normalize_angle
+
 from simulator import DTYPE, EPSILON
 from . import BaseDynamicsModel, DYNAMICS_MODELS
-from common.geometry import normalize_angle
 
 from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter, BicycleModelHyperParameter
 from drltt_proto.dynamics_model.state_pb2 import State
@@ -37,7 +40,7 @@ class BicycleModel(BaseDynamicsModel):
             self.parse_hyper_parameter(self.hyper_parameter, **kwargs)
         else:
             # set parsed hyper-parameter
-            self.hyper_parameter = deepcopy(hyper_parameter)
+            self.hyper_parameter.CopyFrom(hyper_parameter)
 
         self.state = State()
 
@@ -47,6 +50,7 @@ class BicycleModel(BaseDynamicsModel):
     def parse_hyper_parameter(
         cls,
         hyper_parameter: HyperParameter = None,
+        name: str = 'bicycle model',
         front_overhang: float = 0.0,
         wheelbase: float = 0.0,
         rear_overhang: float = 0.0,
@@ -68,6 +72,7 @@ class BicycleModel(BaseDynamicsModel):
             max_lat_acc: Maximum lateral acceleration.
         """
         hyper_parameter.type = cls.__name__
+        hyper_parameter.name = name
         hyper_parameter.bicycle_model.front_overhang = front_overhang
         hyper_parameter.bicycle_model.wheelbase = wheelbase
         hyper_parameter.bicycle_model.rear_overhang = rear_overhang

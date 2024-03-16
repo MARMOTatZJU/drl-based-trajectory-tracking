@@ -38,6 +38,14 @@ class BaseDynamicsModel(ABC):
         if init_state is not None:
             self.set_state(init_state)
 
+    def get_name(self) -> str:
+        """Get the dynamics model's name.
+
+        Returns:
+            str: The dynamics model's name.
+        """
+        return self.hyper_parameter.name
+
     def get_state(self) -> np.ndarray:
         """Get the state in `np.ndarray` (deserialized form).
 

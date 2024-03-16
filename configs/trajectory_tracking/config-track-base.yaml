@@ -14,8 +14,8 @@ environment:
   init_state_ub: [+1.e-8, +1.e-8, +3.1415926536, 40.0]
   n_observation_steps: 15
   dynamics_model_configs:
-      # short vehicle
   -   type: 'BicycleModel'
+      name: 'ShortVehicle'
       front_overhang: 0.9
       rear_overhang: 0.9
       wheelbase: 2.7
@@ -23,8 +23,8 @@ environment:
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
       max_lat_acc: 8.0
-      # long vehicle
   -   type: 'BicycleModel'
+      name: 'LongVehicle'
       front_overhang: 2.3
       rear_overhang: 2.0
       wheelbase: 6.1
@@ -32,8 +32,8 @@ environment:
       action_space_lb: *ACTION_SPACE_LB
       action_space_ub: *ACTION_SPACE_UB
       max_lat_acc: 4.0
-      # middle vehicle
   -   type: 'BicycleModel'
+      name: 'MiddleVehicle'
       front_overhang: 1.0
       rear_overhang: 1.5
       wheelbase: 3.4

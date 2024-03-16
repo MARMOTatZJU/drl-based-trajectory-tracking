@@ -10,14 +10,22 @@ docker_checkpoint_dir=${docker_repo_work_dir}/track-test/checkpoint
 docker_usr_lib_dir=/usr/local/lib
 docker_proto_gen_dir=${docker_source_dir}/proto_gen
 
-if [[ -z ${HOST_LIBTORCH_PATH} ]];then
+if [[ -v HOST_LIBTORCH_DIR ]];then
+    docker_libtorch_dir=/libtorch-host
+    mount_host_libtorch_in_docker="-v ${HOST_LIBTORCH_DIR}:${docker_libtorch_dir}:ro"
+    echo "Using libtorch mounted from host: ${HOST_LIBTORCH_DIR}"
+else
     docker_libtorch_dir=/libtorch
     mount_host_libtorch_in_docker=""
     echo "Using libtorch preinstalled in docker image"
+fi
+
+if [[ -v HOST_PYTORCH_DIR ]];then
+    docker_pytorch_dir=/pytorch-host
+    mount_pytorch_in_docker="-v $PYTORCH_DIR:/${docker_pytorch_dir}:rw"
 else
-    docker_libtorch_dir=/libtorch-host
-    mount_host_libtorch_in_docker="-v ${HOST_LIBTORCH_PATH}:${docker_libtorch_dir}:ro"
-    echo "Using libtorch mounted from host: ${HOST_LIBTORCH_PATH}"
+    docker_pytorch_dir=/pytorch
+    mount_pytorch_in_docker=""
 fi
 
 # TODO: reorganize mouted path
@@ -50,9 +58,11 @@ docker run --name drltt-sdk --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=
     -e "CHECKPOINT_DIR=${docker_checkpoint_dir}" \
     -e "USR_LIB_DIR=${docker_usr_lib_dir}" \
     -e "LIBTORCH_DIR=${docker_libtorch_dir}" \
+    -e "PYTORCH_DIR=${docker_pytorch_dir}" \
     -v $PWD:/${docker_source_dir}:rw \
     -v $PWD/../common/proto:/proto:rw \
     -v $PWD/../work_dir:${docker_repo_work_dir}:ro \
+    ${mount_pytorch_in_docker} \
     ${mount_host_libtorch_in_docker} \
     ${docker_arg_suffix} \
     -c "${docker_container_cmd}"

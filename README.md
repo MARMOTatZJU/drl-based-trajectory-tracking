@@ -24,6 +24,14 @@ The [Documentation](https://drl-based-trajectory-tracking.readthedocs.io/) hoste
 
 ## Installation
 
+### Repository Cloning
+
+This repo uses `git-submodule`. Run following command to clone:
+
+```bash
+git clone --recursive ${URL_TO_THIS_REPO}
+```
+
 ### Python Requirements
 
 DRLTT requires Python>=3.12. If you are using [Conda](https://www.anaconda.com/) for Python environment management, you may create an environment for DRLTT through the following command:
@@ -50,6 +58,37 @@ pip install -r requirements/pypi.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```bash
 source install-setup-protoc.sh
 ```
+
+## Try out Pre-trained Checkpoints
+
+Pre-trained checkpoints and pre-compiled protobuf-generated code are collected in [drltt-assets](https://github.com/MARMOTatZJU/drltt-assets).
+
+Set up environment variables by running:
+
+```bash
+source ./setup-minimum.sh
+```
+
+Then, launch a Python interpreter and run following code:
+
+```python
+import numpy as np
+from simulator import TrajectoryTracker
+
+pretrained_checkpoint_dir = './submodules/drltt-assets/checkpoints/track/checkpoint'
+trajectory_tracker = TrajectoryTracker(checkpoint_dir=pretrained_checkpoint_dir)
+
+states, actions = trajectory_tracker.track_reference_line()
+reference_line = trajectory_tracker.get_reference_line()
+
+print(f'States shape: {np.array(states).shape}')
+print(f'Actions shape: {np.array(actions).shape}')
+pos_diffs = np.array(reference_line) - np.array(states)[:, :2]
+print('Position diff')
+print(pos_diffs)
+print(f'Position diff max.: {pos_diffs.max()}')
+```
+
 
 ## RL Training & Evaluating & Tracing
 
@@ -175,58 +214,6 @@ This project uses `black` for Python code formatting and `clang-format` for CXX 
 }
 
 ```
-
-### Debugging
-
-Following global objects are useful for achieving runtime result consistency on the Python side and the C++ side:
-
-- python: `common.io.GLOBAL_DEBUG_INFO`
-- cpp: `drltt::global_debug_info`
-
-For example, to compare runtime values of `rotation_radius_inv`, you may add two lines of code as follows than run `./test.sh fast`:
-
-```diff
-diff --git a/sdk/drltt-sdk/dynamics_models/bicycle_model.cpp b/sdk/drltt-sdk/dynamics_models/bicycle_model.cpp
-index b694343..bcf01e4 100644
---- a/sdk/drltt-sdk/dynamics_models/bicycle_model.cpp
-+++ b/sdk/drltt-sdk/dynamics_models/bicycle_model.cpp
-@@ -96,6 +96,8 @@ bool BicycleModel::ComputeRotationRelatedVariables(
-   *rotation_radius_inv =
-       std::sin(*omega) / _hyper_parameter.bicycle_model().rearwheel_to_cog();
- 
-+  global_debug_info.add_data(*rotation_radius_inv);
-+
-   return true;
- }
- 
-diff --git a/simulator/dynamics_models/bicycle_model.py b/simulator/dynamics_models/bicycle_model.py
-index a2df076..c93e8fe 100644
---- a/simulator/dynamics_models/bicycle_model.py
-+++ b/simulator/dynamics_models/bicycle_model.py
-@@ -180,6 +180,8 @@ class BicycleModel(BaseDynamicsModel):
-         omega = normalize_angle(omega)
-         rotation_radius_inv = np.sin(omega) / hyper_parameter.rearwheel_to_cog
- 
-+        from common import GLOBAL_DEBUG_INFO;GLOBAL_DEBUG_INFO.data.append(rotation_radius_inv)
-+
-         return omega, rotation_radius_inv
- 
-     @property
-```
-
-Check out log file to check the data. `gt_data` (ground-truth) denotes value on the Python side and `rt_data` (runtime) denotes value on the C++ side.
-
-```text
-5: Test case: 323, Step: 28
-5:     gt_data: 0.000584156, rt_data: 0.000584146
-5: Test case: 323, Step: 29
-5:     gt_data: -8.38374e-05, rt_data: -8.38471e-05
-5: Test case: 323, Step: 30
-5:     gt_data: -0.00092932, rt_data: -0.00092933
-5: Test case: 323, Step: 31
-5:     gt_data: -0.00189424, rt_data: -0.00189425
-```
-
 
 
 ## Citation

@@ -5,8 +5,6 @@ file(GLOB_RECURSE _SRCS "*.[hc]pp")
 list(FILTER _SRCS EXCLUDE REGEX "_pybind_export.[hc]pp$")
 add_library(trajectory_tracker STATIC ${_SRCS})
 target_link_libraries(trajectory_tracker
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
     ${TORCH_LIBRARIES}
     environments
 )

@@ -107,9 +107,9 @@ RUN \
 
 RUN \
     echo "Installing libtorch" && \
-    LIBTORCH_VERSION=2.2.1 && \
-    LIBTORCH_FILENAME="libtorch-cxx11-abi-shared-with-deps-${LIBTORCH_VERSION}+cpu.zip" && \
-    LIBTORCH_FILENAME_IN_URL="libtorch-cxx11-abi-shared-with-deps-${LIBTORCH_VERSION}%2Bcpu.zip" && \
+    LIBTORCH_VERSION=2.1.0 && \
+    LIBTORCH_FILENAME="libtorch-cxx11-abi-static-with-deps-${LIBTORCH_VERSION}+cpu.zip" && \
+    LIBTORCH_FILENAME_IN_URL=$(echo $LIBTORCH_FILENAME | sed -r 's/\+/%2B/g') && \
     LIBTORH_URL=https://download.pytorch.org/libtorch/cpu/${LIBTORCH_FILENAME_IN_URL} && \
     wget $LIBTORH_URL && \
     unzip ${LIBTORCH_FILENAME} && \

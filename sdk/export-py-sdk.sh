@@ -13,9 +13,11 @@ mkdir -p $export_dir
 #   TODO: consider a more elegant way, like packaging
 libtorch_lib_dir=${LIBTORCH_DIR}/lib
 cp -r ${USR_LIB_DIR} $export_dir/
-cp -r ${libtorch_lib_dir} $export_dir/
 echo "User lib size: $(du -sh $USR_LIB_DIR)"
-echo "libtorch lib size: $(du -sh $libtorch_lib_dir)"
+if [[ ! -v PY_SDK_NO_LIBTORCH_EXPORTED ]];then
+  cp -r ${libtorch_lib_dir} $export_dir/
+  echo "libtorch lib size: $(du -sh $libtorch_lib_dir)"
+fi
 echo "Total exported lib size: $(du -sh $export_dir/lib)"
 
 # export sdk shared library

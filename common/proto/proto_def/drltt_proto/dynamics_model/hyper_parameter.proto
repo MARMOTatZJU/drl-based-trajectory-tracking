@@ -6,9 +6,12 @@ package drltt_proto;
 
 // TODO: add name field: LongVehicle/Truck/LongVehicle
 message HyperParameter {
+    // The class name of the dynamics model.
     optional string type= 1;
-    // optional string name= 1;
-    optional BicycleModelHyperParameter bicycle_model = 2;
+    // The name of dynamics model. E.g. short vehicle, long vehicle, etc.
+    optional string name= 2;
+    // Bicycle model's hyper paramter.
+    optional BicycleModelHyperParameter bicycle_model = 3;
 }
 
 message BicycleModelHyperParameter {

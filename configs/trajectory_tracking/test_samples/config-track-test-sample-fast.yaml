@@ -1,4 +1,6 @@
-# override for testing/debugging
+# Overriding config file for FAST TEST.
+#   Can be used during debugging of tests.
+#   Quicker than preparation with FORMAL TEST config  while ensuring enough consistency of testing results.
 
 environment:
   tracking_length_lb: 45

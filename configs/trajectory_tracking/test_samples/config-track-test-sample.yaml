@@ -1,4 +1,7 @@
-# override for testing/debugging
+# Overriding config file for FORMAL TEST.
+#   Each commit/pull request/merge request need to pass tests
+#     associated with this config
+#   Long preparation time but ensure consistent testing results.
 
 environment:
   tracking_length_lb: 45
