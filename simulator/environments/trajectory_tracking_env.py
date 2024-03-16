@@ -129,7 +129,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         dynamics_model_manager: DynamicsModelManager,
     ):
         """TODO: docstring"""
-        hyper_parameter.dynamics_models_hyper_parameters.clear()
+        del hyper_parameter.dynamics_models_hyper_parameters[:]
         for dynamics_model_hyper_parameger in dynamics_model_manager.get_all_hyper_parameters():
             dm_hparam = hyper_parameter.dynamics_models_hyper_parameters.add()
             dm_hparam.CopyFrom(dynamics_model_hyper_parameger)

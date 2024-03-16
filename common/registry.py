@@ -1,10 +1,10 @@
-from typing import Dict, Any, Self
+from typing import Dict, Any
 from copy import deepcopy
 import logging
 
 from frozendict import frozendict
 
-from .future import override
+from .future import override, Self
 
 def _register_generic(
     module_dict: Dict,

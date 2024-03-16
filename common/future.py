@@ -16,3 +16,9 @@ def override(func: Callable) -> Callable:
         return override(func)
     except:
         return func
+
+try:
+    from typing import Self
+except:
+    from typing import Any
+    Self = Any
