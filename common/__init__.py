@@ -7,4 +7,3 @@ __all__ = [
     'build_object_within_registry_from_config',
     'load_config_from_yaml',
 ]
-

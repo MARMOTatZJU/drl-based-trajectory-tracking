@@ -12,6 +12,7 @@ from simulator.trajectory.reference_line import ReferenceLineManager
 
 class TrajectoryTracker:
     """Trajectory tracking SDK class"""
+
     def __init__(self, checkpoint_dir: str):
         """
         Args:
@@ -26,7 +27,7 @@ class TrajectoryTracker:
     def track_reference_line(
         self,
         init_state: Union[Tuple[float, float, float, float], None] = None,
-        dynamics_model_name: Union[str, None]='ShortVehicle',
+        dynamics_model_name: Union[str, None] = 'ShortVehicle',
         reference_line: Union[List[Tuple[float, float]], None] = None,
     ) -> Tuple[List[Tuple[float, float, float, float]], List[Tuple[float, float]]]:
         """Track a reference line with the underlying policy model.
@@ -54,17 +55,18 @@ class TrajectoryTracker:
             init_state = np.array(init_state)
         if reference_line is not None:
             reference_line = ReferenceLineManager.np_array_to_reference_line(np.array(reference_line))
- 
+
         states, actions, observations = roll_out_one_episode(
             self.env,
             self.policy_func,
             init_state=init_state,
             dynamics_model_name=dynamics_model_name,
             reference_line=reference_line,
-            )
-        return \
-            [tuple(state) for state in states], \
-            [tuple(action) for action in actions], 
+        )
+        return (
+            [tuple(state) for state in states],
+            [tuple(action) for action in actions],
+        )
 
     def policy_func(self, observation: np.ndarray) -> np.ndarray:
         observation_tensor = torch.from_numpy(observation).reshape(1, -1)

@@ -119,7 +119,7 @@ def eval_with_sb3(
     all_episodes_metrics = list()
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
-        roll_out_one_episode(environment,  lambda obs: algorithm.predict(obs)[0])
+        roll_out_one_episode(environment, lambda obs: algorithm.predict(obs)[0])
 
         compute_metrics = METRICS[compute_metrics_name]
         episode: TrajectoryTrackingEpisode = environment.export_environment_data().trajectory_tracking.episode

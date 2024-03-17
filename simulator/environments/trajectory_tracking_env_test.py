@@ -21,5 +21,6 @@ def test_trajectory_tracking_env():
 
     env.get_dynamics_model_info()
 
+
 if __name__ == '__main__':
     test_trajectory_tracking_env()

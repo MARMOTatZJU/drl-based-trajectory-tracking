@@ -6,6 +6,7 @@ from frozendict import frozendict
 
 from .future import override, Self
 
+
 def _register_generic(
     module_dict: Dict,
     module_name: str,

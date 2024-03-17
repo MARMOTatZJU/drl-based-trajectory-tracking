@@ -25,6 +25,7 @@ def test_reference_line_manager():
     reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
     assert len(reference_line_manager.raw_reference_line.waypoints) == 60
 
+
 def test_estimate_init_state_from_reference_line():
     step_interval = 0.1
     init_v = 5.0
@@ -42,6 +43,7 @@ def test_estimate_init_state_from_reference_line():
     estimated_init_state = ReferenceLineManager.estimate_init_state_from_reference_line(reference_line, step_interval)
     assert np.isclose(estimated_init_state.bicycle_model.body_state.r, init_r)
     assert np.isclose(estimated_init_state.bicycle_model.v, init_v)
+
 
 if __name__ == '__main__':
     test_reference_line_manager()

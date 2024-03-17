@@ -174,20 +174,21 @@ class ReferenceLineManager:
         """TODO: to implement"""
         raise NotImplementedError
 
-    @classmethod    
+    @classmethod
     def np_array_to_reference_line(cls, arr: np.ndarray) -> ReferenceLine:
         assert arr.ndim == 2
         assert arr.shape[1] == 2
         reference_line = ReferenceLine()
         for np_pt in arr:
             waypoint = ReferenceLineWaypoint(
-                x=np_pt[0], y=np_pt[1],
+                x=np_pt[0],
+                y=np_pt[1],
             )
             reference_line.waypoints.append(waypoint)
 
         return reference_line
 
-    @classmethod    
+    @classmethod
     def reference_line_to_np_array(cls, reference_line: ReferenceLine) -> np.ndarray:
         waypoints = list()
         for waypoint in reference_line.waypoints:
@@ -197,9 +198,10 @@ class ReferenceLineManager:
 
         return waypoints
 
-
     @classmethod
-    def estimate_init_state_from_reference_line(cls, reference_line: ReferenceLine, delta_t: float, window_size: int = 5) -> State:
+    def estimate_init_state_from_reference_line(
+        cls, reference_line: ReferenceLine, delta_t: float, window_size: int = 5
+    ) -> State:
         length = len(reference_line.waypoints)
         if length < 1:
             raise ValueError(f'Reference line\'s length is too short: {length}')
@@ -207,13 +209,13 @@ class ReferenceLineManager:
         discount_factor = 1 / np.exp(1.0)
         real_window_size = min(window_size, length)
         window_refline = cls.reference_line_to_np_array(reference_line)[:real_window_size]  # (N-1, 2)
-        window_refline_diffs = window_refline[1:] - window_refline[:-1]                     # (N-1, 2)
+        window_refline_diffs = window_refline[1:] - window_refline[:-1]  # (N-1, 2)
         window_refline_disps = np.linalg.norm(window_refline_diffs, axis=1).reshape(-1, 1)  # (N-1, 1)
-        weights = np.power(discount_factor, np.arange(real_window_size-1)).reshape(-1, 1)   # (N-1, 1)
+        weights = np.power(discount_factor, np.arange(real_window_size - 1)).reshape(-1, 1)  # (N-1, 1)
 
-        estimated_v= (window_refline_disps*weights).sum() / weights.sum() / delta_t         # (1,)
-        estimated_diff = (window_refline_diffs*weights).sum(axis=0) / weights.sum()         # (2,)
-        estimated_r = np.arctan2(estimated_diff[1], estimated_diff[0])                      # (1,)
+        estimated_v = (window_refline_disps * weights).sum() / weights.sum() / delta_t  # (1,)
+        estimated_diff = (window_refline_diffs * weights).sum(axis=0) / weights.sum()  # (2,)
+        estimated_r = np.arctan2(estimated_diff[1], estimated_diff[0])  # (1,)
 
         estimated_init_state = State()
         estimated_init_state.bicycle_model.body_state.x = window_refline[0][0]
