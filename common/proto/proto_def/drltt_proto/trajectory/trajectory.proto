@@ -5,6 +5,8 @@ import "drltt_proto/dynamics_model/action.proto";
 
 package drltt_proto;
 
+// TODO: add step_interval to all structure.
+
 // Reference line's waypoint.
 //      TODO: move to body state
 message ReferenceLineWaypoint {

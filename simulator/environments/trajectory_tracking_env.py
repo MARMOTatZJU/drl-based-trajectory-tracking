@@ -201,6 +201,11 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             )
         else:
             tracking_length = len(reference_line.waypoints)
+            if init_state is None:
+                init_state = ReferenceLineManager.estimate_init_state_from_reference_line(
+                    reference_line,
+                    delta_t=self.env_info.trajectory_tracking.hyper_parameter.step_interval,
+                    )
             sampled_dynamics_model.set_state(init_state)
             # TODO: optional estimate from init state
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
