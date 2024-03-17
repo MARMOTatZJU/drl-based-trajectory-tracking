@@ -1,4 +1,5 @@
 """Components ensuring compatibility"""
+
 from typing import Callable
 
 
@@ -13,12 +14,15 @@ def override(func: Callable) -> Callable:
     """
     try:
         from typing import override
+
         return override(func)
     except:
         return func
+
 
 try:
     from typing import Self
 except:
     from typing import Any
+
     Self = Any

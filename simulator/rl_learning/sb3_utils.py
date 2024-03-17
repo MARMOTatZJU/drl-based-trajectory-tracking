@@ -6,6 +6,7 @@ import gym
 
 from simulator.environments.env_interface import ExtendedGymEnv
 
+
 def roll_out_one_episode(
     environment: ExtendedGymEnv,
     policy_func: Callable,

@@ -1,9 +1,7 @@
-
 import numpy as np
 
 from simulator import TEST_CHECKPOINT_DIR
 from simulator.trajectory_tracker.trajectory_tracker import TrajectoryTracker
-
 
 
 def test_trajectory_tracker_print():
@@ -42,4 +40,4 @@ def test_trajectory_tracker():
 
 
 if __name__ == '__main__':
-   test_trajectory_tracker()
+    test_trajectory_tracker()

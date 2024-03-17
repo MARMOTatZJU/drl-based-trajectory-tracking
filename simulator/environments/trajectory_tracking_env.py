@@ -48,8 +48,8 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
 
     def __init__(
         self,
-        env_info: Union[Environment, None]=None,
-        dynamics_model_configs: Union[Iterable[Dict[str, Any]], None]=None,
+        env_info: Union[Environment, None] = None,
+        dynamics_model_configs: Union[Iterable[Dict[str, Any]], None] = None,
         **kwargs,
     ):
         """
@@ -83,7 +83,6 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             self.reference_line_manager,
             self.dynamics_model_manager,
         )
-
 
         # build spaces
         self._build_spaces()
@@ -173,8 +172,9 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         )
 
         if len(dynamics_model_name) > 0:
-            sampled_dynamics_model_index, sampled_dynamics_model = \
+            sampled_dynamics_model_index, sampled_dynamics_model = (
                 self.dynamics_model_manager.select_dynamics_model_by_name(dynamics_model_name)
+            )
         else:
             sampled_dynamics_model_index, sampled_dynamics_model = self.dynamics_model_manager.sample_dynamics_model()
 
@@ -183,7 +183,6 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             sampled_dynamics_model.hyper_parameter
         )
         self.env_info.trajectory_tracking.episode.selected_dynamics_model_index = sampled_dynamics_model_index
-
 
         if reference_line is None:
             tracking_length = random.randint(
@@ -201,6 +200,11 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             )
         else:
             tracking_length = len(reference_line.waypoints)
+            if init_state is None:
+                init_state = ReferenceLineManager.estimate_init_state_from_reference_line(
+                    reference_line,
+                    delta_t=self.env_info.trajectory_tracking.hyper_parameter.step_interval,
+                )
             sampled_dynamics_model.set_state(init_state)
             # TODO: optional estimate from init state
         self.reference_line_manager.set_reference_line(reference_line, tracking_length=tracking_length)
@@ -208,7 +212,6 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         self.env_info.trajectory_tracking.episode.reference_line.CopyFrom(
             self.reference_line_manager.raw_reference_line
         )
-
 
         # TODO: use closest waypoint assignment for observation
         observation = self.observation_manager.get_observation(
@@ -285,9 +288,7 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
             deepcopy(current_dynamics_model.serialize_action(action))
         )
         self.env_info.trajectory_tracking.episode.rewards.append(deepcopy(scalar_reward))
-        self.env_info.trajectory_tracking.episode.dynamics_model.debug_infos.append(
-            deepcopy(GLOBAL_DEBUG_INFO)
-        )
+        self.env_info.trajectory_tracking.episode.dynamics_model.debug_infos.append(deepcopy(GLOBAL_DEBUG_INFO))
         GLOBAL_DEBUG_INFO.Clear()
 
         # ABOVE: step t

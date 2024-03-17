@@ -1,11 +1,11 @@
 #pragma once
 
-#include "drltt_proto/sdk/exported_policy_test_case.pb.h"
-#include "drltt_proto/dynamics_model/basics.pb.h"
 #include <torch/torch.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "drltt_proto/dynamics_model/basics.pb.h"
+#include "drltt_proto/sdk/exported_policy_test_case.pb.h"
 
 namespace drltt {
 

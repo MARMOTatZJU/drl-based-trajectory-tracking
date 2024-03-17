@@ -20,7 +20,9 @@ class DynamicsModelManager:
     sampled_dynamics_model: Union[BaseDynamicsModel, None] = None
     sampled_dynamics_model_index: int = -1
 
-    def __init__(self, hyper_parameters: Iterable[HyperParameter]=tuple(), dynamics_model_configs: Iterable = tuple()):
+    def __init__(
+        self, hyper_parameters: Iterable[HyperParameter] = tuple(), dynamics_model_configs: Iterable = tuple()
+    ):
         """
         Args:
             dynamics_model_configs: configurations of dynamics models.
@@ -31,7 +33,9 @@ class DynamicsModelManager:
         if len(hyper_parameters) > 0:
             # TODO: add test for this branch
             for dynamics_hyper_parameter in hyper_parameters:
-                dynamics_model_type = dynamics_hyper_parameter.type  # TODO wrap this to function like build_object_within_registry_from_config
+                dynamics_model_type = (
+                    dynamics_hyper_parameter.type
+                )  # TODO wrap this to function like build_object_within_registry_from_config
                 dynamics_model = DYNAMICS_MODELS[dynamics_model_type](hyper_parameter=dynamics_hyper_parameter)
                 self.dynamics_models.append(dynamics_model)
         else:
@@ -46,8 +50,7 @@ class DynamicsModelManager:
 
         # TODO: unify data structure for dynamics models
         self.names_to_indexes_and_dynamics_models = {
-            dm.get_name() : (dm_idx, dm)
-            for dm_idx, dm in enumerate(self.dynamics_models)
+            dm.get_name(): (dm_idx, dm) for dm_idx, dm in enumerate(self.dynamics_models)
         }
 
     def get_dynamics_model_observation_space(self) -> Space:
@@ -69,10 +72,12 @@ class DynamicsModelManager:
     def get_dynamics_model_info(self) -> str:
         dm_infos = list()
         for dm in self.dynamics_models:
-            dm_info = '\n'.join((
-                dm.get_name(),
-                str(dm.hyper_parameter),
-            ))
+            dm_info = '\n'.join(
+                (
+                    dm.get_name(),
+                    str(dm.hyper_parameter),
+                )
+            )
             dm_infos.append(dm_info)
         return '\n'.join(dm_infos)
 

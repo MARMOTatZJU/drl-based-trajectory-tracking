@@ -7,33 +7,12 @@ from drltt_proto.environment.environment_pb2 import Environment
 from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine, ReferenceLineWaypoint
 from simulator.environments.trajectory_tracking_env import TrajectoryTrackingEnv
 from simulator.rl_learning.sb3_utils import roll_out_one_episode
-
-
-def np_array_to_reference_line(arr: np.ndarray) -> ReferenceLine:
-    assert arr.ndim == 2
-    assert arr.shape[1] == 2
-    reference_line = ReferenceLine()
-    for np_pt in arr:
-        waypoint = ReferenceLineWaypoint(
-            x=np_pt[0], y=np_pt[1],
-        )
-        reference_line.waypoints.append(waypoint)
-
-    return reference_line
-
-
-def reference_line_to_np_array(reference_line: ReferenceLine) -> np.ndarray:
-    waypoints = list()
-    for waypoint in reference_line.waypoints:
-        waypoints.append(np.array((waypoint.x, waypoint.y)))
-
-    waypoints = np.stack(waypoints, axis=0)
-
-    return waypoints
+from simulator.trajectory.reference_line import ReferenceLineManager
 
 
 class TrajectoryTracker:
     """Trajectory tracking SDK class"""
+
     def __init__(self, checkpoint_dir: str):
         """
         Args:
@@ -48,7 +27,7 @@ class TrajectoryTracker:
     def track_reference_line(
         self,
         init_state: Union[Tuple[float, float, float, float], None] = None,
-        dynamics_model_name: Union[str, None]='ShortVehicle',
+        dynamics_model_name: Union[str, None] = 'ShortVehicle',
         reference_line: Union[List[Tuple[float, float]], None] = None,
     ) -> Tuple[List[Tuple[float, float, float, float]], List[Tuple[float, float]]]:
         """Track a reference line with the underlying policy model.
@@ -75,18 +54,19 @@ class TrajectoryTracker:
         if init_state is not None:
             init_state = np.array(init_state)
         if reference_line is not None:
-            reference_line = np_array_to_reference_line(np.array(reference_line))
- 
+            reference_line = ReferenceLineManager.np_array_to_reference_line(np.array(reference_line))
+
         states, actions, observations = roll_out_one_episode(
             self.env,
             self.policy_func,
             init_state=init_state,
             dynamics_model_name=dynamics_model_name,
             reference_line=reference_line,
-            )
-        return \
-            [tuple(state) for state in states], \
-            [tuple(action) for action in actions], 
+        )
+        return (
+            [tuple(state) for state in states],
+            [tuple(action) for action in actions],
+        )
 
     def policy_func(self, observation: np.ndarray) -> np.ndarray:
         observation_tensor = torch.from_numpy(observation).reshape(1, -1)
@@ -102,6 +82,6 @@ class TrajectoryTracker:
         return self.env.get_dynamics_model_info()
 
     def get_reference_line(self) -> List[Tuple[float, float]]:
-        arr = reference_line_to_np_array(self.env.get_reference_line())
+        arr = ReferenceLineManager.reference_line_to_np_array(self.env.get_reference_line())
 
         return [tuple(waypoint) for waypoint in arr]
