@@ -58,9 +58,31 @@ class TrajectoryTracking {
    * @return false Loading failed.
    */
   bool LoadEnvData(const std::string& env_data_path);
+  /**
+   * @brief Set the dynamics model hyper parameter with index.
+   *    TODO: provide function to set dynamics model by name.
+   *
+   * @param index The index of dynamicsmo stored in the `env_data`.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
   bool set_dynamics_model_hyper_parameter(int index);
+  /**
+   * @brief Set the reference line object.
+   *
+   * @param reference_line Reference line.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
   bool set_reference_line(
       const std::vector<REFERENCE_WAYPOINT>& reference_line);
+  /**
+   * @brief Set the reference line object.
+   *
+   * @param reference_line Reference line.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
   bool set_reference_line(const drltt_proto::ReferenceLine& reference_line);
   /**
    * @brief Estimate the initial state.
@@ -74,7 +96,21 @@ class TrajectoryTracking {
   static bool EstimateInitialState(
       const drltt_proto::ReferenceLine& reference_line,
       drltt_proto::State& state, float delta_t);
+  /**
+   * @brief Set the dynamics model initial state object.
+   *
+   * @param state Initial state to be set to dynamics model.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
   bool set_dynamics_model_initial_state(STATE state);
+  /**
+   * @brief Set the dynamics model initial state object.
+   *
+   * @param state Initial state to be set to dynamics model.
+   * @return true Setting succeeded.
+   * @return false Setting failed.
+   */
   bool set_dynamics_model_initial_state(drltt_proto::State state);
   /**
    * @brief Roll out a trajectory based on underlying policy model and

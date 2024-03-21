@@ -17,6 +17,7 @@ def roll_out_one_episode(
     Args:
         environment: The associated environment.
         policy_func: The policy function, observation -> action.
+
     Returns:
         List[np.ndarray]: States.
         List[np.ndarray]: Actions.

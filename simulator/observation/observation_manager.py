@@ -10,7 +10,7 @@ from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEp
 
 
 class ObservationManager:
-    """Manager for observation
+    """Manager for observation.
 
     Attributes:
         reference_line_manager: handler of underlying reference line manager
@@ -55,7 +55,7 @@ class ObservationManager:
         return observation_space
 
     def get_observation(self, episode_data, body_state: BodyState) -> np.ndarray:
-        """Return the vectorized observation, which is usually ego-centric
+        """Return the vectorized observation, which is usually ego-centric.
 
         Args:
             episode_data: Episode data.

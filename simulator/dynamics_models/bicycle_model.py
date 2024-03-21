@@ -61,6 +61,7 @@ class BicycleModel(BaseDynamicsModel):
         **kwargs,
     ):
         """
+        TODO: refer this part to protobuf and so for remove redundant doc.
         Args:
             hyper_parameter: Hyper-parameter as parsing result.
             front_overhang: Distance from front axle to vehicle front.

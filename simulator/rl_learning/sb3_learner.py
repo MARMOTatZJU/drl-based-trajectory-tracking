@@ -17,6 +17,7 @@ from common.gym_helper import scale_action
 from simulator.environments import ExtendedGymEnv
 from . import METRICS
 from .sb3_utils import roll_out_one_episode
+from simulator.visualization.viz import visualize_trajectory_tracking_episode
 
 from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
 
@@ -105,6 +106,7 @@ def eval_with_sb3(
     report_dir: str,
     n_episodes: int,
     compute_metrics_name: str,
+    viz_interval: int = 10,
 ):
     """RL Evaluation with Stable Baselines3.
 
@@ -114,9 +116,13 @@ def eval_with_sb3(
         report_dir: Directory to export report JSON.
         n_episodes: Number of episodes.
         compute_metrics_name: Name of `compute_metrics`.
+        viz_interval: Interval of episodes that this function performs visualization.
+            TODO: set it with argument passed through Shell script.
     """
     algorithm.set_logger(configure(f'{report_dir}/sb3-eval', format_strings=SB3_LOGGING_FORMAT_STRINGS))
     all_episodes_metrics = list()
+    viz_dir = f"{report_dir}/visualization"
+    os.makedirs(viz_dir, exist_ok=True)
     for scenario_idx in range(n_episodes):
         logging.info(f'scenario #{scenario_idx}')
         roll_out_one_episode(environment, lambda obs: algorithm.predict(obs)[0])
@@ -124,6 +130,10 @@ def eval_with_sb3(
         compute_metrics = METRICS[compute_metrics_name]
         episode: TrajectoryTrackingEpisode = environment.export_environment_data().trajectory_tracking.episode
         metrics = compute_metrics(episode, environment)  # metric[metric_name][reduce_method]
+        if scenario_idx % viz_interval == 0:
+            # TODO: move to env.render()
+            viz_prefix = f"{viz_dir}/{scenario_idx}"
+            visualize_trajectory_tracking_episode(episode, viz_prefix)
         all_episodes_metrics.append(metrics)
 
     df = pd.DataFrame.from_records(all_episodes_metrics)
@@ -155,7 +165,6 @@ def compute_bicycle_model_metrics(
         - l2_distance_median: median L2 distance
         - scaled_action_norm_median
         - reward_median
-
     """
     dists = list()
     scaled_action_norms = list()

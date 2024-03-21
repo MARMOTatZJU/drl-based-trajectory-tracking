@@ -31,9 +31,15 @@ static inline double normalize_angle(double angle) {
   return a;
 }
 
-// TODO referenceline waypoint: move to body state
-// TODO resolve c++ function naming issue
-// TODO unit test
+/**
+ * @brief Transfer a SO(2) state from the world frame to the body frame.
+ *    TODO: referenceline waypoint: move to body state
+ *    TODO: resolve c++ function naming issue
+ *    TODO: unit test
+ *
+ * @param body_state
+ * @param state State to be transformed.
+ */
 static inline void transform_to_local_from_world(
     const drltt_proto::BodyState& body_state, drltt_proto::BodyState* state) {
   const float x = body_state.x();

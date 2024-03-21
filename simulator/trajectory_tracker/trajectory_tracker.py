@@ -39,6 +39,8 @@ class TrajectoryTracker:
         - r: heading in [rad] within [-pi, pi), following convention of math lib like `std::atan2`
         - v: scalar speed in [m/s] within [0, +inf)
 
+        TODO: refer this part to definition of prototype and so for avoid redundant documentation.
+
         Args:
             init_state: Initial state, format=<x, y, r, v>.
             dynamics_model_name: Name of the dynamics model.
@@ -69,6 +71,16 @@ class TrajectoryTracker:
         )
 
     def policy_func(self, observation: np.ndarray) -> np.ndarray:
+        """Wrapper of underlying JIT policy in form of func(observation) -> action.
+
+        Including preprocessing and post processing of the tensor.
+
+        Args:
+            observation: Observation.
+
+        Returns:
+            np.ndarray: Action.
+        """
         observation_tensor = torch.from_numpy(observation).reshape(1, -1)
         action_tensor = self.policy(observation_tensor)
         action = action_tensor.reshape(-1).numpy()
@@ -76,12 +88,27 @@ class TrajectoryTracker:
         return action
 
     def get_step_interval(self) -> float:
+        """Get the step interval in time.
+
+        Returns:
+            float: Time step interval.
+        """
         return self.env.env_info.trajectory_tracking.hyper_parameter.step_interval
 
     def get_dynamics_model_info(self) -> str:
+        """Get the string for the information of dynamics models.
+
+        Returns:
+            str: Pretty string containing information of dynamics models.
+        """
         return self.env.get_dynamics_model_info()
 
     def get_reference_line(self) -> List[Tuple[float, float]]:
+        """Get the current reference line.
+
+        Returns:
+            List[Tuple[float, float]]: Reference line, shape=[<x, y>].
+        """
         arr = ReferenceLineManager.reference_line_to_np_array(self.env.get_reference_line())
 
         return [tuple(waypoint) for waypoint in arr]

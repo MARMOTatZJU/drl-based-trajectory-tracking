@@ -127,7 +127,12 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         hyper_parameter: TrajectoryTrackingHyperParameter,
         dynamics_model_manager: DynamicsModelManager,
     ):
-        """TODO: docstring"""
+        """Parse the hyper-parameters of dynamics models from the manager.
+
+        Args:
+            hyper_parameter (TrajectoryTrackingHyperParameter): Hyper-parameter to store parsed info.
+            dynamics_model_manager (DynamicsModelManager): Dynamics model manager.
+        """
         del hyper_parameter.dynamics_models_hyper_parameters[:]
         for dynamics_model_hyper_parameger in dynamics_model_manager.get_all_hyper_parameters():
             dm_hparam = hyper_parameter.dynamics_models_hyper_parameters.add()
@@ -142,9 +147,9 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
     ) -> np.ndarray:
         """Reset environment for Trajectory Tracking.
 
-        - Setup reference line
-        - Clear and replace self episode
-        - Randomly sample a dynamics model
+        - Clear and replace episode data.
+        - Randomly sample a dynamics model.
+        - Setup reference line and initial state.
 
         Args:
             init_state: Specified initial state of dynamics model. Default to `None` which denotes random sampling from pre-defined initial state space.
@@ -319,30 +324,27 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         return observation, scalar_reward, terminated, extra_info
 
     @override
-    def export_environment_data(
-        self,
-    ) -> Environment:
-        """Export environment data.
-
-        Return:
-            Environment: Environment data in proto structure.
-        """
-        env_data = Environment()
-        env_data.CopyFrom(self.env_info)
-
-        return env_data
-
-    @override
     def get_state(self) -> np.ndarray:
         return self.dynamics_model_manager.get_sampled_dynamics_model().get_state()
 
     def get_dynamics_model_info(self) -> str:
+        """Get the infromation about configuration of dynamics models.
+
+        Returns:
+            str: Pretty string of information for dynamics models.
+        """
         return self.dynamics_model_manager.get_dynamics_model_info()
 
-    def get_reference_line(self):
+    def get_reference_line(self) -> ReferenceLine:
+        """Get the current reference line.
+
+        Returns:
+            ReferenceLine: The current reference line.
+        """
         reference_line = ReferenceLine()
         reference_line.CopyFrom(self.reference_line_manager.raw_reference_line)
 
         return reference_line
 
     # TODO: rendering
+    # refernce: https://github.com/openai/gym/blob/dcd185843a62953e27c2d54dc8c2d647d604b635/gym/core.py#L153
