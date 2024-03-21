@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from jax import numpy as jnp
 
-import waymax
-from waymax.datatypes import Trajectory
-from waymax.visualization import plot_trajectory
-from waymax.visualization import plot_trajectory
-import waymax.visualization.utils as viz_utils
+from waymax_viz.waymax.datatypes import Trajectory
+from waymax_viz.waymax.visualization import (
+    plot_trajectory,
+    plot_trajectory,
+    utils as viz_utils,
+)
 
 from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
 

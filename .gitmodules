@@ -1,3 +1,6 @@
 [submodule "submodules/drltt-assets"]
 	path = submodules/drltt-assets
 	url = git@github.com:MARMOTatZJU/drltt-assets.git
+[submodule "submodules/waymax-visualization"]
+	path = submodules/waymax-visualization
+	url = git@github.com:MARMOTatZJU/waymax-visualization.git
