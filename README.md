@@ -90,7 +90,7 @@ print(f'Position diff max.: {pos_diffs.max()}')
 ```
 
 
-## RL Training & Evaluating & Tracing
+## RL Training & Evaluating & Visualizing & Tracing
 
 Run `./scripts/train_eval_trace-track.sh` for training-evaluation-tracing.
 
@@ -120,6 +120,19 @@ The checkpoint (trained model/log/evaluation results/etc.) will be output at `$w
 └── sb3-eval                        # SB3 log during evaluation phase
     └── ...
 ```
+
+#### Visualization results
+
+Visualization results can be found under `<checkpoint-dir>/visualization/<scenario-index>-<segment-index>-stacked.png`.
+
+Legends:
+
+* The red line is the reference line.
+* Blue bounding boxes are tracked states.
+  * Transition between each pair of consecutive states follows the kinematics of the *bicycle model*.
+
+![demo](https://raw.githubusercontent.com/MARMOTatZJU/drltt-assets/main/images/40-1-stacked.png)
+
 
 ### System Design of Python-Side Framework
 
