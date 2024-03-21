@@ -114,6 +114,7 @@ The checkpoint (trained model/log/evaluation results/etc.) will be output at `$w
 ├── traced_policy_test_cases.bin    # data of test cases for testing traced policy during deployment phase
 ├── log.txt                         # python logger's output
 ├── metrics.json                    # metrics
+├── visualization                   # visualization results
 ├── sb3-train                       # SB3 log during training phase
 │   └── ...
 └── sb3-eval                        # SB3 log during evaluation phase
