@@ -347,3 +347,4 @@ class TrajectoryTrackingEnv(gym.Env, CustomizedEnvInterface):
         return reference_line
 
     # TODO: rendering
+    # refernce: https://github.com/openai/gym/blob/dcd185843a62953e27c2d54dc8c2d647d604b635/gym/core.py#L153
