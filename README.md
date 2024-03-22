@@ -17,6 +17,7 @@ Currently, DRLTT supports the following features:
   * Based on *pybind*.
   * See `./sdk/drltt-sdk/trajectory_tracker`
 
+![idea-illustration](https://raw.githubusercontent.com/MARMOTatZJU/drltt-assets/main/images/drltt-idea-illustration.png)
 
 Please refer to the [*Code Repository*](https://github.com/MARMOTatZJU/drl-based-trajectory-tracking/) and the [*Technical Report*](https://arxiv.org/abs/2308.15991) for details.
 
@@ -26,7 +27,7 @@ The [Documentation](https://drl-based-trajectory-tracking.readthedocs.io/) hoste
 
 ### Repository Cloning
 
-This repo uses `git-submodule`. Run following command to clone:
+This repo uses `git-submodule`. Run the following command to clone:
 
 ```bash
 git clone --recursive ${URL_TO_THIS_REPO}
@@ -61,7 +62,7 @@ source install-setup-protoc.sh
 
 ## Try out Pre-trained Checkpoints
 
-Pre-trained checkpoints and pre-compiled protobuf-generated code are collected in [drltt-assets](https://github.com/MARMOTatZJU/drltt-assets).
+After the installation phase, you can try out pre-trained checkpoints. Pre-trained checkpoints and pre-compiled protobuf-generated code are collected in [drltt-assets](https://github.com/MARMOTatZJU/drltt-assets).
 
 Set up environment variables by running:
 
@@ -69,7 +70,7 @@ Set up environment variables by running:
 source ./setup-minimum.sh
 ```
 
-Then, launch a Python interpreter and run following code:
+Then, launch a Python interpreter and run the following code:
 
 ```python
 import numpy as np
@@ -109,15 +110,15 @@ The checkpoint (trained model/log/evaluation results/etc.) will be output at `$w
 ├── ...
 ├── config.yaml                     # overridden configuration
 ├── checkpoint.zip                  # checkpoint of SB3
-├── env_data.bin                    # environment data serialized in proto binary stream
+├── env_data.bin                    # environment data serialized in Protobuf binary stream
 ├── traced_policy.pt                # traced policy, ready for SDK inference
-├── traced_policy_test_cases.bin    # data of test cases for testing traced policy during deployment phase
+├── traced_policy_test_cases.bin    # data of test cases for testing traced policy during the deployment phase
 ├── log.txt                         # python logger's output
 ├── metrics.json                    # metrics
 ├── visualization                   # visualization results
-├── sb3-train                       # SB3 log during training phase
+├── sb3-train                       # SB3 log during the training phase
 │   └── ...
-└── sb3-eval                        # SB3 log during evaluation phase
+└── sb3-eval                        # SB3 log during the evaluation phase
     └── ...
 ```
 
@@ -159,9 +160,16 @@ SB3-BaseAlgorithm
 ```
 
 
-## C++/Python SDK
+## Deploying DRLTT
 
-See *DRTLL SDK* for details.
+DRLTT provides both Python SDK (based on PyTorch JIT) and C++ SDK (based on LibTorch).
+
+For Python SDK, a simple demonstration has been given in the section "Try out Pre-trained Checkpoints". For more comprehensive usage, readers are referred to:
+
+* `simulator/trajectory_tracker/trajectory_tracker.py` for docstring and implementation;
+* `simulator/trajectory_tracker/trajectory_tracker_test.py` for usage.
+
+For C++ SDK, see the *DRTLL SDK* page for details.
 
 ## Development
 
@@ -198,7 +206,7 @@ To skip both SDK exporting and checkpoint generation (e.g. while debugging the t
 ./test-cpp.sh test reuse-checkpoint
 ```
 
-To use a sample config with shorter time for test data generation (a dummy training), run:
+To use a sample config with a shorter time for test data generation (a dummy training), run:
 
 ```bash
 ./test-cpp.sh fast test
@@ -213,7 +221,7 @@ This project uses `black` for Python code formatting and `clang-format` for CXX 
 .. literalinclude:: ../../../format-code.sh
   :language: bash
 
-### Configuring vscode
+### Configuring `vscode`
 
 `.vscode/settings.json`
 
