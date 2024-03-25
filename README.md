@@ -216,10 +216,15 @@ TODO: refactor argument parsing logic in test scripts.
 
 ### Code Formatting
 
-This project uses `black` for Python code formatting and `clang-format` for CXX code formatting:
+This project uses `black` for Python code formatting and `clang-format` for CXX code formatting according to *Google Python Style Guide* and *Google C++ Style Guide*, respectively:
 
 .. literalinclude:: ../../../format-code.sh
   :language: bash
+
+References:
+
+* https://google.github.io/styleguide/pyguide.html
+* https://google.github.io/styleguide/cppguide.html
 
 ### Configuring `vscode`
 
