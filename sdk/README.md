@@ -207,7 +207,7 @@ Following global objects are useful for achieving runtime result consistency on 
 - python: `common.io.GLOBAL_DEBUG_INFO`
 - cpp: `drltt::global_debug_info`
 
-For example, to compare runtime values of `rotation_radius_inv`, you may add two lines of code as follows than run `./test.sh fast`:
+For example, to compare runtime values of `rotation_radius_inv`, you may add two lines of code as follows before running `./test.sh fast` to launch the debugging process:
 
 ```diff
 diff --git a/sdk/drltt-sdk/dynamics_models/bicycle_model.cpp b/sdk/drltt-sdk/dynamics_models/bicycle_model.cpp
