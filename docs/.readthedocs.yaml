@@ -1,5 +1,11 @@
+# https://docs.readthedocs.io/en/stable/config-file/v2.html
 version: "2"
 
+# build process
+# https://docs.readthedocs.io/en/stable/builds.html
+# https://docs.readthedocs.io/en/stable/build-customization.html
+
+# https://docs.readthedocs.io/en/stable/config-file/v2.html#build
 build:
   os: "ubuntu-22.04"
   tools:
@@ -12,11 +18,19 @@ build:
     pre_build:
       - bash ./setup.sh
 
-
+# https://docs.readthedocs.io/en/stable/config-file/v2.html#python-install
 python:
   install:
     - requirements: requirements/pypi.txt
     - requirements: requirements/pypi-doc.txt
+    - requirements: submodules/waymax-visualization/requirements.txt
 
+# https://docs.readthedocs.io/en/stable/config-file/v2.html#sphinx
 sphinx:
   configuration: docs/source/conf.py
+  fail_on_warning: True
+
+# https://docs.readthedocs.io/en/stable/config-file/v2.html#submodules
+submodules:
+  include: all
+  recursive: True
