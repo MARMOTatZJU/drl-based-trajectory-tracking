@@ -1,4 +1,4 @@
-# DRL-Based Trajectory Tracking (DRLTT)
+# DRL-based Trajectory Tracking (DRLTT)
 
 This repo hosts code and script for training and deploying the *DRL-Based Trajectory Tracking (DRLTT)* algorithm. DRLTT leverages Deep Reinforcement Learning (DRL) and achieves robustness, accuracy, and versatility in the Trajectory Tracking (TT) task in the context of Autonomous Driving. Benefiting from its methodological simplicity, DRLTT can process 32 trajectories (each contains 50 steps) within several milliseconds on edge computing devices.
 
@@ -12,10 +12,13 @@ Currently, DRLTT supports the following features:
   * Easy deployment and efficient inference of RL policy under a pure CPU environment.
   * Based on cpu-compiled *libtorch*.
   * See `./sdk`
-* A Python SDK
-  * Compatible with any Python environment, *No requirement* for any Python package.
-  * Based on *pybind*.
-  * See `./sdk/drltt-sdk/trajectory_tracker`
+* Two Python SDKs
+  * One based on Torch JIT
+    * Compatible with existing PyTorch environment
+    * See `./simulator/trajectory_tracker/trajectory_tracker.py`
+  * One based on C++ SDK
+    * Able to run standalone without PyTorch installation or other Python packages.
+    * See `sdk/assets/exported-python-sdk`
 
 ![idea-illustration](https://raw.githubusercontent.com/MARMOTatZJU/drltt-assets/main/images/drltt-idea-illustration.png)
 
@@ -45,6 +48,7 @@ Install Python requirement through `pip`:
 
 ```bash
 pip install -r requirements/pypi.txt
+pip install -r submodules/waymax-visualization/requirements.txt
 ```
 
 For network environments within Mainland China, you may consider using a domestic pip source to accelerate this process:

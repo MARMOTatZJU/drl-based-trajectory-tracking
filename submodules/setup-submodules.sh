@@ -6,3 +6,4 @@ export PYTHONPATH=:${drltt_proto_gen_py_dir_default}:${PYTHONPATH}
 waymax_viz_dir=submodules/waymax-visualization
 export PYTHONPATH=:${waymax_viz_dir}:${PYTHONPATH}
 
+echo "DRLTT submodule setup finished."
