@@ -6,6 +6,8 @@
 Welcome to DRL-based Trajectory Tracking (DRLTT)'s documentation!
 =================================================================
 
+Code repository: https://github.com/MARMOTatZJU/drl-based-trajectory-tracking
+
 .. toctree::
    :maxdepth: 3
    :caption: Introduction
@@ -17,6 +19,12 @@ Welcome to DRL-based Trajectory Tracking (DRLTT)'s documentation!
    :caption: SDK
 
    rst_files/readme-sdk
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Test
+
+   rst_files/readme-test
 
 .. toctree::
    :maxdepth: 3
