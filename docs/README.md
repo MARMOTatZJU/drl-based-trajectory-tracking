@@ -30,9 +30,9 @@ make html
 
 ### For incremental changes
 
-As documentation of the current project has already been set up, you can only run `make-html.sh` instead of the previous steps:
+As documentation of the current project has already been set up, you can only run `./docs/make-html.sh` instead of the previous steps:
 
-.. literalinclude:: ../../../make-html.sh
+.. literalinclude:: ../../../docs/make-html.sh
   :language: bash
 
 
@@ -74,13 +74,13 @@ Use the `.. literalinclude::` directive to include a code snippet from a script/
 For example,
 
 ```
-.. literalinclude:: ../../../make-html.sh
+.. literalinclude:: ../../../docs/make-html.sh
   :language: bash
 ```
 
 results in:
 
-.. literalinclude:: ../../../make-html.sh
+.. literalinclude:: ../../../docs/make-html.sh
   :language: bash
 
 ## Auto-Generation of API Documentations

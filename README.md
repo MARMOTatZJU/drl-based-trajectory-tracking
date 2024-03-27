@@ -48,6 +48,7 @@ Install Python requirement through `pip`:
 
 ```bash
 pip install -r requirements/pypi.txt
+pip install -r requirements/pypi-doc.txt
 pip install -r submodules/waymax-visualization/requirements.txt
 ```
 
@@ -166,12 +167,26 @@ SB3-BaseAlgorithm
 
 ## Deploying DRLTT
 
-DRLTT provides both Python SDK (based on PyTorch JIT) and C++ SDK (based on LibTorch).
+DRLTT provides both Python SDK (PyTorch JIT-based/standalone) and C++ SDK (based on LibTorch).
 
-For Python SDK, a simple demonstration has been given in the section "Try out Pre-trained Checkpoints". For more comprehensive usage, readers are referred to:
+### DRLTT Python SDK (PyTorch JIT-based) (Recommended)
+
+This Python SDK is based on PyTorch JIT, and thus requires a PyTorch installation. A simple demonstration has been given in the section "Try out Pre-trained Checkpoints". For more comprehensive usage, readers are referred to:
 
 * `simulator/trajectory_tracker/trajectory_tracker.py` for docstring and implementation;
 * `simulator/trajectory_tracker/trajectory_tracker_test.py` for usage.
+
+### DRLTT Python SDK (Standalone)
+
+This Python SDK is based on *pybind*. This SDK is able to run without PyTorch installation.
+
+* `sdk/assets/exported-python-sdk/trajectory_tracker.py` for docstring;
+* `sdk/assets/exported-python-sdk/README.md` for description;
+* `sdk/assets/exported-python-sdk/check_export_symbols.py` for usage/example.
+
+NOTE: Currently, this version of standalone SDK is compatible with PyTorch installation. This is due to the incompatibility between the shared libraries of PyTorch and LibTorch. The authors are dealing with this issue and will update the availability once this SDK is ready again.
+
+### DRLTT C++ SDK
 
 For C++ SDK, see the *DRTLL SDK* page for details.
 
@@ -179,44 +194,14 @@ For C++ SDK, see the *DRTLL SDK* page for details.
 
 ### Testing
 
-Run `./test.sh` to test all code:
+Run `./test/test.sh` to test all code and documentation:
 
-.. literalinclude:: ../../../test.sh
+.. literalinclude:: ../../../test/test.sh
   :language: bash
 
-Python testing is done with *pytest*. To launch the Python testing, run `./test-python.sh`:
+Check out test logs under `./test-log/`.
 
-.. literalinclude:: ../../../test-python.sh
-  :language: bash
-
-CPP testing is performed through *gtest* immediately after building. To launch the CPP testing, run `./test-cpp.sh`:
-
-.. literalinclude:: ../../../test-cpp.sh
-  :language: bash
-
-Please refer to *DRTLL SDK* for details.
-
-#### Accelerating CPP testing
-
-To skip SDK exporting (e.g. while debugging the test running), run:
-
-```bash
-./test-cpp.sh test
-```
-
-To skip both SDK exporting and checkpoint generation (e.g. while debugging the test building), run:
-
-```bash
-./test-cpp.sh test reuse-checkpoint
-```
-
-To use a sample config with a shorter time for test data generation (a dummy training), run:
-
-```bash
-./test-cpp.sh fast test
-```
-
-TODO: refactor argument parsing logic in test scripts.
+For more details about testing of DRLTT, please refer to [DRLTT TEST](./test/README.md)
 
 ### Code Formatting
 
@@ -237,9 +222,12 @@ References:
 ```json
 {
     "python.analysis.extraPaths": [
-        "${workspaceFolder}/common/proto/proto_gen_py"
-    ],
+        "${workspaceFolder}",
+        "${workspaceFolder}/common/proto/proto_gen_py",
+        "${workspaceFolder}/submodules/waymax-visualization"
+],
     "C_Cpp.default.includePath": [
+        "${workspaceFolder}/sdk",
         "${workspaceFolder}/common/proto/proto_gen_cpp"
     ]
 }
