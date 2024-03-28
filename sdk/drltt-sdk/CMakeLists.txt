@@ -7,5 +7,3 @@ add_subdirectory(inference)
 add_subdirectory(managers)
 add_subdirectory(environments)
 add_subdirectory(trajectory_tracker)
-
-# TODO: add another sample program

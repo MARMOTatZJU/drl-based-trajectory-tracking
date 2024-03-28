@@ -1,0 +1,37 @@
+stages:
+- test
+
+drltt-python-test-job:
+  stage: test
+  script:
+    - ./test/test-python.sh
+  artifacts:
+    paths:
+    - "test-log/"
+  interruptible: true
+
+drltt-cpp-test-job:
+  stage: test
+  script:
+    - ./cicd/test-cpp-ci.sh
+  artifacts:
+    paths:
+    - "test-log/"
+  interruptible: true
+  timeout: "3h 30m"
+
+drltt-doc-test-job:
+  stage: test
+  script:
+    - export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+    - ./test/test-doc.sh
+  artifacts:
+    paths:
+    - "test-log/"
+  interruptible: true
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
+  GIT_DEPTH: 1
+  GIT_SUBMODULE_DEPTH: 1

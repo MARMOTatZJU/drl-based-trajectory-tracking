@@ -1,0 +1,89 @@
+
+FROM ubuntu:22.04
+WORKDIR /
+
+ENV DEBIAN_FRONTEND noninteractive
+
+ARG USER_WORKDIR=/work_dir
+ARG USER_BIN=/usr_bin
+ARG USER_BASHRC=/work_dir/.bashrc
+
+SHELL [ "/bin/bash", "-c" ]
+ENV SHELL=/bin/bash
+
+ARG APT_SOURCE_LIST=/etc/apt/sources.list
+RUN \
+    echo "Activating APT links to source code for in-container building" && \
+    printf '\n' >> ${APT_SOURCE_LIST} && \
+    printf "deb-src http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
+    printf '\n' >> ${APT_SOURCE_LIST} && \
+    printf "deb-src http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
+    printf '\n' >> ${APT_SOURCE_LIST} && \
+    printf "deb-src http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
+    printf '\n' >> ${APT_SOURCE_LIST} && \
+    printf "deb-src http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
+    printf '\n' >> ${APT_SOURCE_LIST} && \
+    apt update --fix-missing && \
+    echo "Adding ppa:deadsnakes/ppa, for installing python3.x" && \
+    DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    echo "Updating APT list" && \
+    apt update --fix-missing && \
+    echo "APT list configuration done."
+
+RUN \
+    echo "Installing network tools" && \
+    apt install -y \
+        ca-certificates \
+        libssl-dev \
+        curl wget \
+        && \
+    echo "Installing compiling tools" && \
+    apt install -y \
+        cmake \
+        build-essential \
+        cmake \
+        python3 \
+        && \
+    echo "Installing system utilities" && \
+    apt install -y \
+        git \
+        unzip \
+        vim \
+        && \
+    echo "Fixing git openssl issue inside dockerfile building" && \
+        apt install -y gnutls-bin && \
+        git config --global http.sslVerify false && \
+        git config --global http.postBuffer 1048576000 && \
+    echo "Installing dependency libraries" && \
+    apt install -y \
+        libblas-dev \
+        liblapack-dev \
+        libeigen3-dev \
+        python3-opencv \
+        libopencv-dev \
+        libgtest-dev \
+        libboost-all-dev \
+        libabsl-dev \
+        && \
+    mkdir $USER_WORKDIR && chmod -R 777 $USER_WORKDIR && \
+    mkdir $USER_BIN && chmod -R 777 $USER_BIN && \
+    echo "Configuring user's bashrc" && \
+    touch $USER_BASHRC && \
+        echo "# Add LD_LIBRARY_PATH installed by user." >> $USER_BASHRC && \
+        echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> $USER_BASHRC && \
+        echo "source $USER_BASHRC" >> /root/.bashrc && \
+        echo "apt package installation and bashrc modification done."
+
+RUN \
+    echo "Installing gitlab-runner" && \
+    ( \
+        curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.gitlab.cn/latest/binaries/gitlab-runner-linux-amd64; \
+        chmod +x /usr/local/bin/gitlab-runner; \
+        useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash; \
+        gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner; \
+        # sudo gitlab-runner start; \
+    ) && \
+    echo "gitlab-runner installed."
+
+# TODO refactor all dockerfiles and remove redundant part.

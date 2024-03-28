@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
 project(drltt-sdk)
-set(PROJECT_ROOT_PATH ${PROJECT_SOURCE_DIR})
+set(SDK_ROOT_DIR ${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 option(BUILD_TESTS "Build tests." OFF)
-add_definitions(-DMACRO_CHECKPOINT_DIR="/drltt-work_dir/track-test/checkpoint")
+add_definitions(-DREPO_ROOT_DIR="$(git rev-parse --show-toplevel)")
+add_definitions(-DMACRO_CHECKPOINT_DIR="${REPO_ROOT_DIR}/work_dir/track-test/checkpoint")
 add_definitions(-DLIBTORCH_DIR="/libtorch")
 
 message("Using checkpoint at ${MACRO_CHECKPOINT_DIR}.")
@@ -33,8 +34,9 @@ if(BUILD_TESTS)
 endif(BUILD_TESTS)
 
 # protobuf
-add_subdirectory(/proto/proto_def proto_def)
-include_directories(/drltt-sdk/proto_gen)  # TODO resolve it in more formal way, try to find a nother place in sdk folder
+set(PROTO_GENERATE_PATH ${SDK_ROOT_DIR}/proto_gen)
+add_subdirectory(${REPO_ROOT_DIR}/common/proto/proto_def proto_def)
+include_directories(${PROTO_GENERATE_PATH})
 
 # setup pybind11
 execute_process(COMMAND "which python" OUTPUT_VARIABLE PYTHON_PATH)

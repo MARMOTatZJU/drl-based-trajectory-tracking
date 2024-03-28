@@ -5,9 +5,8 @@ mkdir -p $log_dir
 
 
 (
+
     echo "SETTING UP CPP TESTING ENVIRONMENT"
-    source setup.sh
-    echo "TEST CPP CODE"
     if [[ $1 == "fast"  ]]; then
         gen_data_script=./scripts/tests/train_eval_trace-track_test_sample_fast.sh
         shift
@@ -17,9 +16,11 @@ mkdir -p $log_dir
 
     if [[ ! ( $1 == "test" && $2 == "reuse-checkpoint" ) ]]; then
         # generate checkpoint for sdk test
-        $gen_data_script
+        source $gen_data_script
+    else
+        source setup.sh
     fi
-
+    echo "TEST CPP CODE"
     pushd sdk
         bash ./compile-in-docker.sh "$@"
     popd
