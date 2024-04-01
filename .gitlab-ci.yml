@@ -23,7 +23,6 @@ drltt-cpp-test-job:
 drltt-doc-test-job:
   stage: test
   script:
-    - export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
     - ./test/test-doc.sh
   artifacts:
     paths:
