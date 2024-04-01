@@ -8,6 +8,7 @@ drltt-python-test-job:
   artifacts:
     paths:
     - "test-log/"
+    expire_in: 1 week
   interruptible: true
 
 drltt-cpp-test-job:
@@ -17,6 +18,7 @@ drltt-cpp-test-job:
   artifacts:
     paths:
     - "test-log/"
+    expire_in: 1 week
   interruptible: true
   timeout: "3h 30m"
 
@@ -27,6 +29,8 @@ drltt-doc-test-job:
   artifacts:
     paths:
     - "test-log/"
+    - "docs/build/"
+    expire_in: 1 week
   interruptible: true
 
 variables:
