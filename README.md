@@ -52,7 +52,7 @@ pip install -r requirements/pypi-doc.txt
 pip install -r submodules/waymax-visualization/requirements.txt
 ```
 
-For network environments within Mainland China, you may consider using a domestic pip source to accelerate this process:
+Tip: For network environments within Mainland China, you may consider using a domestic pip source to accelerate this process:
 
 ```bash
 # Example using TUNA PyPI source

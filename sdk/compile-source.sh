@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# NOTE: current directory is `./sdk/build`
+# NOTE: This script runs in docker container.
+# NOTE: Current directory is `${SDK_ROOT_DIR}/build`.
+
+set -exo pipefail
 
 # shared libraries
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$USR_LIB_DIR
@@ -22,8 +25,15 @@ mkdir -p ${PROTO_GEN_DIR}
 pushd ${BUILD_DIR}
     cmake .. \
         -DBUILD_TESTS=ON \
+        -DREPO_ROOT_DIR=${REPO_ROOT_DIR} \
         -DMACRO_CHECKPOINT_DIR=${CHECKPOINT_DIR} \
         -DLIBTORCH_DIR=${LIBTORCH_DIR} \
         && make -j$(nproc --all) 2>&1 | tee ./build.log
+    cmake_ret_val=$?
+    if [ ${cmake_ret_val} != 0 ]; then
+        echo "cmake failed with exit ${cmake_ret_val}"
+        exit ${cmake_ret_val}
+    fi
     ctest -VV --rerun-failed --output-on-failure 2>&1 | tee ./test.log
 popd
+set +exo pipefail

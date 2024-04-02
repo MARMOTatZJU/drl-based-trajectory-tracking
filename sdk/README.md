@@ -104,10 +104,20 @@ The standalone library is under `./sdk/build/drltt_sdk_py.tar.gz`. Currently, th
 │   └── local
 │       ├── bin
 │       └── lib
-├── proto -> $PROJECT_ROOT/common/proto:/proto      # protobuf source
-├── drltt-sdk -> $PROJECT_ROOT/sdk/drltt-sdk        # `source_dir`
-│   └── proto_gen                                   # generated protobuf
+├── $PROJECT_DIRNAME -> $PROJECT_ROOT/
+│   ├── common
+│   │   ├── ...
+│   │   └── proto
+│   │       └── proto_def                   # Protobuf source directory
+│   │           └── ...
+│   └── sdk                                 # SDK root directory
+│       ├── drltt-sdk                       # SDK source directory
+│       │   └── ...
+│       └── proto_gen                       # generated protobuf
 └── work_dir
+    └── track-test                          # checkpoint for running test
+        ├── ...
+        └── checkpoint
 ```
 
 #### `build` folder structure
