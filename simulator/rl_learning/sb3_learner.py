@@ -17,9 +17,9 @@ from common.gym_helper import scale_action
 from simulator.environments import ExtendedGymEnv
 from . import METRICS
 from .sb3_utils import roll_out_one_episode
-from simulator.visualization.viz import visualize_trajectory_tracking_episode
+from simulator.visualization import VISUALIZATION_FUNCTIONS
 
-from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
+from drltt_proto.environment.environment_pb2 import Environment
 
 SB3_MODULES = Registry().register_from_python_module(stable_baselines3)
 SB3_LOGGING_FORMAT_STRINGS = ['stdout', 'log', 'csv']
@@ -106,6 +106,7 @@ def eval_with_sb3(
     report_dir: str,
     n_episodes: int,
     compute_metrics_name: str,
+    visualization_function_name: str,
     viz_interval: int = 10,
 ):
     """RL Evaluation with Stable Baselines3.
@@ -116,6 +117,7 @@ def eval_with_sb3(
         report_dir: Directory to export report JSON.
         n_episodes: Number of episodes.
         compute_metrics_name: Name of `compute_metrics`.
+        visualization_function_name: Name of `visualization_function`.
         viz_interval: Interval of episodes that this function performs visualization.
             TODO: set it with argument passed through Shell script.
     """
@@ -128,12 +130,13 @@ def eval_with_sb3(
         roll_out_one_episode(environment, lambda obs: algorithm.predict(obs)[0])
 
         compute_metrics = METRICS[compute_metrics_name]
-        episode: TrajectoryTrackingEpisode = environment.export_environment_data().trajectory_tracking.episode
-        metrics = compute_metrics(episode, environment)  # metric[metric_name][reduce_method]
+        env_data: Environment = environment.export_environment_data()
+        metrics = compute_metrics(env_data, environment)  # format: metric[metric_name][reduce_method]
         if scenario_idx % viz_interval == 0:
-            # TODO: move to env.render()
+            # TODO: consider moving it to env.render()
             viz_prefix = f"{viz_dir}/{scenario_idx}"
-            visualize_trajectory_tracking_episode(episode, viz_prefix)
+            visualization_function = VISUALIZATION_FUNCTIONS[visualization_function_name]
+            visualization_function(env_data, viz_prefix)
         all_episodes_metrics.append(metrics)
 
     df = pd.DataFrame.from_records(all_episodes_metrics)
@@ -150,7 +153,7 @@ def eval_with_sb3(
 
 @METRICS.register
 def compute_bicycle_model_metrics(
-    episode: TrajectoryTrackingEpisode,
+    env_data: Environment,
     environment: ExtendedGymEnv,
 ) -> Dict[str, Any]:
     """Compute metrics for the bicycle model for an episode.
@@ -166,6 +169,9 @@ def compute_bicycle_model_metrics(
         - scaled_action_norm_median
         - reward_median
     """
+    assert isinstance(env_data, Environment), f'`compute_bicycle_model_metrics` requires env_data to be in class `Environment`'
+    episode = env_data.trajectory_tracking.episode
+
     dists = list()
     scaled_action_norms = list()
     rewards = list()

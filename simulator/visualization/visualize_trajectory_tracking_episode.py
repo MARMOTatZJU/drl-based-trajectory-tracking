@@ -17,12 +17,15 @@ from waymax_viz.waymax.visualization.viz import (
 )
 
 
-from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
+from drltt_proto.environment.environment_pb2 import Environment
+from simulator.visualization import VISUALIZATION_FUNCTIONS
+
 from .utils import scale_xy_lim
 
 
+@VISUALIZATION_FUNCTIONS.register
 def visualize_trajectory_tracking_episode(
-    episode: TrajectoryTrackingEpisode,
+    env_data: Environment,
     viz_prefix: str,
     n_steps_per_viz: int = 30,
 ):
@@ -32,9 +35,12 @@ def visualize_trajectory_tracking_episode(
 
     Args:
         episode (TrajectoryTrackingEpisode): Episode data of trajectory tracking.
-        viz_prefix (str): The prefix of visualization files to be saved
+        viz_prefix (str): The prefix of visualization files to be saved.
         n_steps_per_viz (int, optional): Number of steps per draw. Defaults to 20.
     """
+    assert isinstance(env_data, Environment), f'`visualize_trajectory_tracking_episode` requires env_data to be in class `Environment`'
+    episode = env_data.trajectory_tracking.episode
+
     traj_len = episode.tracking_length
     n_viz = traj_len // n_steps_per_viz
 
