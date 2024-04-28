@@ -1,17 +1,18 @@
+# Dockerfile for lauching CI/CD environment for DRLTT
 
 FROM ubuntu:22.04
 WORKDIR /
 
-ENV DEBIAN_FRONTEND noninteractive
-
 ARG USER_WORKDIR=/work_dir
 ARG USER_BIN=/usr_bin
 ARG USER_BASHRC=/work_dir/.bashrc
+ARG APT_SOURCE_LIST=/etc/apt/sources.list
 
-SHELL [ "/bin/bash", "-c" ]
+ENV DEBIAN_FRONTEND noninteractive
 ENV SHELL=/bin/bash
 
-ARG APT_SOURCE_LIST=/etc/apt/sources.list
+SHELL [ "/bin/bash", "-c" ]
+
 RUN \
     echo "Activating APT links to source code for in-container building" && \
     printf '\n' >> ${APT_SOURCE_LIST} && \
@@ -47,14 +48,9 @@ RUN \
         && \
     echo "Installing system utilities" && \
     apt install -y \
-        git \
         unzip \
         vim \
         && \
-    echo "Fixing git openssl issue inside dockerfile building" && \
-        apt install -y gnutls-bin && \
-        git config --global http.sslVerify false && \
-        git config --global http.postBuffer 1048576000 && \
     echo "Installing dependency libraries" && \
     apt install -y \
         libblas-dev \
@@ -76,7 +72,7 @@ RUN \
         echo "apt package installation and bashrc modification done."
 
 RUN \
-    echo "Installing gitlab-runner" && \
+    echo "Installing gitlab-runner..." && \
     ( \
         curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.gitlab.cn/latest/binaries/gitlab-runner-linux-amd64; \
         chmod +x /usr/local/bin/gitlab-runner; \
@@ -86,4 +82,3 @@ RUN \
     ) && \
     echo "gitlab-runner installed."
 
-# TODO refactor all dockerfiles and remove redundant part.

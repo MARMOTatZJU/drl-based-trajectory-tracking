@@ -4,23 +4,7 @@ DRLTT uses [gitlab-cicd](https://docs.gitlab.com/ee/ci/pipelines/) to build CI/C
 
 ## Build Docker image for CI/CD
 
-### Build Docker Image for GitLab Runner
-
-```bash
-docker image build --tag drltt-cicd:runner - < ./Dockerfile.runner
-```
-
-### Build Docker Image for GitLab Executor
-
-```bash
-docker image build --tag drltt-cicd:executor - < ./Dockerfile.executor
-```
-
-Tip: For network environments within Mainland China, you may consider using a domestic pip source to accelerate this process:
-
-```bash
-docker image build --tag drltt-cicd:executor --build-arg PIP_SRC_ARG=" -i https://pypi.tuna.tsinghua.edu.cn/simple " - < ./Dockerfile.executor
-```
+Build Docker images `drltt:cicd` and `drltt:runtime` following the instructions in [Docker instructions](../docker/README.md).
 
 ## Set-up runner
 

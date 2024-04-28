@@ -65,6 +65,10 @@ pip install -r requirements/pypi.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 source install-setup-protoc.sh
 ```
 
+### Docker images
+
+Please refer to [Docker's README](docker/README.md) for details.
+
 ## Try out Pre-trained Checkpoints
 
 After the installation phase, you can try out pre-trained checkpoints. Pre-trained checkpoints and pre-compiled protobuf-generated code are collected in [drltt-assets](https://github.com/MARMOTatZJU/drltt-assets).

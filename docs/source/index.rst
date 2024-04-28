@@ -32,6 +32,12 @@ Code repository: https://github.com/MARMOTatZJU/drl-based-trajectory-tracking
 
    rst_files/readme-docs
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Docker
+
+   rst_files/readme-docker
+
 
 .. Indices and tables
 .. ==================
