@@ -11,3 +11,5 @@ pushd docs
     echo "Sphinx documentation building failed!!!"
   fi
 popd
+
+exit $make_sphinx_ret_val
