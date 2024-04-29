@@ -3,7 +3,8 @@
 runner_image_name="drltt:cicd"
 executor_image_name="drltt:runtime"
 
-token=$1
+gitlab_url=$1
+token=$2
 
 if [[ -z ${token} ]];then
   echo "No gitlab runner token provided."
@@ -12,7 +13,7 @@ fi
 
 register_cmd="gitlab-runner register \
 --non-interactive \
---url https://git.sjtu.edu.cn \
+--url ${gitlab_url} \
 --token ${token} \
 --executor docker \
 --docker-image "${executor_image_name}" \

@@ -13,7 +13,7 @@ Go to `https://${GITLAB_URL}/${USER}/${REPO_NAME}/-/runners/new`, create a new r
 On the runner machine, run `start-gitlab-runner.sh`, and pass the runner token to it.
 
 ```bash
-./start-gitlab-runner.sh ${RUNNER_TOKEN}
+./start-gitlab-runner.sh ${GITLAB_URL} ${RUNNER_TOKEN}
 ```
 
 Cleanup: To stop and clear all runners, run `stop-all-gitlab-runners.sh`.
