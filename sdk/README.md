@@ -204,7 +204,7 @@ index a2df076..c93e8fe 100644
          omega = normalize_angle(omega)
          rotation_radius_inv = np.sin(omega) / hyper_parameter.rearwheel_to_cog
  
-+        from common import GLOBAL_DEBUG_INFO;GLOBAL_DEBUG_INFO.data.append(rotation_radius_inv)
++        from drltt.common import GLOBAL_DEBUG_INFO;GLOBAL_DEBUG_INFO.data.append(rotation_radius_inv)
 +
          return omega, rotation_radius_inv
  

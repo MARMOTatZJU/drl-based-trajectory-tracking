@@ -1,37 +1,37 @@
-APIs: simulator
-===================
+APIs: drltt.simulator
+=================================
 
-simulator.environments
+drltt.simulator.environments
 ---------------------------------
-.. automodule:: simulator.environments
+.. automodule:: drltt.simulator.environments
    :members:
    :special-members:
    :private-members:
 
-simulator.dynamics_models
+drltt.simulator.dynamics_models
 ---------------------------------
-.. automodule:: simulator.dynamics_models
+.. automodule:: drltt.simulator.dynamics_models
    :members:
    :special-members:
    :private-members:
 
-simulator.rl_learning
+drltt.simulator.rl_learning
 ---------------------------------
-.. automodule:: simulator.rl_learning
+.. automodule:: drltt.simulator.rl_learning
    :members:
    :special-members:
    :private-members:
 
-simulator.observation
+drltt.simulator.observation
 ---------------------------------
-.. automodule:: simulator.observation
+.. automodule:: drltt.simulator.observation
    :members:
    :special-members:
    :private-members:
 
-simulator.trajectory
+drltt.simulator.trajectory
 ---------------------------------
-.. automodule:: simulator.trajectory
+.. automodule:: drltt.simulator.trajectory
    :members:
    :special-members:
    :private-members:

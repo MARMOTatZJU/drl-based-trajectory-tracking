@@ -5,9 +5,9 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from drltt_proto.dynamics_model.basics_pb2 import BodyState
-from simulator import DTYPE
+from drltt.simulator import DTYPE
 
+from drltt_proto.dynamics_model.basics_pb2 import BodyState
 from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter
 from drltt_proto.dynamics_model.state_pb2 import State
 from drltt_proto.dynamics_model.action_pb2 import Action

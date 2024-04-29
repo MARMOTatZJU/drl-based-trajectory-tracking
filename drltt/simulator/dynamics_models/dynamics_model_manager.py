@@ -3,7 +3,7 @@ from typing import List, Tuple, Union, Iterable
 import numpy as np
 from gym.spaces import Space
 
-from common import build_object_within_registry_from_config
+from drltt.common import build_object_within_registry_from_config
 from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter
 from . import BaseDynamicsModel, DYNAMICS_MODELS
 

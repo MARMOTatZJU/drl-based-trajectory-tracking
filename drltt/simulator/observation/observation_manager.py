@@ -2,11 +2,10 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from drltt_proto.dynamics_model.basics_pb2 import BodyState
-from simulator.dynamics_models import BaseDynamicsModel, DynamicsModelManager
-from simulator.trajectory.reference_line import ReferenceLineManager
+from drltt.simulator.dynamics_models import DynamicsModelManager
+from drltt.simulator.trajectory.reference_line import ReferenceLineManager
 
-from drltt_proto.environment.trajectory_tracking_pb2 import TrajectoryTrackingEpisode
+from drltt_proto.dynamics_model.basics_pb2 import BodyState
 
 
 class ObservationManager:

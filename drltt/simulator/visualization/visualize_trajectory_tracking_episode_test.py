@@ -1,12 +1,13 @@
 from gym import Env
 
-from common import build_object_within_registry_from_config
-from common.io import load_and_override_configs, generate_random_string
-from simulator import TEST_CONFIG_PATHS
-from simulator.environments import ENVIRONMENTS
-from simulator.rl_learning.sb3_learner import build_sb3_algorithm_from_config
-from simulator.rl_learning.sb3_utils import roll_out_one_episode
-from simulator.visualization.visualize_trajectory_tracking_episode import visualize_trajectory_tracking_episode
+from drltt.common import build_object_within_registry_from_config
+from drltt.common.io import load_and_override_configs, generate_random_string
+from drltt.simulator import TEST_CONFIG_PATHS
+from drltt.simulator.environments import ENVIRONMENTS
+from drltt.simulator.rl_learning.sb3_learner import build_sb3_algorithm_from_config
+from drltt.simulator.rl_learning.sb3_utils import roll_out_one_episode
+from drltt.simulator.visualization.visualize_trajectory_tracking_episode import visualize_trajectory_tracking_episode
+
 from drltt_proto.environment.environment_pb2 import Environment
 
 

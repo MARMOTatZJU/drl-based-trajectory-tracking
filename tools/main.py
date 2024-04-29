@@ -10,12 +10,12 @@ import gym
 from gym import Env
 from stable_baselines3.common.base_class import BaseAlgorithm
 
-from common import build_object_within_registry_from_config
-from common.io import load_and_override_configs, override_config, save_config_to_yaml
-from simulator.rl_learning.sb3_learner import train_with_sb3, eval_with_sb3, build_sb3_algorithm_from_config
-from simulator.rl_learning.sb3_export import export_sb3_jit_module
-from simulator.environments import ENVIRONMENTS, ExtendedGymEnv
-from simulator.rl_learning.sb3_learner import SB3_MODULES
+from drltt.common import build_object_within_registry_from_config
+from drltt.common.io import load_and_override_configs, override_config, save_config_to_yaml
+from drltt.simulator.rl_learning.sb3_learner import train_with_sb3, eval_with_sb3
+from drltt.simulator.rl_learning.sb3_export import export_sb3_jit_module
+from drltt.simulator.environments import ENVIRONMENTS, ExtendedGymEnv
+from drltt.simulator.rl_learning.sb3_learner import SB3_MODULES
 
 
 def parse_args():

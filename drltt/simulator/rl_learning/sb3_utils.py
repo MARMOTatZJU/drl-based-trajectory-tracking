@@ -2,9 +2,8 @@ from typing import List, Tuple, Callable
 from copy import deepcopy
 
 import numpy as np
-import gym
 
-from simulator.environments.env_interface import ExtendedGymEnv
+from drltt.simulator.environments.env_interface import ExtendedGymEnv
 
 
 def roll_out_one_episode(

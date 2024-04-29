@@ -16,11 +16,11 @@ from waymax_viz.waymax.visualization.viz import (
     _RoadGraphDefaultColor,
 )
 
+from .utils import scale_xy_lim
+
+from drltt.simulator.visualization import VISUALIZATION_FUNCTIONS
 
 from drltt_proto.environment.environment_pb2 import Environment
-from simulator.visualization import VISUALIZATION_FUNCTIONS
-
-from .utils import scale_xy_lim
 
 
 @VISUALIZATION_FUNCTIONS.register

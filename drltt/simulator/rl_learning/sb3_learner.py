@@ -12,12 +12,13 @@ from stable_baselines3.common.utils import configure
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.noise import NormalActionNoise
 
-from common import Registry, build_object_within_registry_from_config
-from common.gym_helper import scale_action
-from simulator.environments import ExtendedGymEnv
 from . import METRICS
 from .sb3_utils import roll_out_one_episode
-from simulator.visualization import VISUALIZATION_FUNCTIONS
+
+from drltt.common import Registry, build_object_within_registry_from_config
+from drltt.common.gym_helper import scale_action
+from drltt.simulator.environments import ExtendedGymEnv
+from drltt.simulator.visualization import VISUALIZATION_FUNCTIONS
 
 from drltt_proto.environment.environment_pb2 import Environment
 

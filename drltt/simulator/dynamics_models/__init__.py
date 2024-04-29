@@ -1,4 +1,4 @@
-from common import Registry
+from drltt.common import Registry
 
 DYNAMICS_MODELS = Registry()
 

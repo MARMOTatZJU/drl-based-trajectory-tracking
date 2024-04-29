@@ -8,23 +8,22 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from common.future import override
-from common.gym_helper import scale_action
-from common import GLOBAL_DEBUG_INFO
+from drltt.common.future import override
+from drltt.common.gym_helper import scale_action
+from drltt.common import GLOBAL_DEBUG_INFO
 from . import ENVIRONMENTS
-from simulator.environments.env_interface import CustomizedEnvInterface
-from simulator import DTYPE
-from simulator.dynamics_models import (
+from drltt.simulator.environments.env_interface import CustomizedEnvInterface
+from drltt.simulator import DTYPE
+from drltt.simulator.dynamics_models import (
     BaseDynamicsModel,
     DynamicsModelManager,
 )
-from simulator.trajectory.random_walk import random_walk
-from simulator.trajectory.reference_line import ReferenceLineManager
-from simulator.observation.observation_manager import ObservationManager
+from drltt.simulator.trajectory.random_walk import random_walk
+from drltt.simulator.trajectory.reference_line import ReferenceLineManager
+from drltt.simulator.observation.observation_manager import ObservationManager
 from drltt_proto.environment.environment_pb2 import Environment
 from drltt_proto.environment.trajectory_tracking_pb2 import (
     TrajectoryTrackingHyperParameter,
-    TrajectoryTrackingEpisode,
 )
 from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine
 

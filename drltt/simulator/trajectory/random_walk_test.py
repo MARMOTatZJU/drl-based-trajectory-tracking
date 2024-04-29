@@ -1,7 +1,7 @@
 import numpy as np
 
-from simulator.dynamics_models import BicycleModel
-from simulator.trajectory.random_walk import random_walk
+from drltt.simulator.dynamics_models import BicycleModel
+from drltt.simulator.trajectory.random_walk import random_walk
 
 
 def test_random_walk():

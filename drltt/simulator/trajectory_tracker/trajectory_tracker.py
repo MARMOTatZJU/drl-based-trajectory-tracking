@@ -3,11 +3,12 @@ from typing import List, Tuple, Union
 import numpy as np
 import torch
 
+from drltt.simulator.environments.trajectory_tracking_env import TrajectoryTrackingEnv
+from drltt.simulator.rl_learning.sb3_utils import roll_out_one_episode
+from drltt.simulator.trajectory.reference_line import ReferenceLineManager
+
 from drltt_proto.environment.environment_pb2 import Environment
-from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine, ReferenceLineWaypoint
-from simulator.environments.trajectory_tracking_env import TrajectoryTrackingEnv
-from simulator.rl_learning.sb3_utils import roll_out_one_episode
-from simulator.trajectory.reference_line import ReferenceLineManager
+from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine
 
 
 class TrajectoryTracker:
@@ -56,7 +57,7 @@ class TrajectoryTracker:
         if init_state is not None:
             init_state = np.array(init_state)
         if reference_line is not None:
-            reference_line = ReferenceLineManager.np_array_to_reference_line(np.array(reference_line))
+            reference_line: ReferenceLine = ReferenceLineManager.np_array_to_reference_line(np.array(reference_line))
 
         states, actions, observations = roll_out_one_episode(
             self.env,

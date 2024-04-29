@@ -1,6 +1,6 @@
 import numpy as np
 
-from simulator.dynamics_models import BicycleModel
+from drltt.simulator.dynamics_models import BicycleModel
 
 
 def test_bicycle_model():

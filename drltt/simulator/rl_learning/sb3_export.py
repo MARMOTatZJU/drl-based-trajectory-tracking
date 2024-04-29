@@ -17,8 +17,9 @@ from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.policies import BasePolicy
 from stable_baselines3 import TD3, SAC, DDPG
 
+from drltt.common.io import convert_numpy_to_TensorFP, convert_TensorFP_to_numpy
+
 from drltt_proto.sdk.exported_policy_test_case_pb2 import ExportedPolicyTestCases
-from common.io import convert_numpy_to_TensorFP, convert_TensorFP_to_numpy
 
 ACTOR_CRITIC_ALGORITHMS = (TD3, SAC, DDPG)
 

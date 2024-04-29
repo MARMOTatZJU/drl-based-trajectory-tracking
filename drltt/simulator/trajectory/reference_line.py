@@ -2,8 +2,9 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from common.geometry import transform_to_local_from_world
-from simulator import DTYPE
+from drltt.common.geometry import transform_to_local_from_world
+from drltt.simulator import DTYPE
+
 from drltt_proto.trajectory.trajectory_pb2 import ReferenceLine, ReferenceLineWaypoint
 from drltt_proto.dynamics_model.basics_pb2 import BodyState
 from drltt_proto.dynamics_model.state_pb2 import State

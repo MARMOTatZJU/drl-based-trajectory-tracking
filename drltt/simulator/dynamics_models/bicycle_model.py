@@ -7,10 +7,10 @@ import numpy as np
 import gym
 from gym.spaces import Space
 
-from common.future import override
-from common.geometry import normalize_angle
+from drltt.common.future import override
+from drltt.common.geometry import normalize_angle
 
-from simulator import DTYPE, EPSILON
+from drltt.simulator import DTYPE, EPSILON
 from . import BaseDynamicsModel, DYNAMICS_MODELS
 
 from drltt_proto.dynamics_model.hyper_parameter_pb2 import HyperParameter, BicycleModelHyperParameter

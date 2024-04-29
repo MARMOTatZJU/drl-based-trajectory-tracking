@@ -1,7 +1,7 @@
 import numpy as np
 
-from simulator import TEST_CHECKPOINT_DIR
-from simulator.trajectory_tracker.trajectory_tracker import TrajectoryTracker
+from drltt.simulator import TEST_CHECKPOINT_DIR
+from drltt.simulator.trajectory_tracker import TrajectoryTracker
 
 
 def test_trajectory_tracker_print():
@@ -12,7 +12,9 @@ def test_trajectory_tracker_print():
 def test_trajectory_tracker_random_reference_line():
     trajectory_tracker = TrajectoryTracker(checkpoint_dir=TEST_CHECKPOINT_DIR)
     states, actions = trajectory_tracker.track_reference_line()
-    assert len(states) == len(actions)
+    reference_line = trajectory_tracker.get_reference_line()
+
+    assert len(states) == len(actions) == len(reference_line)
 
 
 def test_trajectory_tracker():

@@ -1,4 +1,4 @@
-from common import Registry
+from drltt.common import Registry
 
 VISUALIZATION_FUNCTIONS = Registry()
 

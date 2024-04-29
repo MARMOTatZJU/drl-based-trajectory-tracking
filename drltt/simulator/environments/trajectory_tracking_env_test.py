@@ -1,9 +1,9 @@
 from gym import Env
 
-from common import build_object_within_registry_from_config
-from common.io import load_and_override_configs
-from simulator import TEST_CONFIG_PATHS
-from simulator.environments import ENVIRONMENTS
+from drltt.common import build_object_within_registry_from_config
+from drltt.common.io import load_and_override_configs
+from drltt.simulator import TEST_CONFIG_PATHS
+from drltt.simulator.environments import ENVIRONMENTS
 
 
 def test_trajectory_tracking_env():

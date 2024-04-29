@@ -1,11 +1,9 @@
 from typing import Tuple
 
-from simulator.dynamics_models import BaseDynamicsModel
-
 import numpy as np
-import gym
 from gym.spaces import Space
 
+from drltt.simulator.dynamics_models import BaseDynamicsModel
 
 from drltt_proto.trajectory.trajectory_pb2 import ReferenceLineWaypoint, ReferenceLine, TrajectoryWaypoint, Trajectory
 
