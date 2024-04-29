@@ -1,7 +1,7 @@
 #!/bin/bash
 
 project_name=drltt-sdk
-image_name=${project_name}:dev
+image_name=drltt:runtime
 
 repo_root_dir=$(git rev-parse --show-toplevel)
 repo_dirname=$(basename $repo_root_dir)

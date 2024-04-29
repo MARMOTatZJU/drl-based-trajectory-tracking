@@ -1,18 +1,26 @@
+# Dockerfile for building runtime image for DRLTT
+# TODO: refactor all dockerfiles and remove redundant part.
 
 FROM ubuntu:22.04
 WORKDIR /
 
-ENV DEBIAN_FRONTEND noninteractive
-
 ARG USER_WORKDIR=/work_dir
 ARG USER_BIN=/usr_bin
 ARG USER_BASHRC=/work_dir/.bashrc
-ARG PIP_SRC_ARG=""
+ARG PYTHON_VERSION=3.12
+ARG PIP_ARGS=""
+ARG CURL_ARGS=" -OL --retry-all-errors "
+ARG USR_LOCAL_BIN_DIR=/usr/local/bin/
+ARG USR_LOCAL_LIB_DIR=/usr/local/lib/
+ARG APT_SOURCE_LIST=/etc/apt/sources.list
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV SHELL=/bin/bash
+ENV LD_LIBRARY_PATH=${USR_LOCAL_BIN_DIR}:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=${USR_LOCAL_LIB_DIR}:${LD_LIBRARY_PATH}
 
 SHELL [ "/bin/bash", "-c" ]
-ENV SHELL=/bin/bash
 
-ARG APT_SOURCE_LIST=/etc/apt/sources.list
 RUN \
     echo "Activating APT links to source code for in-container building" && \
     printf '\n' >> ${APT_SOURCE_LIST} && \
@@ -27,7 +35,10 @@ RUN \
     apt update --fix-missing && \
     echo "Adding ppa:deadsnakes/ppa, for installing python3.x" && \
     DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common && \
+    echo "Add PPA for Python" && \
     add-apt-repository ppa:deadsnakes/ppa && \
+    echo "Add PPA for Git" && \
+    add-apt-repository ppa:git-core/ppa && \
     echo "Updating APT list" && \
     apt update --fix-missing && \
     echo "APT list configuration done."
@@ -48,14 +59,9 @@ RUN \
         && \
     echo "Installing system utilities" && \
     apt install -y \
-        git \
         unzip \
         vim \
         && \
-    echo "Fixing git openssl issue inside dockerfile building" && \
-        apt install -y gnutls-bin && \
-        git config --global http.sslVerify false && \
-        git config --global http.postBuffer 1048576000 && \
     echo "Installing dependency libraries" && \
     apt install -y \
         libblas-dev \
@@ -72,26 +78,42 @@ RUN \
     echo "Configuring user's bashrc" && \
     touch $USER_BASHRC && \
         echo "# Add LD_LIBRARY_PATH installed by user." >> $USER_BASHRC && \
-        echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> $USER_BASHRC && \
+        echo 'export LD_LIBRARY_PATH=${USR_LOCAL_LIB_DIR}:${LD_LIBRARY_PATH}' >> $USER_BASHRC && \
         echo "source $USER_BASHRC" >> /root/.bashrc && \
         echo "apt package installation and bashrc modification done."
 
 RUN \
-    echo "Installing Python" && \
+    echo "Installing and configuring Git from source..." && \
+    apt remove git && \
+    apt install -y build-essential autoconf dh-autoreconf libcurl4-openssl-dev \
+        tcl-dev gettext asciidoc docbook2x install-info \
+        libexpat1-dev libz-dev sudo && \
+    tmp_dir=/tmp/drltt-$(openssl rand -hex 6) && \
+    mkdir -p ${tmp_dir} && \
+    ( \
+        cd ${tmp_dir}; \
+        wget https://raw.githubusercontent.com/paul-nelson-baker/git-openssl-shellscript/master/compile-git-with-openssl.sh; \
+        bash compile-git-with-openssl.sh -skiptests; \
+    ) && rm -rf ${tmp_dir} && \
+    git config --global http.version HTTP/1.1 && \
+    git config --global http.postBuffer 524288000 && \
+    echo "Git installed from source and configured."
+
+RUN \
+    echo "Installing Python && pip..." && \
     echo "  Reference: https://github.com/ufoym/deepo/blob/master/docker/Dockerfile.pytorch-py38-cpu" && \
-    echo "  Installing Python" && \
-    PYTHON_VERSION=3.12 && \
+    echo "  Installing Python..." && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-dev \
         python${PYTHON_VERSION}-distutils \
         && \
-    ln -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python && \
-    echo "Python installed." && \
-    echo "Installing pip" && \
+    ln -s /usr/bin/python${PYTHON_VERSION} ${USR_LOCAL_BIN_DIR}/python && \
+    echo "  Python installed." && \
+    echo "  Installing pip..." && \
     wget https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py && \
-    echo "pip installed"
+    python get-pip.py ${PIP_ARGS} && \
+    echo "  pip installed."
 
 RUN \
     echo "Installing DRLTT Python requirements" && \
@@ -99,23 +121,21 @@ RUN \
     git clone --depth=1 --recursive --shallow-submodules https://github.com/MARMOTatZJU/${repo_name}.git && \
     ( \
         cd ${repo_name}; \
-        pip install ${PIP_SRC_ARG} -r requirements/pypi.txt; \
-        pip install ${PIP_SRC_ARG} -r requirements/pypi-doc.txt; \
-        pip install ${PIP_SRC_ARG} -r submodules/waymax-visualization/requirements.txt; \
+        pip install ${PIP_ARGS} -r requirements/pypi.txt; \
+        pip install ${PIP_ARGS} -r requirements/pypi-doc.txt; \
+        pip install ${PIP_ARGS} -r submodules/waymax-visualization/requirements.txt; \
     ) && rm -rf ${repo_name} && \
     echo "DRLTT Python requirements installed."
-
-ARG USR_LOCAL_BIN_DIR=/usr/local/bin/
 
 RUN \
     echo "Installing Protobuf" && \
     protobuf_release_version="21.12" && \
     proto_release_filename=protoc-${protobuf_release_version}-linux-x86_64.zip  && \
     tmp_dir=/tmp/drltt-$(openssl rand -hex 6) && \
-    mkdir ${tmp_dir} && \
+    mkdir -p ${tmp_dir} && \
     ( \
       cd ${tmp_dir}; \
-      curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v${protobuf_release_version}/${proto_release_filename}; \
+      curl ${CURL_ARGS} https://github.com/protocolbuffers/protobuf/releases/download/v${protobuf_release_version}/${proto_release_filename}; \
       unzip ${proto_release_filename} -d protobuf-release/; \
       mv protobuf-release/bin/protoc ${USR_LOCAL_BIN_DIR}; \
     ) && rm -rf ${tmp_dir} && \
@@ -125,14 +145,14 @@ RUN \
     echo "Installing Doxygen" && \
     DOXYGEN_VERSION="1.10.0" && \
     tmp_dir=/tmp/drltt-$(openssl rand -hex 6) && \
-    mkdir ${tmp_dir} && \
+    mkdir -p ${tmp_dir} && \
     ( \
       cd ${tmp_dir}; \
       DOXYGEN_TARBALL_NAME=doxygen-${DOXYGEN_VERSION}; \
       DOXYGEN_TARBALL_FILENAME=${DOXYGEN_TARBALL_NAME}.linux.bin.tar.gz; \
       DOXYGEN_RELEASE_NAME=Release_$(echo $DOXYGEN_VERSION | sed -r 's/\./_/g'); \
       DOXYGEN_URL="https://github.com/doxygen/doxygen/releases/download/${DOXYGEN_RELEASE_NAME}/${DOXYGEN_TARBALL_FILENAME}"; \
-      curl -OL ${DOXYGEN_URL}; \
+      curl ${CURL_ARGS} ${DOXYGEN_URL}; \
       tar -xzvf ${DOXYGEN_TARBALL_FILENAME} && \
           ( \
               cd ${DOXYGEN_TARBALL_NAME}; \
@@ -142,20 +162,20 @@ RUN \
     echo "Doxygen installed"
 
 RUN \
-    echo "Installing progo-gen-doc" && \
+    echo "Installing progo-gen-doc..." && \
     PROTO_GEN_DOC_VERSION="1.5.1" && \
     tmp_dir=/tmp/drltt-$(openssl rand -hex 6) && \
-    mkdir ${tmp_dir} && \
+    mkdir -p ${tmp_dir} && \
     ( \
         cd ${tmp_dir}; \
         PROTO_GEN_DOC_FILENAME=protoc-gen-doc_${PROTO_GEN_DOC_VERSION}_linux_amd64.tar.gz; \
-        curl -OL https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTO_GEN_DOC_VERSION}/${PROTO_GEN_DOC_FILENAME}; \
+        curl ${CURL_ARGS} https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTO_GEN_DOC_VERSION}/${PROTO_GEN_DOC_FILENAME}; \
         tar -xvf ${PROTO_GEN_DOC_FILENAME} -C ${USR_LOCAL_BIN_DIR} protoc-gen-doc; \
     ) && rm -rf ${tmp_dir} && \
-    echo "progo-gen-doc installed"
+    echo "progo-gen-doc installed."
 
 RUN \
-    echo "Installing CPP Protobuf" && \
+    echo "Installing CPP Protobuf..." && \
     PROTO_VERSION=25.3 && \
     git clone --depth=1 --progress -b v${PROTO_VERSION} https://github.com/protocolbuffers/protobuf && \
         ( \
@@ -196,10 +216,6 @@ RUN \
 
 # TODO: decide if moving pybind to requiremnets.txt
 RUN \
-    echo "Installing pybind" && \
-    pip install ${PIP_SRC_ARG} pybind11[global] && \
+    echo "Installing pybind..." && \
+    pip install ${PIP_ARGS} pybind11[global] && \
     echo "pybind installed."
-
-# TODO refactor all dockerfiles and remove redundant part.
-
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}

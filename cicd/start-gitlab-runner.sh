@@ -1,5 +1,8 @@
 #!/bin/bash
 
+runner_image_name="drltt:cicd"
+executor_image_name="drltt:runtime"
+
 token=$1
 
 if [[ -z ${token} ]];then
@@ -12,7 +15,7 @@ register_cmd="gitlab-runner register \
 --url https://git.sjtu.edu.cn \
 --token ${token} \
 --executor docker \
---docker-image "drltt-cicd:executor" \
+--docker-image "${executor_image_name}" \
 --docker-pull-policy if-not-present \
 --name test-runner \
 "
@@ -23,8 +26,7 @@ docker_container_cmd="(
     sleep infinity;
 )"
 
-image_name="drltt-cicd:runner"
-docker_arg_suffix=${image_name}
+docker_arg_suffix=${runner_image_name}
 
 docker_container_name=drltt-cicd-$(date +%s)
 docker run --name ${docker_container_name} --entrypoint bash -e "ACCEPT_EULA=Y" --rm --network=host \

@@ -3,7 +3,6 @@
 log_dir=./test-log
 mkdir -p $log_dir
 
-
 (
 
     echo "SETTING UP CPP TESTING ENVIRONMENT"
@@ -23,5 +22,8 @@ mkdir -p $log_dir
     echo "TEST CPP CODE"
     pushd sdk
         bash ./compile-in-docker.sh "$@"
+        retval=$?
     popd
 ) 2>&1 | tee ./${log_dir}/cpp-test.log
+
+exit $retval

@@ -63,4 +63,5 @@ evaluation:
   eval_config:
     n_episodes: 200
     compute_metrics_name: "compute_bicycle_model_metrics"
+    visualization_function_name: "visualize_trajectory_tracking_episode"
   overriden_environment: {}

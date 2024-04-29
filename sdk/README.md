@@ -14,44 +14,7 @@ This project employs `cmake` as build system.. The compilation is recommended to
 
 ### Build Docker Image
 
-Firstly, build an image named `drltt-sdk` for compilation with the provided Dockerfile.
-
-```bash
-docker image build --tag drltt-sdk:dev - < ./Dockerfile
-```
-
-Tip: To remove unused images/cached, run:
-
-```bash
-docker system prune
-```
-
-Tip 2: To save the Docker image for transferring and save time:
-
-```
-docker image save drltt-sdk:dev -o ./drltt-sdk.image
-```
-
-```
-docker image load -i ./drltt-sdk.image
-```
-
-
-Tip 3: For network environments within Mainland China, you may consider using a domestic apt source to accelerate this process by appending the following part to the `./Dockerfile`:
-
-
-```dockerfile
-# Example using TUNA apt source
-ARG APT_SOURCE_LIST=/etc/apt/sources.list
-RUN \
-    mv ${APT_SOURCE_LIST} ${APT_SOURCE_LIST}.bak && \
-    touch ${APT_SOURCE_LIST} && \
-    printf "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
-    printf "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
-    printf "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
-    printf "deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" >> ${APT_SOURCE_LIST} && \
-    cat ${APT_SOURCE_LIST}
-```
+Build the Docker image `drltt:runtime` following the instructions in [Docker instructions](../docker/README.md).
 
 #### Debugging the building process
 
