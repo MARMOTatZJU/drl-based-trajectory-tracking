@@ -38,7 +38,9 @@ def visualize_trajectory_tracking_episode(
         viz_prefix (str): The prefix of visualization files to be saved.
         n_steps_per_viz (int, optional): Number of steps per draw. Defaults to 20.
     """
-    assert isinstance(env_data, Environment), f'`visualize_trajectory_tracking_episode` requires env_data to be in class `Environment`'
+    assert isinstance(
+        env_data, Environment
+    ), f'`visualize_trajectory_tracking_episode` requires env_data to be in class `Environment`'
     episode = env_data.trajectory_tracking.episode
 
     traj_len = episode.tracking_length

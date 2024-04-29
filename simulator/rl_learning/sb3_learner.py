@@ -169,7 +169,9 @@ def compute_bicycle_model_metrics(
         - scaled_action_norm_median
         - reward_median
     """
-    assert isinstance(env_data, Environment), f'`compute_bicycle_model_metrics` requires env_data to be in class `Environment`'
+    assert isinstance(
+        env_data, Environment
+    ), f'`compute_bicycle_model_metrics` requires env_data to be in class `Environment`'
     episode = env_data.trajectory_tracking.episode
 
     dists = list()

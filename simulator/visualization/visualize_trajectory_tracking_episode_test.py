@@ -1,4 +1,3 @@
-
 from gym import Env
 
 from common import build_object_within_registry_from_config
