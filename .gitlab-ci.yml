@@ -20,7 +20,7 @@ drltt-cpp-test-job:
     - "test-log/"
     expire_in: 1 week
   interruptible: true
-  timeout: "3h 30m"
+  timeout: "10h 00m"
 
 drltt-doc-test-job:
   stage: test
@@ -38,3 +38,4 @@ variables:
   GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
   GIT_DEPTH: 1
   GIT_SUBMODULE_DEPTH: 1
+  GET_SOURCES_ATTEMPTS: 10

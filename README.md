@@ -7,18 +7,18 @@ Currently, DRLTT supports the following features:
 * A Python framework
   * Training-Evaluation-Tracing of an RL policy for the task of Trajectory Tracking in Autonomous Driving.
   * Based on *Stable Baselines 3*.
-  * See `./simulator`.
+  * See `./drltt/simulator`.
 * A C++ SDK
   * Easy deployment and efficient inference of RL policy under a pure CPU environment.
   * Based on cpu-compiled *libtorch*.
-  * See `./sdk`
+  * See `./sdk/`
 * Two Python SDKs
   * One based on Torch JIT
     * Compatible with existing PyTorch environment
-    * See `./simulator/trajectory_tracker/trajectory_tracker.py`
+    * See `./drltt/simulator/trajectory_tracker/`
   * One based on C++ SDK
     * Able to run standalone without PyTorch installation or other Python packages.
-    * See `sdk/assets/exported-python-sdk`
+    * See `sdk/assets/exported-python-sdk/`
 
 ![idea-illustration](https://raw.githubusercontent.com/MARMOTatZJU/drltt-assets/main/images/drltt-idea-illustration.png)
 
@@ -83,7 +83,7 @@ Then, launch a Python interpreter and run the following code:
 
 ```python
 import numpy as np
-from simulator import TrajectoryTracker
+from drltt.simulator import TrajectoryTracker
 
 pretrained_checkpoint_dir = './submodules/drltt-assets/checkpoints/track/checkpoint'
 trajectory_tracker = TrajectoryTracker(checkpoint_dir=pretrained_checkpoint_dir)

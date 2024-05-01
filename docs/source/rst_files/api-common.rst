@@ -1,31 +1,31 @@
-APIs: common
-==============
+APIs: drltt.common
+=================================
 
 
-common.registry
-----------------
-.. automodule:: common.registry
+drltt.common.registry
+---------------------------------
+.. automodule:: drltt.common.registry
    :members:
    :special-members:
    :private-members:
 
-common.io
-----------------
-.. automodule:: common.io
+drltt.common.io
+---------------------------------
+.. automodule:: drltt.common.io
    :members:
    :special-members:
    :private-members:
 
-common.gym_helper
-------------------
-.. automodule:: common.gym_helper
+drltt.common.gym_helper
+---------------------------------
+.. automodule:: drltt.common.gym_helper
    :members:
    :special-members:
    :private-members:
 
-common.geometry
-----------------
-.. automodule:: common.geometry
+drltt.common.geometry
+---------------------------------
+.. automodule:: drltt.common.geometry
    :members:
    :special-members:
    :private-members:

@@ -6,10 +6,15 @@ WORKDIR /
 ARG USER_WORKDIR=/work_dir
 ARG USER_BIN=/usr_bin
 ARG USER_BASHRC=/work_dir/.bashrc
+ARG CURL_ARGS=" -OL --retry-all-errors "
+ARG USR_LOCAL_BIN_DIR=/usr/local/bin/
+ARG USR_LOCAL_LIB_DIR=/usr/local/lib/
 ARG APT_SOURCE_LIST=/etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV SHELL=/bin/bash
+ENV LD_LIBRARY_PATH=${USR_LOCAL_BIN_DIR}:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=${USR_LOCAL_LIB_DIR}:${LD_LIBRARY_PATH}
 
 SHELL [ "/bin/bash", "-c" ]
 
@@ -27,6 +32,7 @@ RUN \
     apt update --fix-missing && \
     echo "Adding ppa:deadsnakes/ppa, for installing python3.x" && \
     DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common && \
+    echo "Add PPA for Python" && \
     add-apt-repository ppa:deadsnakes/ppa && \
     echo "Updating APT list" && \
     apt update --fix-missing && \
@@ -38,6 +44,7 @@ RUN \
         ca-certificates \
         libssl-dev \
         curl wget \
+        gnutls-bin \
         && \
     echo "Installing compiling tools" && \
     apt install -y \

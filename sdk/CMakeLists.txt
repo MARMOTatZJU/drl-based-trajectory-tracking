@@ -35,7 +35,7 @@ endif(BUILD_TESTS)
 
 # protobuf
 set(PROTO_GENERATE_PATH ${SDK_ROOT_DIR}/proto_gen)
-add_subdirectory(${REPO_ROOT_DIR}/common/proto/proto_def proto_def)
+add_subdirectory(${REPO_ROOT_DIR}/drltt/common/proto/proto_def proto_def)
 include_directories(${PROTO_GENERATE_PATH})
 
 # setup pybind11
