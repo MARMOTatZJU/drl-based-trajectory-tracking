@@ -1,6 +1,14 @@
 stages:
 - test
 
+drltt-code-check-job:
+  stage: test
+  script:
+    - export BLACK_ARGS=" --check "
+    - export CLANG_FORMAT_ARGS=" --dry-run "
+    - ./format-code.sh
+  interruptible: true
+
 drltt-python-test-job:
   stage: test
   script:

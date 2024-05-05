@@ -9,7 +9,7 @@ ARG USER_BIN=/usr_bin
 ARG USER_BASHRC=/work_dir/.bashrc
 ARG PYTHON_VERSION=3.12
 ARG PIP_ARGS=""
-ARG CURL_ARGS=" -OL --retry-all-errors "
+ARG CURL_ARGS=" -OL --retry-all-errors --http1.1 "
 ARG USR_LOCAL_BIN_DIR=/usr/local/bin/
 ARG USR_LOCAL_LIB_DIR=/usr/local/lib/
 ARG APT_SOURCE_LIST=/etc/apt/sources.list
@@ -246,3 +246,24 @@ RUN \
     echo "Installing pybind..." && \
     pip install ${PIP_ARGS} pybind11[global] && \
     echo "pybind installed."
+
+RUN \
+    echo "Installing clang..." && \
+    CLANG_TAG=llvmorg-18.1.5 && \
+    repo_name=llvm-project && \
+    git_retry_counter=0 && \
+    while [ 0 -ne $(git clone --depth=1 --recursive --shallow-submodules --progress -b ${CLANG_TAG} https://github.com/llvm/${repo_name}.git) ];do \
+        rm -rf ${repo_name}; \
+        git_retry_counter=$((${git_retry_counter}+1)); \
+        delay=$((RANDOM % 10 + 1)); \
+        echo "git_retry_counter=${git_retry_counter}, git retrying after ${delay} seconds..."; \
+        sleep ${delay}; \
+    done && \
+    ( \
+        cd ${repo_name}; \
+        mkdir build; \
+        cd build; \
+        cmake -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../llvm; \
+        make -j$(nproc --all) install; \
+    ) && rm -rf ${repo_name} && \
+    echo "clang installed."

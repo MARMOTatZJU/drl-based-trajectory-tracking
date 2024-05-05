@@ -29,7 +29,7 @@ docker image build --tag drltt:runtime - < ./Dockerfile.runtime
 For network environments within Mainland China, you may consider using a domestic pip source to accelerate this process and setting the timeout to a larger value:
 
 ```bash
-docker image build --tag drltt:runtime --build-arg PIP_ARG=" -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout 1000 " - < ./Dockerfile.runtime
+docker image build --tag drltt:runtime --build-arg PIP_ARGS=" -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout 1000 " - < ./Dockerfile.runtime
 ```
 
 For APT source, you may consider using a domestic apt source to accelerate this process by appending the following part to the `./Dockerfile`:
@@ -47,7 +47,13 @@ RUN \
     cat ${APT_SOURCE_LIST}
 ```
 
-### Tip 2: Transferring Docker images
+### Tip 2: Retrying the image building command
+
+```bash
+ret_val=1;while [ -z "${ret_val}" ] || [ 0 -ne $ret_val ]; do ret_val=$(docker image build --tag drltt:runtime --build-arg PIP_ARGS=" -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout 1000 " - < ./Dockerfile.runtime); done
+```
+
+### Tip 3: Transferring Docker images
 
 To save time by transferring the Docker images, save with the command:
 
@@ -61,10 +67,17 @@ docker image save drltt:runtime -o ./drltt.runtime.image
 docker image load -i ./drltt.runtime.image
 ```
 
-### Tip 3: Clearing Cache
+### Tip 4: Clearing Cache
 
 Tip: To remove unused images/cached, run:
 
 ```bash
 docker system prune
+```
+
+### Tip 5: To debug with docker images
+
+```bash
+image_name=drltt:runtime
+docker run --name ${image_name}-$((RANDOM%100000)) --entrypoint bash --rm --network=host -it ${image_name} -c bash
 ```
