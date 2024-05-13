@@ -1,8 +1,17 @@
 #!/bin/bash
 
-echo FORMATTING PYTHON CODE...
-black --config ./configs/code_formatting/pyproject.toml ./
+./format-python-code.sh
+python_check_result=$?
 
 pushd ./sdk
-    bash ./format-code.sh
+    ./format-cpp-code.sh
+    cpp_check_result=$?
 popd
+
+if [ $python_check_result -ne 0 ] || [ $cpp_check_result -ne 0 ]; then
+    echo "Code formatting failed"
+    exit 1
+fi
+
+echo "Code formatting succeeded"
+exit 0
