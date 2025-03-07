@@ -239,6 +239,10 @@ References:
 ```
 
 
+## License
+
+This project is licensed under an **MIT license**. Feel free to use it for commercial purpose, research purpose, and more.
+
 ## Citation
 
 If you wish to cite this work, you may consider using the following reference form:
